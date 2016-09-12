@@ -5,8 +5,8 @@ import thread
 
 
 class events():
-    def __init__(self, grog):
-        self.eventMgr = grog.eventMgr
+    def __init__(self, mgr):
+        self.eventMgr = mgr
         logging.info("Event thread initialized")
 
     def events_thread(self):
