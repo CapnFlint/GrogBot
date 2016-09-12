@@ -29,5 +29,5 @@ def get_orders(query, international = False):
         return count
 
     except urllib2.URLError:
-        print "error"
+        logging.error("error connecting to check teespring!")
         return {}
