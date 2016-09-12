@@ -56,7 +56,7 @@ class GrogBot():
         self.connMgr.connect()
 
 def main():
-    grog = GrogBot(self.channel)
+    grog = GrogBot(twitch.twitch_channel)
     grog.run()
 
 if __name__ == "__main__":
