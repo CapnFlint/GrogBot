@@ -4,9 +4,9 @@ import time
 import random
 
 class passive_exp():
-    def __init__(self, grog):
+    def __init__(self, mgr):
         self.exp_timer = 60 * 5
-        self.charMgr = grog.charMgr
+        self.charMgr = mgr
 
     def passive_exp(self, delay):
         while 1:

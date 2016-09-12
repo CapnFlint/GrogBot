@@ -28,7 +28,7 @@ class CharacterManager():
         self.load_ranks()
         self.skip_names = []
 
-        self.grog.add_worker(passive_exp(self.grog))
+        self.grog.add_worker(passive_exp(self))
 
 
     def load_levels(self):
