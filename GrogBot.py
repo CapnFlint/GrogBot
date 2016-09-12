@@ -12,6 +12,7 @@ from modules.characters.character_manager import CharacterManager
 from modules.events.event_manager import EventManager
 
 import modules.overlay.overlay as overlay
+import utils.db_utils as db
 
 import config.twitch_config as twitch
 
