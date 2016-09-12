@@ -8,6 +8,8 @@ import utils.db_utils as db
 
 import modules.overlay.overlay as overlay
 
+from config.strings import strings
+
 class follows():
     def __init__(self, grog):
         self.connMgr = grog.connMgr
