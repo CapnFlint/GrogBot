@@ -48,7 +48,7 @@ def alert_levelup(name, rank):
     data['audio'] = [{"file": "sounds/levelup.wav", "volume": 15}]
     _send_message("alert", data)
 
-def alert_donate(name, amount):
+def alert_tip(name, amount, message=""):
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] has donated [HL]${1}[/HL]! Give them some love!!!".format(name, format(amount, '.2f'))
@@ -56,6 +56,7 @@ def alert_donate(name, amount):
         data['audio'] = []
     else:
         data['audio'] = []
+    data['message'] = message
     _send_message("alert", data)
 
 def alert_teespring(count):
@@ -77,15 +78,16 @@ def alert_sub(sender):
     data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
     data['audio'] = [{"file": "sounds/pirate2.mp3", "volume": 50}]
     _send_message("alert", data)
-    ship("sub", sender, 1)
+    #ship("sub", sender, 1)
 
-def alert_resub(sender, count):
+def alert_resub(sender, count, message):
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
     data['audio'] = [{"file": "sounds/pirate2.mp3", "volume": 50}]
+    data['message'] = message
     _send_message("alert", data)
-    ship("sub", sender, count)
+    #ship("sub", sender, count)
 
 ''' Twitter '''
 

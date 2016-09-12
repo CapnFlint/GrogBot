@@ -9,7 +9,7 @@ type:
 0 = standard tip
 1 = extra-life
 '''
-def get_latest_donations():
+def get_latest_tips():
     return get_extralife()
 
 def get_extralife():

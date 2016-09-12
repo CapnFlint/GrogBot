@@ -4,6 +4,7 @@ from collections import defaultdict
 from itertools import chain
 
 from helper import *
+from config.strings import strings
 
 bet_rollover = 0
 
@@ -44,7 +45,7 @@ def command_runbet(self, sender, args):
                 return
             self.add_command('!winner', bet_winner)
             self.remove_command('!bet')
-            self.connMgr.send_message('Betting has ended! Total prize pool: ' + str(total_bets(self) + bet_rollover) + ' ' + self.language['currency'] + 's!')
+            self.connMgr.send_message(strings['CMD_BET_PRIZE_POOL'].format(amount=str(total_bets(self) + bet_rollover)))
 
         thread.start_new_thread(bet_thread, (self,bet_len))
 

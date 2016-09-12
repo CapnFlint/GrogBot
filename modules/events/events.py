@@ -1,3 +1,4 @@
+import logging
 import random
 import time
 import thread
@@ -6,6 +7,7 @@ import thread
 class events():
     def __init__(self, grog):
         self.eventMgr = grog.eventMgr
+        logging.info("Event thread initialized")
 
     def events_thread(self):
         while 1:
@@ -15,3 +17,4 @@ class events():
 
     def start(self):
         thread.start_new_thread(self.events_thread, ())
+        logging.info("Event thread started")

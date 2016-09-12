@@ -1,23 +1,29 @@
 #!/usr/bin/env python27
+import logging
 
 from core.message_processor import MessageProcessor
 from core.connection_manager import ConnectionManager
-import core.workers as workers
+
+from core.monitors.follows import follows
+from core.monitors.teespring import teespring
+from core.random_messages import random_messages
 
 from modules.characters.character_manager import CharacterManager
-from modules.events.event_manager2 import EventManager
+from modules.events.event_manager import EventManager
 
 import modules.overlay.overlay as overlay
-import utils.db_utils as db
 
-import config.twitch_config as config
+import config.twitch_config as twitch
 
 class GrogBot():
 
     def __init__(self, channel):
+        logging.basicConfig(level=logging.DEBUG)
+
         self.event_running = False
 
-        self.channel = config.twitch_channel
+        self.channel = twitch.twitch_channel
+        self.worklist = []
 
         # Set up all the managers, order is important!
         self.connMgr = ConnectionManager(self, channel)
@@ -26,12 +32,9 @@ class GrogBot():
         self.msgProc = MessageProcessor(self)
 
         # Initialize all the worker threads
-        self.worklist = []
-        self.add_worker(workers.passive_exp(self))
-        self.add_worker(workers.events(self))
         self.add_worker(workers.messages(self))
-        self.add_worker(workers.followers(self))
-        self.add_worker(workers.teespring(self, "spud citizen Capn_Flint", True))
+        self.add_worker(followers(self))
+        self.add_worker(teespring(self, "spud citizen Capn_Flint", True))
         #self.add_worker(workers.twitter(self))
 
         overlay.update_stat("follows", db.get_stat("sessionFollowers"))
@@ -49,7 +52,7 @@ class GrogBot():
         self.start_workers()
 
         # Connect and start bot
-        print "Starting Up!!!"
+        logging.info("Starting Up!!!")
         self.connMgr.connect()
 
 def main():

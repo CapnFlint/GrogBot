@@ -13,9 +13,9 @@ def command_top(self, sender, args):
             if char['exp'] > highest['exp']:
                 highest = char
     if highest:
-        self.connMgr.send_message("The highest ranked " + self.language['member'] + " in the ship is " + highest['name'] + "!")
+        self.connMgr.send_message(strings['CMD_TOP_HIGHEST'].format(name=highest['name']))
     else:
-        self.connMgr.send_message("No " + self.language['member'] + "s aboard sir!")
+        self.connMgr.send_message(strings['CMD_TOP_NONE'])
 
 @processes('!topbooty')
 def command_topbooty(self, sender, args):
@@ -29,6 +29,6 @@ def command_topbooty(self, sender, args):
             if char['booty'] > highest['booty']:
                 highest = char
     if highest:
-        self.connMgr.send_message("The richest " + self.language['member'] + " in the ship be " + highest['name'] + " with " + str(highest['booty']) + " " + self.language['currency'] + "s!")
+        self.connMgr.send_message(strings['CMD_TOPBOOTY_HIGHEST'].format(name=highest['name'], amount=str(highest['booty'])))
     else:
-        self.connMgr.send_message("No " + self.language['member'] + " aboard sir!")
+        self.connMgr.send_message(strings['CMD_TOP_NONE'])

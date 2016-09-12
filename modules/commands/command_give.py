@@ -1,6 +1,8 @@
 from helper import *
 import utils.twitch_utils as utils
 
+from config.strings import strings
+
 @processes('!give')
 def command_give(self, sender, args):
     try:
@@ -8,7 +10,7 @@ def command_give(self, sender, args):
             print args
             recipient = args[0].lower()
             if recipient == sender:
-                self.connMgr.send_message("You can't send money to yourself!")
+                self.connMgr.send_message(strings['CMD_GIVE_SELF'])
                 return
             try:
                 amount = int(args[1])
@@ -16,7 +18,7 @@ def command_give(self, sender, args):
                 amount = 0
 
             if amount <= 0:
-                self.connMgr.send_message("Sorry " + sender + ", that isn't a valid amount.")
+                self.connMgr.send_message(strings['CMD_GIVE_INVALID'].format(sender=sender))
                 return
 
             if recipient in utils.get_viewers():
@@ -27,12 +29,12 @@ def command_give(self, sender, args):
                     source['booty'] -= amount
                     self.charMgr.save_character(target)
                     self.charMgr.save_character(source)
-                    self.connMgr.send_message(str(amount) + ' ' + self.language['currency'] + 's sent to ' + recipient + '! Thanks ' + sender + '!')
+                    self.connMgr.send_message(strings['CMD_GIVE_SENT'].format(amount=str(amount), recipient=recipient, sender=sender))
                 else:
-                    self.connMgr.send_message('Sorry ' + sender + ", you don't have enough for that.")
+                    self.connMgr.send_message(strings['CMD_GIVE_INSUFFICIENT'].format(sender=sender))
             else:
-                self.connMgr.send_message('Sorry, ' + recipient + " isn't here...")
+                self.connMgr.send_message(strings['CMD_GIVE_MISSING'].format(recipient=recipient))
         else:
-            self.connMgr.send_message("To send money, it's: !give name amount, e.g. !give capn_flint 50")
+            self.connMgr.send_message(strings['CMD_GIVE_USAGE'])
     except:
-        self.connMgr.send_message("That is an invalid amount. Please try again.")
+        self.connMgr.send_message(strings['CMD_GIVE_INVALID'].format(sender=sender))

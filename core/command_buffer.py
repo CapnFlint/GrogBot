@@ -1,4 +1,6 @@
-
+import logging
+import time
+import thread
 
 class command_buffer():
     '''
@@ -11,6 +13,7 @@ class command_buffer():
         self.commandBuffer = {}
         self.owner = owner
         self.locked = False
+        logging.info("Command buffer initialized")
 
     def buffer_command(self, cmd, args):
 
@@ -32,3 +35,4 @@ class command_buffer():
 
     def start(self):
         thread.start_new_thread(self.buffer_manager, (self.commandTimer,))
+        logging.info("Command buffer started")

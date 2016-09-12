@@ -1,4 +1,4 @@
-from events import eventList
+import logging
 import random
 import thread
 import time
@@ -45,7 +45,7 @@ class EventManager():
 # -----[ Event Entry Management ]-----------------------------------------------
 
     def record_entry(self, entrant, choice):
-        print "Trying to record an entry..."
+        logging.debug("Trying to record an entry...")
 
         if entrant not in self.entries[choice]:
             self.entries[choice].append(entrant)
@@ -55,7 +55,7 @@ class EventManager():
 
     def get_all_entries(self, key=None):
         all = []
-        print self.entries
+        logging.debug(self.entries)
         if key:
             all = all + self.entries[key]
         else:
@@ -69,13 +69,13 @@ class EventManager():
         if self.entries:
             for key in self.entries.keys():
                 if not top:
-                    print "Top set to: " + key + "(" + str(len(self.entries[key])) + ")"
+                    logging.debug("Top set to: " + key + "(" + str(len(self.entries[key])) + ")")
                     top = key
                     topCount = len(self.entries[key])
                 else:
-                    print str(len(self.entries[key])) + "::" + str(topCount)
+                    logging.debug(str(len(self.entries[key])) + "::" + str(topCount))
                     if len(self.entries[key]) > topCount:
-                        print "Top set to: " + key + "(" + str(len(self.entries[key])) + ")"
+                        logging.debug("Top set to: " + key + "(" + str(len(self.entries[key])) + ")")
                         top = key
                         topCount = len(self.entries[key])
             return top
@@ -174,7 +174,7 @@ class Event():
 
     def run(self):
         self.commands = db.getEventCommands(self.config['eventID'])
-        print self.commands
+        logging.debug(self.commands)
         for command in self.commands:
             if self.config['type'] == 1:
                 self.msgProc.add_command(command['command'], self.anon_instant_result(command, command['command'].lstrip('!')))
@@ -267,7 +267,7 @@ class Event():
                         self.event_message(command['text'])
                     self.exp_booty_message(command['exp'], command['booty'], entries)
                     self.eventMgr.end_event()
-                    print "Event Ended."
+                    logging.info("Event Ended.")
                     if command['next']:
                         self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
                 else:
@@ -275,7 +275,7 @@ class Event():
 
             elif self.config['type'] == 5:
                 if entryDict:
-                    print entryDict
+                    logging.debug(entryDict)
                     winner = random.choice(self.commands)
                     exp = commands[0]['exp']
                     booty = commands[0]['booty']
@@ -283,7 +283,7 @@ class Event():
                     lose_entries = []
                     for cmd in commands:
                         entries = entryDict[cmd['command']]
-                        print cmd['command'] + " = " + str(entries)
+                        logging.debug(cmd['command'] + " = " + str(entries))
                         if entries:
                             if cmd['command'] == winner['command']:
                                 win_entries += entries
@@ -300,14 +300,14 @@ class Event():
                     self.exp_booty_message(exp, booty, win_entries)
                     self.exp_booty_message(-exp, -booty, lose_entries)
                     self.eventMgr.end_event()
-                    print "Event Ended."
+                    logging.info("Event Ended.")
                     if winner['next']:
                         self.eventMgr.loadAndRun(int(random.choice(winner['next'].split(','))))
                 else:
                     self.fail_event()
             elif self.config['type'] == 6:
                 if entryDict:
-                    print entryDict
+                    logging.debug(entryDict)
                     winner = random.choice(self.commands)
                     exp = commands[0]['exp']
                     booty = commands[0]['booty']
@@ -315,7 +315,7 @@ class Event():
                     lose_entries = []
                     for cmd in commands:
                         entries = entryDict[cmd['command']]
-                        print cmd['command'] + " = " + str(entries)
+                        logging.debug(cmd['command'] + " = " + str(entries))
                         if entries:
                             if cmd['command'] == winner['command']:
                                 win_entries += entries
@@ -331,7 +331,7 @@ class Event():
                     self.exp_booty_message(exp, booty, win_entries)
                     self.exp_booty_message(-exp, -booty, lose_entries)
                     self.eventMgr.end_event()
-                    print "Event Ended."
+                    logging.info("Event Ended.")
                     if winner['next']:
                         self.eventMgr.loadAndRun(int(random.choice(winner['next'].split(','))))
                 else:

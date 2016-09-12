@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import time
 import thread
@@ -10,7 +11,7 @@ import MySQLdb as mdb
 import utils.twitch_utils as utils
 import modules.overlay.overlay as overlay
 import config.db_config as config
-from config.language import pirate as language
+from config.strings import strings
 
 from passive_exp import passive_exp
 
@@ -59,7 +60,7 @@ class CharacterManager():
         name = utils.get_display_name(name)
         if name and name not in self.skip_names:
             try:
-                print "INFO: Creating " + name
+                logging.info("Creating " + name)
                 char = {
                     "level":1,
                     "exp":0,
@@ -78,7 +79,7 @@ class CharacterManager():
                 self.save_character(char)
                 return char
             except:
-                print "Failed creating " + name
+                logging.warning("Failed creating " + name)
                 self.skip_names.append(name)
                 return None
 
@@ -95,7 +96,7 @@ class CharacterManager():
                 user = cur.fetchone()
         except mdb.Error, e:
 
-            print "Error %d: %s" % (e.args[0],e.args[1])
+            logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
 
         finally:
 
@@ -117,7 +118,7 @@ class CharacterManager():
                     user = cur.fetchone()
             except mdb.Error, e:
 
-                print "Error %d: %s" % (e.args[0],e.args[1])
+                logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
 
             finally:
 
@@ -128,7 +129,7 @@ class CharacterManager():
             else:
                 return user
         else:
-            print "ERROR: Unable to load character - " + name
+            logging.error("Unable to load character - " + name)
 
     def save_character(self, char):
         try:
@@ -144,7 +145,7 @@ class CharacterManager():
             if con:
                 con.rollback()
 
-            print "Error %d: %s" % (e.args[0],e.args[1])
+            logging("DB Error %d: %s" % (e.args[0],e.args[1]))
             return 0
 
         finally:
@@ -166,7 +167,7 @@ class CharacterManager():
             if con:
                 con.rollback()
 
-            print "Error %d: %s" % (e.args[0],e.args[1])
+            logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
             return 0
 
         finally:
@@ -184,31 +185,23 @@ class CharacterManager():
         self.revive_character(name)
 
     def kill_character(self, name, duration=0):
-        print "INFO: Killing " + name
-        try:
-            if self.char_exists(name):
-                char = self.load_character(name)
-                char['level'] = 0
-                self.save_character(char)
-                if duration:
-                    thread.start_new_thread(self.death_thread, (name, duration))
-            else:
-                self.grog.connMgr(name + " doesn't exist!")
-        except IOError:
-            print "ERROR: Unable to kill character " + name
-            pass
+        logging.info("Killing " + name)
+        if self.char_exists(name):
+            char = self.load_character(name)
+            char['level'] = 0
+            self.save_character(char)
+            if duration:
+                thread.start_new_thread(self.death_thread, (name, duration))
+        else:
+            self.grog.connMgr(name + " doesn't exist!")
 
     def revive_character(self, name):
-        print "INFO: Reviving " + name
-        try:
-            char = self.load_character(name)
-            if char['level'] > 0:
-                return False
-            char['level'] = self.compute_level(char['exp'])
-            self.save_character(char)
-        except IOError:
-            print "ERROR: Unable to revivie character " + name
+        logging.info("Reviving " + name)
+        char = self.load_character(name)
+        if char['level'] > 0:
             return False
+        char['level'] = self.compute_level(char['exp'])
+        self.save_character(char)
         return True
 
     def is_alive(self, name):
@@ -242,7 +235,7 @@ class CharacterManager():
 
 
     def get_rank(self, char, include_rank = True, include_exp = True):
-        print "INFO: Getting rank."
+        logging.info("Getting character rank.")
         level = char['level']
         if level == 0:
             rankstr = "Corpse... capnRIP"
@@ -257,7 +250,7 @@ class CharacterManager():
             if include_exp:
                 rankstr += (" (" +str((self.levels[level] - char['exp']) + 1)
                             + " exp until next rank)")
-        print "RANK: " + rankstr
+        logging.debug("RANK: " + rankstr)
         return rankstr
 
     def follows_me(self, name, force_check=False, skip_check=False):
@@ -331,7 +324,7 @@ class CharacterManager():
         if char['name'] == "Capn_Flint":
             return
         char['sub_date'] = date
-        char['sub_count'] = self.compute_sub_count(date)
+        char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
 
@@ -341,12 +334,12 @@ class CharacterManager():
         char['sub_count'] = 0
 
 
-    def compute_sub_count(self, date):
+    def guess_sub_count(self, date):
         print "computing count"
         now = datetime.now()
         sub_date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%SZ")
         count = 1
-        while (now - sub_date) > (timedelta(days=30) * count):
+        while (now - sub_date) > (timedelta(days=31) * count):
             count += 1
         print "count = " + str(count)
         return count
@@ -408,5 +401,6 @@ class CharacterManager():
                 if (level - 1) % self.ranks_per_level == 0:
                     for name in levelups[level]:
                         overlay.alert_levelup(name, self.ranks[rank])
-            self.grog.connMgr.send_message("R) YARRR! R) The following " + language['member'] + "s are now a " + self.ranks[rank] + " level " + str(((level - 1) % self.ranks_per_level) + 1) + ": " + ', '.join(levelups[level]))
+            sublevel = str(((level - 1) % self.ranks_per_level) + 1)
+            self.grog.connMgr.send_message(strings['CHAR_LEVEL_UP'].format(ranktitle=self.ranks[rank] + " level " + sublevel, names=', '.join(levelups[level]))
         print "INFO: " + str(amount) + " Exp granted to " + str(count) + " players"

@@ -1,6 +1,9 @@
-import config.twitch_config as config
+import logging
 import socket
 import re
+
+import config.twitch_config as config
+from config.strings import strings
 
 import modules.overlay.overlay as overlay
 import utils.db_utils as db
@@ -31,7 +34,7 @@ class ConnectionManager():
 # -----[ Utility Functions ]----------------------------------------------------
 
     def subscribers(self):
-        print "Checking for Subscribers!"
+        logging.info("Checking for Subscribers!")
 
         subs = twitch.get_latest_subscribers(25)
         self.update_subcount()
@@ -39,16 +42,16 @@ class ConnectionManager():
         new = []
         if subs:
             for user in subs:
-                print "Processing: " + user
+                logging.debug("Processing: " + user)
                 if not self.grog.charMgr.subbed(user):
                     char = self.grog.charMgr.load_character(user)
-                    print "[NEW SUBSCRIBER] " + char['name']
+                    logging.info("[NEW SUBSCRIBER] " + char['name'])
                     overlay.alert_sub(char['name'])
                     new.append(char['name'])
                     self.grog.charMgr.give_booty(50, [user])
                     self.grog.charMgr.subbed(user, force_check=True)
         if new:
-            self.grog.connMgr.send_message("Welcome new Subs and Resubs: " + ", ".join(new) +"! Have some capnBooty ! R)")
+            self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new)))
             stat = db.add_stat('sessionSubs', len(new))
             overlay.update_stat('subs', stat)
 
@@ -56,7 +59,7 @@ class ConnectionManager():
         count = twitch.get_sub_count()
         db.clear_stat('subCount')
         stat = db.add_stat('subCount', int(count))
-        print "stat: " + str(stat)
+        logging.debug("New SubCount: " + str(stat))
         overlay.update_stat('subcount', stat)
 
 
@@ -68,7 +71,7 @@ class ConnectionManager():
     def _send_message(self, msg, chan=None):
         if not chan:
             chan = self.CHAN
-        print 'PRIVMSG %s :%s\r\n' % (chan, msg)
+        logging.debug('PRIVMSG %s :%s\r\n' % (chan, msg))
         self.con.send('PRIVMSG %s :%s\r\n' % (chan, msg))
 
     def _send_emote(self, msg, chan=None):
@@ -80,7 +83,7 @@ class ConnectionManager():
     def _send_names(self, chan=None):
         if not chan:
             chan = self.CHAN
-        print "Sending NAMES command"
+        logging.info("Sending NAMES command")
         self.con.send('NAMES %s\r\n' % chan)
 
     def _send_nick(self, nick):
@@ -118,6 +121,7 @@ class ConnectionManager():
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
     def _handle_join(self, sender):
+        ''' We force a verification here whenever someone joins the channel '''
         if self.grog.charMgr.subbed(sender, force_check = True):
             char = self.grog.charMgr.load_character(sender)
             if char['ship'] > 0:
@@ -136,7 +140,7 @@ class ConnectionManager():
             overlay.ship("leave", sender, ship)
 
     def _handle_mode(self, sender):
-        print sender + " is a mod!"
+        logging.debug(sender + " is a mod!")
 
     def _handle_notify(self, msg):
         '''
@@ -171,17 +175,17 @@ class ConnectionManager():
             overlay.update_stat('subs', stat)
 
         else:
-            print "NOTIFY: " + str(data)
+            logging.warning("NOTIFY: " + str(data))
 
     def _handle_usernotice(self, tags):
         resub = self._get_resub_info(tags)
         self.grog.charMgr.load_character(resub['name'])
 
         self.grog.charMgr.add_sub(resub['name'])
-        self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea matey! YARRR!!!".format(resub['name'], resub['length']))
+        self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea matey! YARRR HARRR!!!".format(resub['name'], resub['length']))
         self.grog.charMgr.give_booty(50, [resub['name']])
         overlay.ship("sub", resub['name'], resub['length'])
-        overlay.alert_resub(resub['name'], resub['length'])
+        overlay.alert_resub(resub['name'], resub['length'], resub['message'])
         overlay.update_timer(10)
         self.update_subcount()
         stat = db.add_stat('sessionSubs', 1)
@@ -225,10 +229,6 @@ class ConnectionManager():
     def _get_perms(self, data):
         '''
         '@color=#5F9EA0;display-name=mr_5ka;emotes=81530:0-7,9-16,18-25;mod=0;room-id=91580306;subscriber=1;turbo=0;user-id=69442368;user-type='
-        data[4] = mod
-        data[6] = subscriber
-
-        TODO: Make this more generic (search for the mod and subscriber parameters)
         '''
         tags = self._get_tag_map(data)
 
@@ -286,11 +286,11 @@ class ConnectionManager():
         self._register_commands()
         self._set_color()
 
-        print "INFO: Connected..."
+        logging.info("Connected...")
 
         # Check for offline subscribers
         self.subscribers()
-        print "Subscriber check done!"
+        logging.info("Subscriber check done!")
 
         data = ""
 
@@ -313,11 +313,13 @@ class ConnectionManager():
 
 
                             elif line[2] == 'USERNOTICE':
+                                print "SUB USERNOTICE!!!"
                                 self._handle_usernotice(line[0])
 
                             elif line[1] == 'PRIVMSG':
                                 sender = self._get_sender(line[0])
                                 if sender == 'twitchnotify':
+                                    print "SUB NOTIFY!!!"
                                     self._handle_notify(self._get_message(line[3:]))
 
 
@@ -346,14 +348,14 @@ class ConnectionManager():
                                 self._handle_mode(line[4])
 
                             else:
-                                print ["!!!!!!!!!!"]+line
+                                logging.warning(" ".join(["Unhandled:"]+line))
 
                 except socket.error:
-                    print("ERROR: Socket died")
+                    logging.error("Socket died")
 
                 except socket.timeout:
-                    print("ERROR: Socket timeout")
+                    logging.error("Socket timeout")
         except Exception as e:
-            print "ERROR: Unhandled Error: " + str(e)
+            logging.error("Unhandled Error: " + str(e))
         # Clean up
         self._part_channel(self.CHAN)

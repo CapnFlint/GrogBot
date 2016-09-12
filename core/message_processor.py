@@ -1,34 +1,29 @@
+import logging
+
 import utils.twitch_utils as twitch
 import utils.db_utils as db
-import thread
-import time
-import random
-import importlib
-from collections import defaultdict
-import sys
-import re
+
 import modules.overlay.overlay as overlay
 
 from modules.commands.helper import *
 from modules.commands import *
 
-from config.language import pirate as language
-
 import core.workers as workers
 import core.command_buffer as cmd_buffer
 import config.twitch_config as config
+
+from config.strings import strings
 
 class MessageProcessor():
 
     def __init__(self, grog):
         self.grog = grog
-        self.connMgr = self.grog.connMgr
-        self.charMgr = self.grog.charMgr
-        self.eventMgr = self.grog.eventMgr
+        self.connMgr = grog.connMgr
+        self.charMgr = grog.charMgr
+        self.eventMgr = grog.eventMgr
         self.session_running = False
         self.commands = None
         self.options = command_dict
-        self.language = language
         self.raid_running = False
         self.cmdBuffer = cmd_buffer.command_buffer(self)
         self.cmdBuffer.start()
@@ -52,9 +47,9 @@ class MessageProcessor():
             self.connMgr.send_message("Command " + command + " not found!")
 
     def parse_command(self, msg, sender, perms):
-        print('[CMD] ' + sender + ": " + msg)
-        print('[PERMS]' + str(perms))
-        print('Sub: ' + str(self.grog.charMgr.subbed(sender)))
+        logging.debug('[CMD] ' + sender + ": " + msg)
+        logging.debug('[PERMS]' + str(perms))
+        logging.debug('Sub: ' + str(self.grog.charMgr.subbed(sender)))
 
         if perms['sub'] and not self.grog.charMgr.subbed(sender):
             self.grog.charMgr.subbed(sender, force_check = True)
@@ -69,7 +64,7 @@ class MessageProcessor():
                 elif cmd in self.custom_commands.keys():
                     self.grog.connMgr.send_message(self.custom_commands[cmd])
                 else:
-                    print "Unknown command: " + cmd
+                    logging.debug("Unknown command: " + cmd)
             else:
                 self.grog.connMgr.send_message('Shhhh ' + sender + "... You're dead! capnRIP")
 
@@ -84,19 +79,19 @@ class MessageProcessor():
                 if sender not in self.seen_senders:
                     self.seen_senders.append(sender)
                     overlay.alert_hello(sender)
-        print('[MSG] ' + sender + ": " + msg)
+        logging.debug('[MSG] ' + sender + ": " + msg)
 
     def parse_raid_message(self, msg, sender):
         if self.raid_running:
             if self.grog.charMgr.char_exists(sender):
-                print sender + " has taken part in the raid!!!"
+                logging.debug(sender + " has taken part in the raid!!!")
 
 
 
 # -----[ Command Functions ]----------------------------------------------------
 
     def add_command(self, option, cmd):
-        print "Adding Command: " + option
+        logging.info("Adding Command: " + option)
         self.options[option] = cmd
 
     def remove_command(self, option):
@@ -104,11 +99,11 @@ class MessageProcessor():
             del self.options[option]
 
     def run_command(self, cmd, args=[]):
-        print "Running command: " + cmd
+        logging.info("Running command: " + cmd)
         if cmd in self.options.keys():
             self.options[cmd](self, config.twitch_channel, args)
         else:
-            print "Command not valid: " + cmd
+            logging.warning("Command not valid: " + cmd)
 
     @processes('!quit', PERM_MOD)
     def command_quit(self, sender, args):
