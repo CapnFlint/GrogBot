@@ -8,9 +8,8 @@ import modules.overlay.overlay as overlay
 from modules.commands.helper import *
 from modules.commands import *
 
-import core.workers as workers
 import core.command_buffer as cmd_buffer
-import config.twitch_config as config
+import config.twitch_config as twitch
 
 from config.strings import strings
 
@@ -101,7 +100,7 @@ class MessageProcessor():
     def run_command(self, cmd, args=[]):
         logging.info("Running command: " + cmd)
         if cmd in self.options.keys():
-            self.options[cmd](self, config.twitch_channel, args)
+            self.options[cmd](self, twitch.twitch_channel, args)
         else:
             logging.warning("Command not valid: " + cmd)
 
