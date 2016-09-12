@@ -402,5 +402,5 @@ class CharacterManager():
                     for name in levelups[level]:
                         overlay.alert_levelup(name, self.ranks[rank])
             sublevel = str(((level - 1) % self.ranks_per_level) + 1)
-            self.grog.connMgr.send_message(strings['CHAR_LEVEL_UP'].format(ranktitle=self.ranks[rank] + " level " + sublevel, names=', '.join(levelups[level]))
+            self.grog.connMgr.send_message(strings['CHAR_LEVEL_UP'].format(ranktitle=self.ranks[rank] + " level " + sublevel, names=', '.join(levelups[level])))
         print "INFO: " + str(amount) + " Exp granted to " + str(count) + " players"
