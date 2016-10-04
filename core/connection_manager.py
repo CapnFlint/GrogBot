@@ -145,6 +145,7 @@ class ConnectionManager():
     def _handle_notify(self, msg):
         '''
         WhiterRice subscribed for 2 months in a row!
+        yungflan just subscribed with Twitch Prime!
         '''
         data = msg.split(" ")
         if data[2] == "subscribed!" or data[1] == "subscribed":
@@ -154,7 +155,14 @@ class ConnectionManager():
             self.grog.charMgr.load_character(name)
 
             self.grog.charMgr.add_sub(name)
-            if len(data) > 4:
+            if (data[5] == "Prime!"):
+                # This is a new prime sub
+                self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
+                self.grog.charMgr.give_booty(50, [name])
+                overlay.ship("sub", name, 1)
+                overlay.alert_sub(name)
+                overlay.update_timer(20)
+            elif len(data) > 4:
                 # this is a resub
                 dur = data[3]
 
