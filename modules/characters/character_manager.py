@@ -116,7 +116,7 @@ class CharacterManager():
                     cur = con.cursor(mdb.cursors.DictCursor)
                     cur.execute("SELECT * from characters where name = %s", (name))
                     user = cur.fetchone()
-            except mdb.Error, e:
+            except e:
 
                 logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
 
