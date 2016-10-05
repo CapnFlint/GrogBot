@@ -118,7 +118,7 @@ class CharacterManager():
                     user = cur.fetchone()
             except:
 
-                logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
+                logging.error("DB Error")
 
             finally:
 
