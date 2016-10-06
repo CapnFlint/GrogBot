@@ -188,25 +188,29 @@ class CharacterManager():
         logging.info("Killing " + name)
         if self.char_exists(name):
             char = self.load_character(name)
-            char['level'] = 0
-            self.save_character(char)
-            if duration:
-                thread.start_new_thread(self.death_thread, (name, duration))
+            if char:
+                char['level'] = 0
+                self.save_character(char)
+                if duration:
+                    thread.start_new_thread(self.death_thread, (name, duration))
         else:
             self.grog.connMgr(name + " doesn't exist!")
 
     def revive_character(self, name):
         logging.info("Reviving " + name)
         char = self.load_character(name)
-        if char['level'] > 0:
+        if char:
+            if char['level'] > 0:
+                return False
+            char['level'] = self.compute_level(char['exp'])
+            self.save_character(char)
+            return True
+        else:
             return False
-        char['level'] = self.compute_level(char['exp'])
-        self.save_character(char)
-        return True
 
     def is_alive(self, name):
         char = self.load_character(name)
-        if char['level'] > 0:
+        if char and char['level'] > 0:
             return True
         return False
 
@@ -283,39 +287,41 @@ class CharacterManager():
         char = self.load_character(name)
         subbed = False
 
-        if char['name'] == "Capn_Flint":
-            subbed = True
+        if char:
 
-        # code to check current subscribers for an unsub. Done monthly.
-        elif not char['subscriber'] and force_check:
-            date = utils.check_subscriber(name, 'capn_flint')
-            # is actually a sub, update to make a subscriber
-            if date:
-                self.update_subscriber(char, date)
+            if char['name'] == "Capn_Flint":
                 subbed = True
 
-        elif char['subscriber']:
-            if char['sub_date']:
-                now = datetime.now()
-                sub_date = datetime.strptime(char['sub_date'],"%Y-%m-%dT%H:%M:%SZ")
-                if (now - sub_date) > (timedelta(days=30) * char['sub_count']):
+            # code to check current subscribers for an unsub. Done monthly.
+            elif not char['subscriber'] and force_check:
+                date = utils.check_subscriber(name, 'capn_flint')
+                # is actually a sub, update to make a subscriber
+                if date:
+                    self.update_subscriber(char, date)
+                    subbed = True
+
+            elif char['subscriber']:
+                if char['sub_date']:
+                    now = datetime.now()
+                    sub_date = datetime.strptime(char['sub_date'],"%Y-%m-%dT%H:%M:%SZ")
+                    if (now - sub_date) > (timedelta(days=30) * char['sub_count']):
+                        date = utils.check_subscriber(name, 'capn_flint')
+                        if date:
+                            self.update_subscriber(char, date)
+                            subbed = True
+                        else:
+                            self.remove_subscriber(char)
+                    else:
+                        subbed = True
+                else:
                     date = utils.check_subscriber(name, 'capn_flint')
                     if date:
                         self.update_subscriber(char, date)
                         subbed = True
                     else:
                         self.remove_subscriber(char)
-                else:
-                    subbed = True
-            else:
-                date = utils.check_subscriber(name, 'capn_flint')
-                if date:
-                    self.update_subscriber(char, date)
-                    subbed = True
-                else:
-                    self.remove_subscriber(char)
 
-        self.save_character(char)
+            self.save_character(char)
         return subbed
 
     def update_subscriber(self, char, date):
@@ -384,14 +390,15 @@ class CharacterManager():
         for user in users:
             count += 1
             char = self.load_character(user)
-            # 20% more exp for all subs!
-            if char['subscriber']:
-                amount = int(booty * 1.2)
-            else:
-                amount = booty
-            if char['level'] > 0: # is_alive
-                self.level_up(char, amount, levelups)
-            self.save_character(char)
+            if char:
+                # 20% more exp for all subs!
+                if char['subscriber']:
+                    amount = int(booty * 1.2)
+                else:
+                    amount = booty
+                if char['level'] > 0: # is_alive
+                    self.level_up(char, amount, levelups)
+                self.save_character(char)
 
         for level in levelups.keys():
             rank = (level - 1) / self.ranks_per_level
