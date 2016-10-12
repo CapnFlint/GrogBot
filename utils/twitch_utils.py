@@ -1,6 +1,7 @@
 import urllib2
 import urllib
 import json
+import logging
 
 import config.twitch_config as twitch
 
@@ -17,6 +18,7 @@ def get_viewers(include_mods = True):
                     userlist['staff'])
         return users
     except urllib2.URLError:
+        logging.error("get_viewers: urllib2 error")
         return {}
 
 def get_mods():
@@ -27,6 +29,7 @@ def get_mods():
         users = userlist['moderators']
         return users
     except urllib2.URLError:
+        logging.error("get_mods: urllib2 error")
         return {}
 
 def get_display_name(name):
@@ -38,6 +41,7 @@ def get_display_name(name):
             return None
         return data['display_name']
     except urllib2.URLError:
+        logging.error("get_display_name: urllib2 error")
         return None
 
 def get_game(name):
@@ -49,6 +53,7 @@ def get_game(name):
             return None
         return data['game']
     except urllib2.URLError:
+        logging.error("get_game: urllib2 error")
         return None
 
 def get_viewcount():
@@ -61,6 +66,7 @@ def get_viewcount():
         else:
             return 0
     except urllib2.URLError:
+        logging.error("urllib2 error - get_viewcount")
         return 0
 
 def get_starttime():
@@ -73,6 +79,7 @@ def get_starttime():
         else:
             return 0
     except urllib2.URLError:
+        logging.error("urllib2 error - get_starttime")
         return 0
 
 def check_streamer(name):
@@ -84,6 +91,7 @@ def check_streamer(name):
             return None
         return data
     except urllib2.URLError:
+        logging.error("urllib2 error - check_streamer")
         return None
 
 def check_follower(name):
@@ -97,6 +105,7 @@ def check_follower(name):
             return False
         return True
     except:
+        logging.error("urllib2 error - check_follower")
         return False
 
 def check_subscriber(name, channel):
@@ -114,6 +123,7 @@ def check_subscriber(name, channel):
             return ""
         return data['created_at']
     except:
+        logging.error("urllib2 error - check_subscriber")
         return ""
 
 def get_latest_follows(count):
@@ -126,6 +136,7 @@ def get_latest_follows(count):
             users.append(item['user']['display_name'])
         return users
     except urllib2.URLError:
+        logging.error("urllib2 error - get_latest_follows")
         return {}
 
 def get_latest_subscribers(count, offset=0):
@@ -141,6 +152,7 @@ def get_latest_subscribers(count, offset=0):
             users.append(item['user']['name'])
         return users
     except urllib2.URLError:
+        logging.error("urllib2 error - get_latest_subscribers")
         return {}
 
 def get_sub_count():
@@ -154,6 +166,7 @@ def get_sub_count():
         print "Total Subscribers: " + str(count)
         return count
     except urllib2.URLError:
+        logging.error("urllib2 error - get_sub_count")
         return 0
 
 def get_subscribers(count=100, offset=0):
@@ -173,4 +186,5 @@ def get_subscribers(count=100, offset=0):
             users = users + get_subscribers(count=100, offset=offset + count)
         return users
     except urllib2.URLError:
+        logging.error("urllib2 error - get_subscribers")
         return {}
