@@ -36,7 +36,7 @@ class ConnectionManager():
     def subscribers(self):
         logging.info("Checking for Subscribers!")
 
-        subs = twitch.get_latest_subscribers(25)
+        subs = twitch.get_latest_subscribers(50)
         self.update_subcount()
 
         new = []
@@ -148,37 +148,34 @@ class ConnectionManager():
         yungflan just subscribed with Twitch Prime!
         '''
         data = msg.split(" ")
-        if data[2] == "subscribed!" or data[1] == "subscribed":
+        if data:
             name = data[0]
+            try:
+                dur = data[data.index('for') + 1]
+            except:
+                dur = 1
 
             # This makes sure the character exists
             self.grog.charMgr.load_character(name)
 
-            self.grog.charMgr.add_sub(name)
-            if (data[5] == "Prime!"):
-                # This is a new prime sub
-                self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
-                self.grog.charMgr.give_booty(50, [name])
-                overlay.ship("sub", name, 1)
-                overlay.alert_sub(name)
-                overlay.update_timer(20)
-            elif len(data) > 4:
-                # this is a resub
-                dur = data[3]
-
+            if dur > 1:
+                # this is a returning sub
                 self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, dur))
                 self.grog.charMgr.give_booty(50, [name])
                 overlay.ship("sub", name, dur)
                 overlay.alert_resub(name, dur)
-                overlay.update_timer(10)
+                #overlay.update_timer(10)
             else:
                 # this is a new sub
                 self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
                 self.grog.charMgr.give_booty(50, [name])
                 overlay.ship("sub", name, 1)
                 overlay.alert_sub(name)
-                overlay.update_timer(20)
+                #overlay.update_timer(20)
+
+            self.grog.charMgr.add_sub(name)
             self.update_subcount()
+
             stat = db.add_stat('sessionSubs', 1)
             overlay.update_stat('subs', stat)
 

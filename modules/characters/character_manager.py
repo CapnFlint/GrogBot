@@ -304,7 +304,7 @@ class CharacterManager():
                 if char['sub_date']:
                     now = datetime.now()
                     sub_date = datetime.strptime(char['sub_date'],"%Y-%m-%dT%H:%M:%SZ")
-                    if (now - sub_date) > (timedelta(days=30) * char['sub_count']):
+                    if (now - sub_date) > (timedelta(days=31) * char['sub_count']):
                         date = utils.check_subscriber(name, 'capn_flint')
                         if date:
                             self.update_subscriber(char, date)
@@ -324,13 +324,16 @@ class CharacterManager():
             self.save_character(char)
         return subbed
 
-    def update_subscriber(self, char, date):
+    def update_subscriber(self, char, date, count=0):
         print "UPDATING SUBSCRIBER: " + char['name']
         char['subscriber'] = 1
         if char['name'] == "Capn_Flint":
             return
         char['sub_date'] = date
-        char['sub_count'] = self.guess_sub_count(date)
+        if count:
+            char['sub_count'] = count
+        else:
+            char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
 
@@ -345,7 +348,7 @@ class CharacterManager():
         now = datetime.now()
         sub_date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%SZ")
         count = 1
-        while (now - sub_date) > (timedelta(days=31) * count):
+        while (now - sub_date) > (timedelta(days=30) * count):
             count += 1
         print "count = " + str(count)
         return count
@@ -358,11 +361,11 @@ class CharacterManager():
             char['checked_follow'] = now
             self.save_character(char)
 
-    def add_sub(self, name):
+    def add_sub(self, name, count=0):
         char = self.load_character(name)
         if char:
             date = utils.check_subscriber(name, 'capn_flint')
-            self.update_subscriber(char, date)
+            self.update_subscriber(char, date, count)
             self.save_character(char)
 
 
