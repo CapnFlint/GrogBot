@@ -1,6 +1,6 @@
 from helper import *
 import utils.twitch_utils as utils
-import config.strings as strings
+from config.strings import strings
 
 @processes('!top')
 def command_top(self, sender, args):
