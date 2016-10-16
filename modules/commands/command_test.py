@@ -4,4 +4,4 @@ import utils.twitter as twitter
 
 @processes("!test", PERM_ADMIN)
 def command_test(self, sender, args):
-    overlay.alert_teespring(2)
+    overlay.alert_follow("GrogBot")
