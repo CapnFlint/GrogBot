@@ -34,7 +34,6 @@ def get_mods():
 
 def get_display_name(name):
     url = "https://api.twitch.tv/kraken/users/" + name + "?client_id=" + twitch.client_id
-    print "URL: " + url.encode('utf-8')
     try:
         response = urllib2.urlopen(url)
         data = json.load(response)
@@ -43,7 +42,7 @@ def get_display_name(name):
         return data['display_name']
     except urllib2.URLError:
         logging.error("get_display_name: urllib2 error")
-        return None
+        return name
 
 def get_game(name):
     url = "https://api.twitch.tv/kraken/channels/" + name + "?client_id=" + twitch.client_id
