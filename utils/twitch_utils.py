@@ -33,13 +33,13 @@ def get_mods():
         return {}
 
 def get_display_name(name):
-    url = "https://api.twitch.tv/kraken/users/" + name + "?client_id=" + twitch.client_id
+    url = "https://api.twitch.tv/kraken/users/" + name.encode('utf-8') + "?client_id=" + twitch.client_id
     print "URL: " + url
     try:
         response = urllib2.urlopen(url)
         data = json.load(response)
         if 'error' in data.keys():
-            return None
+            return name
         return data['display_name']
     except urllib2.URLError:
         logging.error("get_display_name: urllib2 error")
