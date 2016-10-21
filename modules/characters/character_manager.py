@@ -111,7 +111,7 @@ class CharacterManager():
         user = None
         if name:
             try:
-                con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+                con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
                     cur.execute("SELECT * from characters where name = %s", (name))
@@ -133,7 +133,7 @@ class CharacterManager():
 
     def save_character(self, char):
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
 
             with con:
                 cur = con.cursor()
@@ -155,7 +155,7 @@ class CharacterManager():
 
     def delete_character(self, name):
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
 
             with con:
                 cur = con.cursor()
