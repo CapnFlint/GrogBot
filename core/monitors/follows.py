@@ -26,6 +26,7 @@ class follows():
             if follows:
                 first = True
                 for user in follows:
+                    user = user.decode('utf-8')
                     if user:
                         if not self.charMgr.follows_me(user):
                             logging.info("[NEW FOLLOWER] " + user)

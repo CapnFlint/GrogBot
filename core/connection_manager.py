@@ -207,6 +207,7 @@ class ConnectionManager():
                 break
             if char != ":":
                 result += char
+        result = result.decode('utf-8')
         return result
 
     def _get_message(self, msg):
