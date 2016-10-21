@@ -33,8 +33,8 @@ def get_mods():
         return {}
 
 def get_display_name(name):
-    url = "https://api.twitch.tv/kraken/users/" + name.encode('utf-8') + "?client_id=" + twitch.client_id
-    print "URL: " + url
+    url = "https://api.twitch.tv/kraken/users/" + name + "?client_id=" + twitch.client_id
+    print "URL: " + url.encode('utf-8')
     try:
         response = urllib2.urlopen(url)
         data = json.load(response)
