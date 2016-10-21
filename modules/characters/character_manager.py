@@ -111,7 +111,7 @@ class CharacterManager():
         user = None
         if name:
             try:
-                con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+                con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
                     cur.execute("SELECT * from characters where name = %s", (name))
@@ -133,7 +133,7 @@ class CharacterManager():
 
     def save_character(self, char):
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
 
             with con:
                 cur = con.cursor()
@@ -155,7 +155,7 @@ class CharacterManager():
 
     def delete_character(self, name):
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
 
             with con:
                 cur = con.cursor()
@@ -304,7 +304,7 @@ class CharacterManager():
                 if char['sub_date']:
                     now = datetime.now()
                     sub_date = datetime.strptime(char['sub_date'],"%Y-%m-%dT%H:%M:%SZ")
-                    if (now - sub_date) > (timedelta(days=30) * char['sub_count']):
+                    if (now - sub_date) > (timedelta(days=31) * char['sub_count']):
                         date = utils.check_subscriber(name, 'capn_flint')
                         if date:
                             self.update_subscriber(char, date)
@@ -331,8 +331,9 @@ class CharacterManager():
             return
         char['sub_date'] = date
         if count:
-            char['']
-        char['sub_count'] = self.guess_sub_count(date)
+            char['sub_count'] = count
+        else:
+            char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
 
@@ -347,7 +348,7 @@ class CharacterManager():
         now = datetime.now()
         sub_date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%SZ")
         count = 1
-        while (now - sub_date) > (timedelta(days=31) * count):
+        while (now - sub_date) > (timedelta(days=30) * count):
             count += 1
         print "count = " + str(count)
         return count
