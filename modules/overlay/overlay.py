@@ -30,9 +30,9 @@ def alert_follow(name, audio=False):
     data['priority'] = 3
     data['text'] = "[HL]{0}[/HL] has boarded the ship! Welcome!".format(name)
     if audio:
-        data['audio'] = [{"file":"sounds/hell.ogg", "volume":40}]
-        #laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
-        #data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
+        #data['audio'] = [{"file":"sounds/hell.ogg", "volume":40}]
+        laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
+        data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
     _send_message("alert", data)
 
 def alert_event():
@@ -77,7 +77,7 @@ def alert_sub(sender):
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
-    data['audio'] = [{"file": "sounds/scare.mp3", "volume": 40},{"file": "sounds/pirate2.mp3", "volume": 50}]
+    data['audio'] = [{"file": "sounds/pirate2.mp3", "volume": 50}]
     _send_message("alert", data)
     #ship("sub", sender, 1)
 
@@ -85,7 +85,7 @@ def alert_resub(sender, count, message):
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
-    data['audio'] = [{"file": "sounds/scare.mp3", "volume": 40},{"file": "sounds/pirate2.mp3", "volume": 50}]
+    data['audio'] = [{"file": "sounds/pirate2.mp3", "volume": 50}]
     data['message'] = message
     _send_message("alert", data)
     #ship("sub", sender, count)
