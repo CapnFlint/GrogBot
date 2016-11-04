@@ -61,7 +61,7 @@ def application(environ, start_response):
 	items = ','.split(items)
 
 	for item in items:
-		send_alert("Someone has snagged some Booty! A [HL]Loot Crate[/HL] is on it's way!")
+		send_alert("Someone has snagged some Booty! A [HL]" + item + "[/HL] is on it's way!")
 
 	count = add_stat(len(items))
 	update_stat(count)
