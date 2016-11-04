@@ -40,6 +40,7 @@ class GrogBot():
 
         overlay.update_stat("follows", db.get_stat("sessionFollowers"))
         overlay.update_stat("subs", db.get_stat("sessionSubs"))
+        overlay.update_stat("lootcrate", db.get_stat("lootcate"))
 
     def add_worker(self, worker):
         self.worklist.append(worker)
