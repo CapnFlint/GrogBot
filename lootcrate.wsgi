@@ -58,7 +58,7 @@ def application(environ, start_response):
 	qs = parse_qs(environ['QUERY_STRING'])
 
 	items = qs.get('items', [''])[0]
-	items = ','.split(items)
+	items = items.split(',')
 
 	for item in items:
 		send_alert("Someone has snagged some Booty! A [HL]" + item + "[/HL] is on it's way!")
