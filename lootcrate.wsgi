@@ -15,12 +15,12 @@ def add_stat(count):
 		value = 0
 		with con:
 			cur = con.cursor(mdb.cursors.DictCursor)
-			cur.execute("SELECT value from stats where stat = 'lootcrate'", (name))
+			cur.execute("SELECT value from stats where stat = 'lootcrate'")
 			stat = cur.fetchone()
 
 			if stat:
 				value = int(stat['value']) + int(count)
-				cur.execute("UPDATE stats SET value = %s WHERE stat = 'lootcrate'", (value, name))
+				cur.execute("UPDATE stats SET value = %s WHERE stat = 'lootcrate'", (value,))
 	except mdb.Error, e:
 		print "Error %d: %s" % (e.args[0],e.args[1])
 		return 0
