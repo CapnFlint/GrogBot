@@ -2,13 +2,16 @@ from cgi import parse_qs, escape
 from websocket import create_connection
 import json
 import MySQLdb as mdb
-import config.db_config as config
 
 # format: {'status':'1','channel':'capn_flint','error':''}
 
 def add_stat(count):
+	db_host = "localhost"
+	db_db = "grogbot"
+	db_user = "grog"
+	db_pass = "gumbo69"
 	try:
-		con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+		con = mdb.connect(db_host, db_user, db_pass, db_db);
 		value = 0
 		with con:
 			cur = con.cursor(mdb.cursors.DictCursor)
