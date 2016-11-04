@@ -29,6 +29,7 @@ def application(environ, start_response):
 	for item in items:
 		send_alert("Someone has snagged some Booty! A [HL]Loot Crate[/HL] is on it's way!")
 
+	output = "Success!"
 
 	status = '200 OK'
 	response_headers = [('Content-type', 'application/JSON'),
