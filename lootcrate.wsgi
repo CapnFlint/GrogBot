@@ -1,8 +1,32 @@
 from cgi import parse_qs, escape
 from websocket import create_connection
 import json
+import MySQLdb as mdb
+import config.db_config as config
 
 # format: {'status':'1','channel':'capn_flint','error':''}
+
+def add_stat(count):
+	try:
+        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        value = 0
+        with con:
+            cur = con.cursor(mdb.cursors.DictCursor)
+            cur.execute("SELECT value from stats where stat = 'lootcrate'", (name))
+            stat = cur.fetchone()
+
+            if stat:
+                value = int(stat['value']) + int(count)
+                cur.execute("UPDATE stats SET value = %s WHERE stat = 'lootcrate'", (value, name))
+
+    except mdb.Error, e:
+        print "Error %d: %s" % (e.args[0],e.args[1])
+        return 0
+
+    finally:
+        if con:
+            con.close()
+    return value
 
 def send_alert(text):
 	data = {}
@@ -29,6 +53,8 @@ def application(environ, start_response):
 	for item in items:
 		send_alert("Someone has snagged some Booty! A [HL]Loot Crate[/HL] is on it's way!")
 
+	add_stat(len(items))
+	
 	output = "Success!"
 
 	status = '200 OK'
