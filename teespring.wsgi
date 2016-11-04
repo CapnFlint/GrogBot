@@ -6,18 +6,18 @@ import json
 
 def send_alert(text):
 	data = {}
-    data['priority'] = 3
-    data['text'] = text
-    data['audio'] = [{"file": "sounds/narwhals.mp3", "volume": 40}]
+	data['priority'] = 3
+	data['text'] = text
+	data['audio'] = [{"file": "sounds/narwhals.mp3", "volume": 40}]
 
-    message = {}
-    message['handler'] = 'alert'
-    message['data'] = data
+	message = {}
+	message['handler'] = 'alert'
+	message['data'] = data
 
-    ws = create_connection("ws://capnflint.com:9001")
-    ws.send(json.dumps(message))
-    ws.recv()
-    ws.close()
+	ws = create_connection("ws://capnflint.com:9001")
+	ws.send(json.dumps(message))
+	ws.recv()
+	ws.close()
 
 def application(environ, start_response):
 	global bot, bot_thread
