@@ -68,7 +68,7 @@ def clear_stats():
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE stats SET value=0")
+            cur.execute("UPDATE stats SET value=0 where stat like 'session%'")
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0],e.args[1])
