@@ -121,7 +121,7 @@ def check_subscriber(name, channel):
             return ""
         return data['created_at']
     except urllib2.HTTPError, e:
-        loging.info(name + " is no longer subscribed!")
+        logging.info(name + " is no longer subscribed!")
         return ""
     except urllib2.URLError, e:
         logging.error("urllib2 error - check_subscriber")
