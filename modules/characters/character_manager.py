@@ -296,7 +296,7 @@ class CharacterManager():
             elif not char['subscriber'] and force_check:
                 date = utils.check_subscriber(name, 'capn_flint')
                 # is actually a sub, update to make a subscriber
-                if date:
+                if date != "":
                     self.update_subscriber(char, date)
                     subbed = True
 
@@ -306,7 +306,7 @@ class CharacterManager():
                     sub_date = datetime.strptime(char['sub_date'],"%Y-%m-%dT%H:%M:%SZ")
                     if (now - sub_date) > (timedelta(days=31) * char['sub_count']):
                         date = utils.check_subscriber(name, 'capn_flint')
-                        if date:
+                        if date != "":
                             self.update_subscriber(char, date)
                             subbed = True
                         else:
@@ -315,7 +315,7 @@ class CharacterManager():
                         subbed = True
                 else:
                     date = utils.check_subscriber(name, 'capn_flint')
-                    if date:
+                    if date != "":
                         self.update_subscriber(char, date)
                         subbed = True
                     else:

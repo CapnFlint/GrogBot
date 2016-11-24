@@ -111,8 +111,6 @@ def check_follower(name):
 def check_subscriber(name, channel):
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}?api_version=3&client_id={2}".format(twitch.twitch_channel, name, twitch.client_id)
 
-    if name == twitch.twitch_channel:
-        return True
     try:
         req = urllib2.Request(url)
         req.add_header('Authorization', 'OAuth '+twitch.access_token)
@@ -122,7 +120,10 @@ def check_subscriber(name, channel):
         if 'error' in data.keys():
             return ""
         return data['created_at']
-    except:
+    except urllib2.HTTPError, e:
+        loging.info(name + " is no longer subscribed!")
+        return ""
+    except urllib2.URLError, e:
         logging.error("urllib2 error - check_subscriber")
         return ""
 
