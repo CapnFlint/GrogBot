@@ -8,17 +8,27 @@ import utils.twitch_utils as utils
 
 from websocket import create_connection
 
+farts = True
+
+def get_fart():
+    return 'sounds/fart' + str(random.choice(range(1,19))) + '.mp3'
 
 def alert(priority, text, sound=[]):
+    global farts
     data = {}
     data['priority'] = priority
     data['text'] = text
+    if farts:
+        sound = get_fart()
     data['audio'] = sound
     _send_message("alert", data)
 
 def sound(filename, volume, priority=3):
+    global farts
     data = {}
     data['priority'] = priority
+    if farts:
+        filename = get_fart()
     data['file'] = filename
     data['volume'] = volume
     _send_message("sound", data)
@@ -26,13 +36,17 @@ def sound(filename, volume, priority=3):
 ''' Messages '''
 
 def alert_follow(name, audio=False):
+    global farts
     data = {}
     data['priority'] = 3
     data['text'] = "[HL]{0}[/HL] has boarded the ship! Welcome!".format(name)
     if audio:
-        #data['audio'] = [{"file":"sounds/hell.ogg", "volume":40}]
-        laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
-        data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
+        if farts:
+            data['audio'] = [{"file": get_fart(), "volume":60}]
+        else:
+            #data['audio'] = [{"file":"sounds/hell.ogg", "volume":40}]
+            laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
+            data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
     _send_message("alert", data)
 
 def alert_event():
@@ -43,10 +57,17 @@ def alert_event():
     _send_message("alert", data)
 
 def alert_levelup(name, rank):
+    global farts
+    if farts:
+        sound = get_fart()
+        volume = 60
+    else:
+        sound = "sounds/levelup.wav"
+        volume = 15
     data = {}
     data['priority'] = 4
     data['text'] = "[HL]{0}[/HL] is now rank [HL]{1}[/HL]! Congratulations!".format(name, rank)
-    data['audio'] = [{"file": "sounds/levelup.wav", "volume": 15}]
+    data['audio'] = [{"file": sound, "volume": volume}]
     _send_message("alert", data)
 
 def alert_tip(name, amount, message=""):
@@ -74,18 +95,34 @@ def alert_hello(sender):
     _send_message("alert", data)
 
 def alert_sub(sender):
+    global farts
+
+    if farts:
+        sound = get_fart()
+        volume = 60
+    else:
+        sound = "sounds/pirate2.mp3"
+        volume: 50
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
-    data['audio'] = [{"file": "sounds/pirate2.mp3", "volume": 50}]
+    data['audio'] = [{"file": sound, "volume": volume}]
     _send_message("alert", data)
     #ship("sub", sender, 1)
 
 def alert_resub(sender, count, message):
+    global farts
+
+    if farts:
+        sound = get_fart()
+        volume = 60
+    else:
+        sound = "sounds/pirate2.mp3"
+        volume: 50
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
-    data['audio'] = [{"file": "sounds/pirate2.mp3", "volume": 50}]
+    data['audio'] = [{"file": sound, "volume": volume}]
     data['message'] = message
     _send_message("alert", data)
     #ship("sub", sender, count)
