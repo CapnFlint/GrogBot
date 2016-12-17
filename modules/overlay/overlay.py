@@ -88,10 +88,14 @@ def alert_teespring(count):
     _send_message("teespring", data)
 
 def alert_hello(sender):
+    if farts:
+        audio = {"file":get_fart(), "volume":60}
+    else:
+        audio = None
     data = {}
     data['priority'] = 3
     data['text'] = "Ahoy there [HL]{0}[/HL]!".format(sender)
-    data['audio'] = []
+    data['audio'] = [audio]
     _send_message("alert", data)
 
 def alert_sub(sender):
@@ -102,7 +106,7 @@ def alert_sub(sender):
         volume = 60
     else:
         sound = "sounds/pirate2.mp3"
-        volume: 50
+        volume = 50
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
