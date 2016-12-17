@@ -122,7 +122,7 @@ def alert_resub(sender, count, message):
         volume = 60
     else:
         sound = "sounds/pirate2.mp3"
-        volume: 50
+        volume = 50
     data = {}
     data['priority'] = 1
     data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
