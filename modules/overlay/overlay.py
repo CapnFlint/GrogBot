@@ -19,7 +19,7 @@ def alert(priority, text, sound=[]):
     data['priority'] = priority
     data['text'] = text
     if farts:
-        sound = get_fart()
+        sound = [{"file":get_fart(),"volume":80}]
     data['audio'] = sound
     _send_message("alert", data)
 
@@ -28,9 +28,11 @@ def sound(filename, volume, priority=3):
     data = {}
     data['priority'] = priority
     if farts:
-        filename = get_fart()
-    data['file'] = filename
-    data['volume'] = volume
+        data['file'] = get_fart()
+        data['volume'] = 80
+    else:
+        data['file'] = filename
+        data['volume'] = volume
     _send_message("sound", data)
 
 ''' Messages '''
@@ -42,7 +44,7 @@ def alert_follow(name, audio=False):
     data['text'] = "[HL]{0}[/HL] has boarded the ship! Welcome!".format(name)
     if audio:
         if farts:
-            data['audio'] = [{"file": get_fart(), "volume":60}]
+            data['audio'] = [{"file": get_fart(), "volume":80}]
         else:
             #data['audio'] = [{"file":"sounds/hell.ogg", "volume":40}]
             laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
@@ -60,7 +62,7 @@ def alert_levelup(name, rank):
     global farts
     if farts:
         sound = get_fart()
-        volume = 60
+        volume = 80
     else:
         sound = "sounds/levelup.wav"
         volume = 15
@@ -103,7 +105,7 @@ def alert_sub(sender):
 
     if farts:
         sound = get_fart()
-        volume = 60
+        volume = 80
     else:
         sound = "sounds/pirate2.mp3"
         volume = 50
@@ -119,7 +121,7 @@ def alert_resub(sender, count, message):
 
     if farts:
         sound = get_fart()
-        volume = 60
+        volume = 80
     else:
         sound = "sounds/pirate2.mp3"
         volume = 50
