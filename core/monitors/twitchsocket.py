@@ -44,12 +44,14 @@ class twitchsocket():
 
     def on_close(self, ws):
         print "### closed ###"
-        self.connect()
+        #self.connect()
 
     def on_open(self, ws):
-        self.running = True;
+        self.running = True
+        self.register(ws)
         def run(*args):
             #ping loop
+            self.send_ping(ws)
             while 1:
                 if not self.running == True:
                     break
@@ -71,7 +73,7 @@ class twitchsocket():
         ws.on_open = self.on_open
         ws.run_forever()
 
-    def register(self):
+    def register(self, ws):
         data = {}
         data['topics'] = self.topics
         data['auth_token'] = config.access_token
@@ -79,6 +81,7 @@ class twitchsocket():
         message['type'] = "LISTEN"
         message['nonce'] = self.generate_nonce()
         message['data'] = data
+        ws.send(json.dumps(data))
 
     def send_ping(self, ws):
         ws.send('{"type":"PING"}')
