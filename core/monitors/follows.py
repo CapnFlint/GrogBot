@@ -39,6 +39,7 @@ class follows():
                 self.connMgr.send_message(strings["FOLLOW_WELCOME"].format(names=", ".join(new)))
                 stat = db.add_stat('sessionFollowers', len(new))
                 overlay.update_stat('follows', stat)
+                overlay.update_timer(2 * len(new))
 
     def start(self):
         thread.start_new_thread(self.follow_thread, ())

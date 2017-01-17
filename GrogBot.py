@@ -6,6 +6,7 @@ from core.connection_manager import ConnectionManager
 
 from core.monitors.follows import follows
 from core.monitors.teespring import teespring
+from core.monitors.bits import bits
 from core.random_messages import random_messages
 
 from modules.characters.character_manager import CharacterManager
@@ -35,6 +36,7 @@ class GrogBot():
         # Initialize all the worker threads
         self.add_worker(random_messages(self))
         self.add_worker(follows(self))
+        self.add_worker(bits(self))
         self.add_worker(teespring(self, "spud citizen Capn_Flint", True))
         #self.add_worker(workers.twitter(self))
 
