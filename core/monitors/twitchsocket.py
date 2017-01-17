@@ -25,13 +25,13 @@ class twitchsocket():
         msg = json.loads(message)
 
         # handle messages for pings and reconnects
-        if msg['type'] = "PONG":
+        if msg['type'] == "PONG":
             self.handle_pong()
 
-        elif msg['type'] = "RECONNECT":
+        elif msg['type'] == "RECONNECT":
             self.reconnect(ws)
 
-        elif msg['type'] = "MESSAGE":
+        elif msg['type'] == "MESSAGE":
             self.handler(msg['data'])
         # send everything else to handler
     else:
