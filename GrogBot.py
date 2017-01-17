@@ -37,7 +37,7 @@ class GrogBot():
         self.add_worker(random_messages(self))
         self.add_worker(follows(self))
         #self.add_worker(bits(self))
-        self.add_worker(teespring(self, "spud citizen Capn_Flint", True))
+        #self.add_worker(teespring(self, "spud citizen Capn_Flint", True))
         #self.add_worker(workers.twitter(self))
 
         overlay.update_stat("follows", db.get_stat("sessionFollowers"))
