@@ -34,8 +34,8 @@ class twitchsocket():
         elif msg['type'] == "MESSAGE":
             self.handler(msg['data'])
         # send everything else to handler
-    else:
-        self.handler(data)
+        else:
+            self.handler(data)
 
 
     def on_error(self, ws, error):
