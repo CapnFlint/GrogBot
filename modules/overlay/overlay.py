@@ -8,7 +8,7 @@ import utils.twitch_utils as utils
 
 from websocket import create_connection
 
-farts = True
+farts = False
 
 def get_fart():
     return 'sounds/fart' + str(random.choice(range(1,19))) + '.mp3'
