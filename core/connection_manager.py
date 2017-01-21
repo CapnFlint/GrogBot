@@ -164,14 +164,14 @@ class ConnectionManager():
                 self.grog.charMgr.give_booty(50, [name])
                 overlay.ship("sub", name, dur)
                 overlay.alert_resub(name, dur)
-                overlay.update_timer(10)
+                overlay.update_timer(5)
             else:
                 # this is a new sub
                 self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
                 self.grog.charMgr.give_booty(50, [name])
                 overlay.ship("sub", name, 1)
                 overlay.alert_sub(name)
-                overlay.update_timer(20)
+                overlay.update_timer(10)
 
             self.grog.charMgr.add_sub(name)
             self.update_subcount()
@@ -191,7 +191,7 @@ class ConnectionManager():
         self.grog.charMgr.give_booty(50, [resub['name']])
         overlay.ship("sub", resub['name'], resub['length'])
         overlay.alert_resub(resub['name'], resub['length'], resub['message'])
-        overlay.update_timer(10)
+        overlay.update_timer(5)
         self.update_subcount()
         stat = db.add_stat('sessionSubs', 1)
         overlay.update_stat('subs', stat)
