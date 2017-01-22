@@ -65,7 +65,7 @@ class CharacterManager():
                     "level":1,
                     "exp":0,
                     "booty":5,
-                    "name":name,
+                    "name":unicode(name, 'utf-8'),
                     "access":0,
                     "follows":0,
                     "checked_follow":0,
