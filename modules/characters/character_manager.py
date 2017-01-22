@@ -57,7 +57,7 @@ class CharacterManager():
 
     def create_character(self, name):
         # create a character sheet for a new player
-        name = utils.get_display_name(name)
+        #name = utils.get_display_name(name)
         if name and name not in self.skip_names:
             try:
                 logging.info("Creating " + name)
@@ -65,7 +65,7 @@ class CharacterManager():
                     "level":1,
                     "exp":0,
                     "booty":5,
-                    "name":unicode(name, 'utf-8'),
+                    "name":name,
                     "access":0,
                     "follows":0,
                     "checked_follow":0,
