@@ -124,7 +124,7 @@ def get_stat(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT value from stats where stat = %s", (name))
+            cur.execute("SELECT value from stats where stat = %s", (name,))
             stat = cur.fetchone()
             value = int(stat['value'])
 
