@@ -92,7 +92,7 @@ class CharacterManager():
             con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
-                cur.execute("SELECT * from characters where name = %s", (name))
+                cur.execute("SELECT * from characters where name = %s", (name,))
                 user = cur.fetchone()
         except mdb.Error, e:
 
@@ -114,7 +114,7 @@ class CharacterManager():
                 con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
-                    cur.execute("SELECT * from characters where name = %s", (name))
+                    cur.execute("SELECT * from characters where name = %s", (name,))
                     user = cur.fetchone()
             except mdb.Error, e:
 
