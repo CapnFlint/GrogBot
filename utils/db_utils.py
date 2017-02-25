@@ -13,7 +13,7 @@ def get_access(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT access from characters where name = %s", (name))
+            cur.execute("SELECT access from characters where name = %s", (name,))
             char = cur.fetchone()
 
     except mdb.Error, e:
@@ -84,7 +84,7 @@ def clear_stat(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE stats SET value=0 where stat=%s",(name))
+            cur.execute("UPDATE stats SET value=0 where stat=%s",(name,))
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0],e.args[1])
@@ -100,7 +100,7 @@ def add_stat(name, amount):
         value = 0
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT value from stats where stat = %s", (name))
+            cur.execute("SELECT value from stats where stat = %s", (name,))
             stat = cur.fetchone()
 
             if stat:
@@ -202,7 +202,7 @@ def make_mod(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE characters SET access = 1 where name = %s", (name))
+            cur.execute("UPDATE characters SET access = 1 where name = %s", (name,))
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0],e.args[1])
@@ -218,7 +218,7 @@ def make_sub(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE characters SET subscriber = 1 where name = %s", (name))
+            cur.execute("UPDATE characters SET subscriber = 1 where name = %s", (name,))
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0],e.args[1])
@@ -256,7 +256,7 @@ def sc_register(name, twitch):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            rows = cur.execute("SELECT (1) from registrations where name = %s", (name))
+            rows = cur.execute("SELECT (1) from registrations where name = %s", (name,))
             if not rows:
                 cur.execute("INSERT INTO registrations (name, twitch) VALUES (%s, %s)", (name, twitch))
 
@@ -276,7 +276,7 @@ def sc_unregister(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("DELETE FROM registrations WHERE name = %s", (name))
+            cur.execute("DELETE FROM registrations WHERE name = %s", (name,))
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0],e.args[1])
@@ -312,7 +312,7 @@ def sc_addpoints(name, newpoints):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT score from registrations where name = %s", (name))
+            cur.execute("SELECT score from registrations where name = %s", (name,))
             char = cur.fetchone()
 
             if char:
@@ -338,7 +338,7 @@ def stats_add_death(game):
         print "connected"
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT * from deaths where game = %s", (game))
+            cur.execute("SELECT * from deaths where game = %s", (game,))
             print "executed"
             stat = cur.fetchone()
 
@@ -368,7 +368,7 @@ def stats_remove_death(game):
         con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT * from deaths where game = %s", (game))
+            cur.execute("SELECT * from deaths where game = %s", (game,))
             stat = cur.fetchone()
 
             if stat:
@@ -412,7 +412,7 @@ def sr_remove_song(songid):
         con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("DELETE FROM songrequests WHERE id = %s", (songid))
+            cur.execute("DELETE FROM songrequests WHERE id = %s", (songid,))
         ret = True
 
     except mdb.Error, e:
@@ -432,7 +432,7 @@ def sr_song_count(user):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT count(*) as count from songrequests where requestor = %s", (user))
+            cur.execute("SELECT count(*) as count from songrequests where requestor = %s", (user,))
             char = cur.fetchone()
 
             if char:
@@ -483,7 +483,7 @@ def qu_get_quote():
 
             print "count: " + str(count)
             pick = random.choice(range(count))+1
-            cur.execute("SELECT * from quotes where id = %s", (pick))
+            cur.execute("SELECT * from quotes where id = %s", (pick,))
             quote = cur.fetchone()
             print quote
 
@@ -505,7 +505,7 @@ def qu_get_quote_id(quid):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT * from quotes where id = %s", (quid))
+            cur.execute("SELECT * from quotes where id = %s", (quid,))
             quote = cur.fetchone()
             print quote
 
@@ -545,7 +545,7 @@ def eco_set_total(total):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE ecorp SET value=%s WHERE name='total'", (total))
+            cur.execute("UPDATE ecorp SET value=%s WHERE name='total'", (total,))
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0], e.args[1])
@@ -599,7 +599,7 @@ def getEventById(evtid):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from event_events WHERE eventID=%s", (evtid))
+            cur.execute("select * from event_events WHERE eventID=%s", (evtid,))
             event = cur.fetchone()
 
 
@@ -618,7 +618,7 @@ def getEventCommands(event):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from event_commands where eventID = %s", (event))
+            cur.execute("select * from event_commands where eventID = %s", (event,))
             commands = cur.fetchall()
 
     except mdb.Error, e:
@@ -637,7 +637,7 @@ def get_message(msg_idx):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from msg_queue limit %s, 1", (msg_idx))
+            cur.execute("select * from msg_queue limit %s, 1", (msg_idx,))
             event = cur.fetchone()
 
 
