@@ -341,9 +341,9 @@ class ConnectionManager():
                                     for emote in emotes.keys():
                                         count = emotes[emote]
                                         for i in range(count):
-                                            emoteList.append(emotes[emote])
+                                            emoteList.append(emote)
                                     print emoteList
-                                    self.grog.overlay.send_emotes(emoteList)
+                                    overlay.send_emotes(emoteList)
 
                                 if channel == self.CHAN:
                                     if message.startswith('!'):
