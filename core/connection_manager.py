@@ -336,6 +336,15 @@ class ConnectionManager():
                                 perms = self._get_perms(line[0])
                                 emotes = self._get_emotes(line[0])
 
+                                if emotes:
+                                    emoteList = []
+                                    for emote in emotes.keys():
+                                        count = emotes[emote]
+                                        for i in range(count):
+                                            emoteList.append(emotes[emote])
+                                    print emoteList
+                                    self.grog.overlay.send_emotes(emoteList)
+
                                 if channel == self.CHAN:
                                     if message.startswith('!'):
                                         self.grog.msgProc.parse_command(message, sender, perms)

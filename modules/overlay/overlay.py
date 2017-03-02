@@ -186,9 +186,9 @@ def ship(stype, name, count):
 
 ''' emotes '''
 
-def send_emotes(sender, emotes):
+def send_emotes(emotes):
     data = {}
-    data['emotes'] = []
+    data['emotes'] = emotes
     _send_message("emotes", data)
 
 ''' stats '''
