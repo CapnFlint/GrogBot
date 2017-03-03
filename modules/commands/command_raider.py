@@ -1,5 +1,5 @@
 from helper import *
-import utils.twitch_utils as utils
+import utils.twitch_utils as twitch
 
 import modules.overlay.overlay as overlay
 
