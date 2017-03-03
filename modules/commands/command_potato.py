@@ -7,4 +7,4 @@ import modules.overlay.overlay as overlay
 @processes("!potato")
 def command_quote(self, sender, args):
     self.connMgr.send_message("capnYarr capnHype capnYarr capnHype capnYarr capnHype capnYarr capnHype capnYarr capnHype capnYarr capnHype")
-    overlay.send_emotes(['138934','138934','138934','138934','138934','138934','81534','81534','81534','81534','81534','81534','81534'])
+    overlay.send_emotes(sender, ['138934','138934','138934','138934','138934','138934','81534','81534','81534','81534','81534','81534','81534'])
