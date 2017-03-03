@@ -343,7 +343,7 @@ class ConnectionManager():
                                         for i in range(count):
                                             emoteList.append(emote)
                                     print emoteList
-                                    overlay.send_emotes(emoteList)
+                                    overlay.send_emotes(sender, emoteList)
 
                                 if channel == self.CHAN:
                                     if message.startswith('!'):
