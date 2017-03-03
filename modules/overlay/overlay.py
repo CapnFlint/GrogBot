@@ -191,6 +191,15 @@ def send_emotes(emotes):
     data['emotes'] = emotes
     _send_message("emotes", data)
 
+''' raiders! '''
+
+def start_raid(raider, logo):
+    data = {}
+    data['action'] = "start"
+    data['raider'] = raider
+    data['logo'] = logo
+    _send_message("raid", data)
+
 ''' stats '''
 
 def update_stat(stat, value):
