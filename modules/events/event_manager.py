@@ -32,7 +32,6 @@ class EventManager():
                 evtConfig = db.getEventById(evtID)
             event = Event(self, self.grog.charMgr, self.grog.connMgr, self.grog.msgProc, evtConfig)
             self.grog.event_running = True
-            overlay.alert_event()
             event.run()
 
     def is_running(self):

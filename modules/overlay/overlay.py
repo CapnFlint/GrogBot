@@ -51,13 +51,6 @@ def alert_follow(name, audio=False):
             data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
     _send_message("alert", data)
 
-def alert_event():
-    data = {}
-    data['priority'] = 2
-    data['text'] = "An event has started!"
-    data['audio'] = []
-    _send_message("alert", data)
-
 def alert_levelup(name, rank):
     global farts
     if farts:
