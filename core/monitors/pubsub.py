@@ -62,14 +62,14 @@ class pubsub():
         print msg['type']
         mtype = msg['type']
         if mtype == "MESSAGE":
-            self._message(msg['message'])
+            self._message(msg['data'])
         elif mtype == "RESPONSE":
             self._response(msg)
         else:
             print "Unhandled type: " + mtype
 
 
-    def _message(self, msg):
+    def _message(self, data):
         '''
         Bits:
         {
@@ -109,7 +109,9 @@ class pubsub():
            }
         }
         '''
-        if(msg["topic"] == "channel-subscribe-events-v1." + config.channel_id):
+        print data["topic"]
+        print config.channel_id
+        if(data["topic"] == "channel-subscribe-events-v1." + config.channel_id):
             print "Sub message recieved!"
 
             sub_types = {
@@ -118,6 +120,8 @@ class pubsub():
                 "2000":"2",
                 "3000":"3"
             }
+
+            msg = data['message']
 
             name = msg['user_name']
             sub_type = sub_types[msg['sub_plan']]
@@ -163,6 +167,7 @@ class pubsub():
 
             stat = db.add_stat('sessionSubs', 1)
             overlay.update_stat('subs', stat)
+
 
     def update_subcount(self):
         count = twitch.get_sub_count()
