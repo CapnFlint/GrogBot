@@ -296,10 +296,11 @@ class CharacterManager():
 
             # code to check current subscribers for an unsub. Done monthly.
             elif not char['subscriber'] and force_check:
+                #TODO: see if we can remove this
                 date = utils.check_subscriber(name, 'capn_flint')
                 # is actually a sub, update to make a subscriber
                 if date != "":
-                    self.update_subscriber(char, date)
+                    self.update_subscriber(char, date, "1", 1)
                     subbed = True
 
             elif char['subscriber']:
@@ -309,6 +310,7 @@ class CharacterManager():
                     if (now - sub_date) > (timedelta(days=31) * char['sub_count']):
                         date = utils.check_subscriber(name, 'capn_flint')
                         if date != "":
+                            #TODO: Get the current sub_type of char and carry over
                             self.update_subscriber(char, date)
                             subbed = True
                         else:
@@ -326,7 +328,7 @@ class CharacterManager():
             self.save_character(char)
         return subbed
 
-    def update_subscriber(self, char, date, sub_type, count=0):
+    def update_subscriber(self, char, date, sub_type=None, count=0):
         print "UPDATING SUBSCRIBER: " + char['name']
         char['subscriber'] = 1
         if char['name'] == "Capn_Flint":
@@ -338,7 +340,8 @@ class CharacterManager():
             char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
-        char['sub_type'] = sub_type
+        if sub_type:
+            char['sub_type'] = sub_type
 
     def remove_subscriber(self, char):
         char['subscriber'] = 0
