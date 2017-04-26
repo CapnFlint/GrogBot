@@ -4,6 +4,7 @@ import logging
 from core.message_processor import MessageProcessor
 from core.connection_manager import ConnectionManager
 
+from core.monitors.pubsub import Twitch_PubSub
 from core.monitors.follows import follows
 from core.monitors.teespring import teespring
 from core.monitors.bits import bits
@@ -36,6 +37,7 @@ class GrogBot():
         # Initialize all the worker threads
         self.add_worker(random_messages(self))
         self.add_worker(follows(self))
+        self.add_worker(Twitch_PubSub(self))
         #self.add_worker(bits(self))
         #self.add_worker(teespring(self, "spud citizen Capn_Flint", True))
         #self.add_worker(workers.twitter(self))

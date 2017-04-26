@@ -130,9 +130,9 @@ class Twitch_PubSub():
             sub_message = msg['sub_message']
 
             #TODO REMOVE ME when all of the database is updated, and code migrated to use ID
-            #grog.charMgr.update_id(name, user_id)
+            grog.charMgr.update_id(name, user_id)
 
-            #grog.charMgr.add_sub(name, sub_type, count, time)
+            grog.charMgr.add_sub(name, sub_type, count, time)
 
             # Confirm correct channel_id
             if msg['channel_id'] != config.channel_id:
@@ -143,7 +143,7 @@ class Twitch_PubSub():
             # Send alert
             #TODO: update so higher sub tiers add more to the subathon timer
             if context == "sub":
-                #self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
+                self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
                 if sub_type == "1":
                     overlay.update_timer(10)
                 elif sub_type == "2":
@@ -151,7 +151,7 @@ class Twitch_PubSub():
                 elif sub_type == "3":
                     overlay.update_timer(50)
             else:
-                #self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
+                self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
                 if sub_type == "1":
                     overlay.update_timer(5)
                 elif sub_type == "2":
@@ -159,7 +159,7 @@ class Twitch_PubSub():
                 elif sub_type == "3":
                     overlay.update_timer(25)
 
-            #self.grog.charMgr.give_booty(50, [name])
+            self.grog.charMgr.give_booty(50, [name])
             overlay.ship("sub", name, count)
             overlay.alert_sub(name, sub_type, dur, sub_message)
             self.update_subcount()
