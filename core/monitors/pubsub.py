@@ -52,9 +52,8 @@ class Twitch_PubSub():
     # handle RESPONSE
     def _response(self, msg):
         print "Handling RESPONSE"
-        if(msg["error"] != "") {
+        if(msg["error"] != ""):
             print "Error found: '%s'" % msg["error"]
-        }
 
     # handle RECONNECT
     def _reconnect(self):
