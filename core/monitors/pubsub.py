@@ -32,7 +32,7 @@ class pubsub():
         pass
 
     # send LISTEN
-    def _listen(self):
+    def _listen(self, ws):
         print "Sending LISTEN"
         msg = {
             "type": "LISTEN",
@@ -43,7 +43,7 @@ class pubsub():
             }
         }
 
-        self.ws.send(json.dumps(msg))
+        ws.send(json.dumps(msg))
 
     # handle RESPONSE
     def _response(self, msg):
@@ -57,7 +57,7 @@ class pubsub():
         pass
 
     # handle Message
-    def on_message(self, msg):
+    def on_message(self, ws, msg):
         print msg
         mtype = msg['type']
         if mtype == "MESSAGE":
@@ -180,7 +180,7 @@ class pubsub():
     def on_open(self, ws):
         def run(*args):
             # do things
-            self._listen()
+            self._listen(ws)
             pass
         thread.start_new_thread(run, ())
 
