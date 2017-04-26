@@ -11,10 +11,6 @@ import utils.db_utils as db
 import utils.twitch_utils as twitch
 
 
-'''
-config.access_token
-'''
-
 class pubsub():
 
     def __init__(self, grog=None, host=""):
@@ -129,17 +125,12 @@ class pubsub():
             time = msg['time']
             context = msg['context']
             sub_message = msg['sub_message']
+            user_id = msg['user_id']
 
             #TODO REMOVE ME when all of the database is updated, and code migrated to use ID
             self.grog.charMgr.update_id(name, user_id)
 
             self.grog.charMgr.add_sub(name, sub_type, time, count)
-
-            # Confirm correct channel_id
-            if msg['channel_id'] != config.channel_id:
-                print "ERROR channel_id doesn't match"
-                print msg['channel_id'] + " != " + config.channel_id
-                return
 
             # Send alert
             #TODO: update so higher sub tiers add more to the subathon timer
