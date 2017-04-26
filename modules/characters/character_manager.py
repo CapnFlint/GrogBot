@@ -65,7 +65,7 @@ class CharacterManager():
                     "level":1,
                     "exp":0,
                     "booty":5,
-                    "user_id":""
+                    "user_id":"",
                     "name":name,
                     "access":0,
                     "follows":0,
@@ -75,6 +75,7 @@ class CharacterManager():
                     "sub_date":"",
                     "sub_count":0,
                     "sub_max":0,
+                    "sub_type":0,
                     "ship":0
                 }
                 self.save_character(char)
