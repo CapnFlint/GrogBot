@@ -121,7 +121,7 @@ class pubsub():
                 "3000":"3"
             }
 
-            msg = data['message']
+            msg = json.loads(data['message'])
 
             name = msg['user_name']
             sub_type = sub_types[msg['sub_plan']]
