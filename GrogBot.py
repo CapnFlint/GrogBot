@@ -60,6 +60,8 @@ class GrogBot():
         # Connect and start bot
         logging.info("Starting Up!!!")
         #self.connMgr.connect()
+        while(1):
+            pass
 
 def main():
     grog = GrogBot(twitch.twitch_channel)
