@@ -197,4 +197,4 @@ class pubsub():
         self.ws.run_forever()
 
     def start(self):
-        thread.start_new_thread(_connect, (self))
+        thread.start_new_thread(self._connect, ())
