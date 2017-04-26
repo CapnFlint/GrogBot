@@ -170,7 +170,7 @@ class pubsub():
 
     def _connect(self):
         print "Connecting..."
-        websocket.enableTrace(True)
+        #websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp("wss://pubsub-edge.twitch.tv",
                                     on_message = self.on_message,
                                     on_error = self.on_error,
