@@ -57,8 +57,9 @@ class pubsub():
         pass
 
     # handle Message
-    def on_message(self, ws, msg):
-        print msg
+    def on_message(self, ws, message):
+        msg = json.loads(message)
+        print msg['type']
         mtype = msg['type']
         if mtype == "MESSAGE":
             self._handle_message(msg['message'])
