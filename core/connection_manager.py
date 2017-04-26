@@ -37,6 +37,7 @@ class ConnectionManager():
         logging.info("Checking for Subscribers!")
 
         subs = twitch.get_latest_subscribers(50)
+        print subs
         self.update_subcount()
 
         new = []
