@@ -62,14 +62,14 @@ class pubsub():
         print msg['type']
         mtype = msg['type']
         if mtype == "MESSAGE":
-            self._handle_message(msg['message'])
+            self._message(msg['message'])
         elif mtype == "RESPONSE":
-            self._handle_response(msg)
+            self._response(msg)
         else:
             print "Unhandled type: " + mtype
 
 
-    def _handle_message(self, msg):
+    def _message(self, msg):
         '''
         Bits:
         {
