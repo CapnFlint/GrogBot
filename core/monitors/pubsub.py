@@ -130,7 +130,7 @@ class pubsub():
             #TODO REMOVE ME when all of the database is updated, and code migrated to use ID
             grog.charMgr.update_id(name, user_id)
 
-            grog.charMgr.add_sub(name, sub_type, count, time)
+            grog.charMgr.add_sub(name, sub_type, time, count)
 
             # Confirm correct channel_id
             if msg['channel_id'] != config.channel_id:

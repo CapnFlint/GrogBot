@@ -365,7 +365,7 @@ class CharacterManager():
             char['checked_follow'] = now
             self.save_character(char)
 
-    def add_sub(self, name, sub_type, count=0, time):
+    def add_sub(self, name, sub_type, time, count=0):
         #TODO Use the recieved time value (update DB for new format)
         char = self.load_character(name)
         if char:
