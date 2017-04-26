@@ -182,6 +182,7 @@ class pubsub():
     def on_open(self, ws):
         def run(*args):
             # do things
+            self._listen()
             pass
         thread.start_new_thread(run, ())
 
@@ -197,4 +198,3 @@ class pubsub():
 
     def start(self):
         self._connect()
-        self._listen()
