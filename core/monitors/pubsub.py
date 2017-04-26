@@ -20,7 +20,7 @@ class pubsub():
         self.ping_ok = True
 
     # send PING
-    def _ping(self):
+    def _ping(self, ws):
         # Send a ping Message
         print "PubSub:: PING!!!"
         self.ping_ok = False
@@ -158,16 +158,14 @@ class pubsub():
 
     def on_open(self, ws):
         self._listen(ws)
-        print "ON_OPEN"
         def run(*args):
             # ping!
             while(1):
-                print "trying to ping..."
                 self._ping(ws)
                 time.sleep(10)
                 if(self.ping_ok == False):
                     self._reconnect(ws)
-                time.sleep(23)
+                time.sleep(230)
         thread.start_new_thread(run, ())
 
     def _connect(self):
