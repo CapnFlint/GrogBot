@@ -44,8 +44,6 @@ class pubsub():
         }
 
         self.ws.send(json.dumps(msg))
-        res = self.ws.recv()
-        print "Received: '%s'" % res
 
     # handle RESPONSE
     def _response(self, msg):
