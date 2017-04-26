@@ -115,7 +115,7 @@ class Twitch_PubSub():
         if(msg["topic"] == "channel-subscribe-events-v1." + config.channel_id):
             print "Sub message recieved!"
 
-            sub_types {
+            sub_types = {
                 "Prime":"1",
                 "1000":"1",
                 "2000":"2",
