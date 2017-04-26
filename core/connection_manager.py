@@ -143,58 +143,9 @@ class ConnectionManager():
         logging.debug(sender + " is a mod!")
 
     def _handle_notify(self, msg):
-        '''
-        WhiterRice subscribed for 2 months in a row!
-        yungflan just subscribed with Twitch Prime!
-        '''
-        data = msg.split(" ")
-        if data:
-            name = data[0]
-            try:
-                dur = data[data.index('for') + 1]
-            except:
-                dur = 1
-
-            # This makes sure the character exists
-            self.grog.charMgr.load_character(name)
-
-            if dur > 1:
-                # this is a returning sub
-                self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, dur))
-                self.grog.charMgr.give_booty(50, [name])
-                overlay.ship("sub", name, dur)
-                overlay.alert_resub(name, dur)
-                overlay.update_timer(5)
-            else:
-                # this is a new sub
-                self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
-                self.grog.charMgr.give_booty(50, [name])
-                overlay.ship("sub", name, 1)
-                overlay.alert_sub(name)
-                overlay.update_timer(10)
-
-            self.grog.charMgr.add_sub(name)
-            self.update_subcount()
-
-            stat = db.add_stat('sessionSubs', 1)
-            overlay.update_stat('subs', stat)
-
-        else:
-            logging.warning("NOTIFY: " + str(data))
+        pass
 
     def _handle_usernotice(self, tags):
-        resub = self._get_resub_info(tags)
-        self.grog.charMgr.load_character(resub['name'])
-
-        self.grog.charMgr.add_sub(resub['name'])
-        self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea matey! YARRR HARRR!!!".format(resub['name'], resub['length']))
-        self.grog.charMgr.give_booty(50, [resub['name']])
-        overlay.ship("sub", resub['name'], resub['length'])
-        overlay.alert_resub(resub['name'], resub['length'], resub['message'])
-        overlay.update_timer(5)
-        self.update_subcount()
-        stat = db.add_stat('sessionSubs', 1)
-        overlay.update_stat('subs', stat)
         pass
 # ------------------------------------------------------------------------------
 

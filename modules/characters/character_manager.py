@@ -65,6 +65,7 @@ class CharacterManager():
                     "level":1,
                     "exp":0,
                     "booty":5,
+                    "user_id":""
                     "name":name,
                     "access":0,
                     "follows":0,
@@ -137,7 +138,7 @@ class CharacterManager():
 
             with con:
                 cur = con.cursor()
-                cur.execute("REPLACE INTO characters (name, level, exp, booty, access, follows, checked_follow, subscriber, sub_date, sub_max, sub_count, ship) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['sub_date'], char['sub_max'], char['sub_count'], char['ship']))
+                cur.execute("REPLACE INTO characters (user_id, name, level, exp, booty, access, follows, checked_follow, subscriber, sub_date, sub_max, sub_count, sub_type, ship) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (char['user_id'], char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['sub_date'], char['sub_max'], char['sub_count'], char['sub_type'], char['ship']))
                 con.commit()
             return 1
         except mdb.Error, e:
@@ -324,7 +325,7 @@ class CharacterManager():
             self.save_character(char)
         return subbed
 
-    def update_subscriber(self, char, date, count=0):
+    def update_subscriber(self, char, date, sub_type, count=0):
         print "UPDATING SUBSCRIBER: " + char['name']
         char['subscriber'] = 1
         if char['name'] == "Capn_Flint":
@@ -336,11 +337,13 @@ class CharacterManager():
             char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
+        char['sub_type'] = sub_type
 
     def remove_subscriber(self, char):
         char['subscriber'] = 0
         char['sub_date'] = ""
         char['sub_count'] = 0
+        char['sub_type'] = 0
 
 
     def guess_sub_count(self, date):
@@ -361,12 +364,20 @@ class CharacterManager():
             char['checked_follow'] = now
             self.save_character(char)
 
-    def add_sub(self, name, count=0):
+    def add_sub(self, name, sub_type, count=0, time):
+        #TODO Use the recieved time value (update DB for new format)
         char = self.load_character(name)
         if char:
             date = utils.check_subscriber(name, 'capn_flint')
-            self.update_subscriber(char, date, count)
+            self.update_subscriber(char, date, sub_type, count)
             self.save_character(char)
+
+    def update_id(self, name, user_id):
+        char = self.load_character(name)
+        if char:
+            if char['user_id'] == "":
+                char['user_id'] = user_id
+                self.save_character(char)
 
 
     def give_booty(self, amount, users = []):
@@ -384,7 +395,7 @@ class CharacterManager():
                 self.save_character(char)
         print "INFO: " + str(amount) + " Booty given to " + str(count) + " players"
 
-    def give_exp(self, booty, users = []):
+    def give_exp(self, exp, users = []):
         if not users:
             users = utils.get_viewers()
         count = 0
@@ -396,9 +407,16 @@ class CharacterManager():
             if char:
                 # 20% more exp for all subs!
                 if char['subscriber']:
-                    amount = int(booty * 1.2)
+                    multi = 1
+                    if char['sub_type'] == 1:
+                        multi = 1.2
+                    if char['sub_type'] == 2:
+                        multi = 1.5
+                    if char['sub_type'] == 3:
+                        multi = 2
+                    amount = int(exp * multi)
                 else:
-                    amount = booty
+                    amount = exp
                 if char['level'] > 0: # is_alive
                     self.level_up(char, amount, levelups)
                 self.save_character(char)

@@ -8,3 +8,4 @@ client_id = "9y3zrn3dexbra4am227iiy9p1kxqmt9"
 
 # channel
 twitch_channel = "capn_flint"
+channel_id = "91580306"
