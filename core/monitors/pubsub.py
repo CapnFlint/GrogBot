@@ -14,10 +14,10 @@ import utils.twitch_utils as twitch
 '''
 config.access_token
 '''
-test = new twitch_pubsub()
+test = Twitch_PubSub()
 test.start()
 
-class twitch_pubsub():
+class Twitch_PubSub():
 
     def __init__(self, grog=None, host=""):
         self.grog = grog
