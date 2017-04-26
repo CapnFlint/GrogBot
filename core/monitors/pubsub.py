@@ -158,9 +158,11 @@ class pubsub():
 
     def on_open(self, ws):
         self._listen(ws)
+        print "ON_OPEN"
         def run(*args):
             # ping!
             while(1):
+                print "trying to ping..."
                 self._ping(ws)
                 time.sleep(10)
                 if(self.ping_ok == False):
