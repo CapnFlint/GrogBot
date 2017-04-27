@@ -138,7 +138,7 @@ class pubsub():
 
             self.grog.charMgr.give_booty(50, [name])
             overlay.ship("sub", name, count)
-            overlay.alert_sub(name, sub_type, count, sub_message)
+            overlay.alert_sub(name, sub_type, count, context, sub_message)
             self.update_subcount()
 
             stat = db.add_stat('sessionSubs', 1)
