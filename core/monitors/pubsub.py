@@ -73,6 +73,8 @@ class pubsub():
             self._message(msg['data'])
         elif mtype == "RESPONSE":
             self._response(msg)
+        elif mtype == "RECONNECT":
+            self._reconnect(ws)
         else:
             print "Unhandled type: " + mtype
 
@@ -152,9 +154,11 @@ class pubsub():
 
     def on_error(self, ws, error):
         print error
+        self._reconnect(ws)
 
     def on_close(self, ws):
         print "### closed ###"
+        self._reconnect(ws)
 
     def on_open(self, ws):
         self._listen(ws)
