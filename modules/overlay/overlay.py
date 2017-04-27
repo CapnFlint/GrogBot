@@ -93,22 +93,31 @@ def alert_hello(sender):
     data['audio'] = [audio]
     _send_message("alert", data)
 
-def alert_sub(sender, sub_type, dur, message):
+def alert_sub(sender, sub_type="1", count="1", context="sub", message=""):
     global farts
 
     if farts:
         sound = get_fart()
         volume = 80
     else:
-        sound = "sounds/pirate2.mp3"
-        volume = 50
+        if sub_type == "1":
+            sound = "sounds/pirate2.mp3"
+            volume = 50
+        if sub_type == "2":
+            sound = "sounds/narwhals.mp3"
+            volume = 60
+        if sub_type == "3":
+            sound = "sounds/dubpirate.mp3"
+            volume = 60
     data = {}
     data['priority'] = 1
-    data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
+    if context = "sub":
+        data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
+    else:
+        data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
     data['audio'] = [{"file": sound, "volume": volume}]
     data['message'] = message
     _send_message("alert", data)
-    #ship("sub", sender, 1)
 
 
 ''' Twitter '''
