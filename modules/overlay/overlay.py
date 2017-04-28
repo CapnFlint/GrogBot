@@ -111,7 +111,7 @@ def alert_sub(sender, sub_type="1", count="1", context="sub", message=""):
             volume = 60
     data = {}
     data['priority'] = 1
-    if context = "sub":
+    if context == "sub":
         data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
     else:
         data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
