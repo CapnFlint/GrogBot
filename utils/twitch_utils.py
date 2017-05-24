@@ -83,9 +83,11 @@ def get_starttime():
         return 0
 
 def check_streamer(name):
-    url = "https://api.twitch.tv/kraken/channels/" + name + "?client_id=" + twitch.client_id
+    url = "https://api.twitch.tv/kraken/channels/" + name
     try:
-        response = urllib2.urlopen(url)
+        req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
+        response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
             return None
@@ -95,11 +97,13 @@ def check_streamer(name):
         return None
 
 def check_follower(name):
-    url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}?api_version=3&client_id={2}".format(name, twitch.twitch_channel, twitch.client_id)
+    url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(name, twitch.twitch_channel)
     if name == twitch.twitch_channel:
         return True
     try:
-        response = urllib2.urlopen(url)
+        req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
+        response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
             return False
@@ -109,10 +113,11 @@ def check_follower(name):
         return False
 
 def check_subscriber(name, channel):
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}?api_version=3&client_id={2}".format(twitch.twitch_channel, name, twitch.client_id)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(twitch.twitch_channel, name)
 
     try:
         req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
         req.add_header('Authorization', 'OAuth '+twitch.access_token)
         response = urllib2.urlopen(req)
         data = json.load(response)
@@ -128,9 +133,11 @@ def check_subscriber(name, channel):
         return ""
 
 def get_latest_follows(count):
-    url = "https://api.twitch.tv/kraken/channels/{0}/follows?limit={1}&api_version=3&client_id={2}".format(twitch.twitch_channel, str(int(count)), twitch.client_id)
+    url = "https://api.twitch.tv/kraken/channels/{0}/follows?limit={1}".format(twitch.twitch_channel, str(int(count)))
     try:
-        response = urllib2.urlopen(url)
+        req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
+        response = urllib2.urlopen(req)
         userlist = json.load(response)['follows']
         users = []
         for item in userlist:
@@ -141,9 +148,10 @@ def get_latest_follows(count):
         return {}
 
 def get_latest_subscribers(count, offset=0):
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}&api_version=3&client_id={3}".format(twitch.twitch_channel, count, offset, twitch.client_id)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.twitch_channel, count, offset)
     try:
         req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
         req.add_header('Authorization', 'OAuth '+twitch.access_token)
         response = urllib2.urlopen(req)
         data = json.load(response)
@@ -157,9 +165,10 @@ def get_latest_subscribers(count, offset=0):
         return {}
 
 def get_sub_count():
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}&api_version=3&client_id={3}".format(twitch.twitch_channel, 1, 0, twitch.client_id)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.twitch_channel, 1, 0)
     try:
         req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
         req.add_header('Authorization', 'OAuth '+twitch.access_token)
         response = urllib2.urlopen(req)
         data = json.load(response)
@@ -171,10 +180,11 @@ def get_sub_count():
         return 0
 
 def get_subscribers(count=100, offset=0):
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}&api_version=3&client_id={3}".format(twitch.twitch_channel, count, offset, twitch.client_id)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.twitch_channel, count, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + count)
     try:
         req = urllib2.Request(url)
+        req.add_header('Client-ID', twitch.client_id)
         req.add_header('Authorization', 'OAuth '+twitch.access_token)
         response = urllib2.urlopen(req)
         data = json.load(response)
