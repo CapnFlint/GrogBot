@@ -108,7 +108,7 @@ def alert_sub(sender, sub_type="1", count="1", context="sub", message=""):
             volume = 60
         if sub_type == "3":
             sound = "sounds/dubpirate.mp3"
-            volume = 60
+            volume = 50
     data = {}
     data['priority'] = 1
     if context == "sub":
