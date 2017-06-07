@@ -33,7 +33,10 @@ def command_mutiny(self, sender, args):
         self.remove_command("!join")
         self.remove_command("!defend")
 
+        print self.mutineers
+
         if self.mutineers:
+            self.connMgr.send_message("The Mutiny has begun!")
             mutiny_start_mutiny(self)
 
     # if mutiny isn't already running, and no other event is running...
@@ -44,11 +47,13 @@ def command_mutiny(self, sender, args):
 def mutiny_join(self, sender, args):
     # handle adding player to the mutiny
     if sender not in self.mutineers.keys() + self.defenders.keys():
+        self.connMgr.send_message(sender + " has joined the mutiny!")
         self.mutineers[sender] = self.charMgr.load_character(sender)['level']
 
 def mutiny_defend(self, sender, args):
     # handle adding a player to the defence
     if sender not in self.mutineers + self.defenders:
+        self.connMgr.send_message(sender + " is defending the ship!")
         self.defenders[sender] = self.charMgr.load_character(sender)['level']
 
 def sum_array(values):
