@@ -19,13 +19,13 @@ def command_mutiny(self, sender, args):
         countdown = 120
 
         def command_join(self, sender, args):
-            if check_permission(sender, PERM_FOLLOWS):
-                mutiny_join(self, sender, args)
+            if check_permission(sender, PERM_NONE):
+                mutiny_join(self, sender)
         self.add_command("!join", command_join)
 
         def command_defend(self, sender, args):
-            if check_permission(sender, PERM_FOLLOWS):
-                mutiny_defend(self, sender, args)
+            if check_permission(sender, PERM_NONE):
+                mutiny_defend(self, sender)
         self.add_command("!defend", command_defend)
 
         time.sleep(countdown)
@@ -38,19 +38,22 @@ def command_mutiny(self, sender, args):
         if self.mutineers:
             self.connMgr.send_message("The Mutiny has begun!")
             mutiny_start_mutiny(self)
+        else:
+            self.connMgr.send_message("No one joined the mutiny today...")
 
     # if mutiny isn't already running, and no other event is running...
+    mutiny_join(self, sender)
     thread.start_new_thread(mutiny_thread, (self,))
     self.connMgr.send_message(sender + " has started a mutiny! Would you like to !join the mutiny, or !defend the Captain?!")
 
 
-def mutiny_join(self, sender, args):
+def mutiny_join(self, sender):
     # handle adding player to the mutiny
     if sender not in self.mutineers.keys() + self.defenders.keys():
         self.connMgr.send_message(sender + " has joined the mutiny!")
         self.mutineers[sender] = self.charMgr.load_character(sender)['level']
 
-def mutiny_defend(self, sender, args):
+def mutiny_defend(self, sender):
     # handle adding a player to the defence
     if sender not in self.mutineers + self.defenders:
         self.connMgr.send_message(sender + " is defending the ship!")
