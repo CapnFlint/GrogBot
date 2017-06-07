@@ -37,7 +37,7 @@ def command_mutiny(self, sender, args):
 
         if self.mutineers:
             self.connMgr.send_message("The Mutiny has begun!")
-            mutiny_start_mutiny(self)
+            mutiny_start(self)
         else:
             self.connMgr.send_message("No one joined the mutiny today...")
 
