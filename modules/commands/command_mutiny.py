@@ -38,7 +38,7 @@ def command_mutiny(self, sender, args):
 
     # if mutiny isn't already running, and no other event is running...
     thread.start_new_thread(mutiny_thread, (self,))
-    self.connMgr.send_message(Sender + " has started a mutiny! Would you like to !join the mutiny, or !defend the Captain?!")
+    self.connMgr.send_message(sender + " has started a mutiny! Would you like to !join the mutiny, or !defend the Captain?!")
 
 
 def mutiny_join(self, sender, args):
