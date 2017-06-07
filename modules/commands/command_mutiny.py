@@ -55,7 +55,7 @@ def mutiny_join(self, sender):
 
 def mutiny_defend(self, sender):
     # handle adding a player to the defence
-    if sender not in self.mutineers + self.defenders:
+    if sender not in self.mutineers.keys() + self.defenders.keys():
         self.connMgr.send_message(sender + " is defending the ship!")
         self.defenders[sender] = self.charMgr.load_character(sender)['level']
 
