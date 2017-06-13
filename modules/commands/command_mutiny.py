@@ -8,8 +8,8 @@ from helper import *
 def command_mutiny(self, sender, args):
     self.mutineers = {}
     self.defenders = {}
-    #self.connMgr.send_message("The Capn catches " + sender + " trying to start a mutiny!")
-    #self.run_command("!plank", [sender, 15])
+    self.connMgr.send_message("The Capn catches " + sender + " trying to start a mutiny!")
+    self.run_command("!plank", [sender, 15])
 
     # Have a mutiny window... Random event every X to Y minutes.
     # a viewer starts a mutiny... anyone or subscriber?
@@ -42,9 +42,9 @@ def command_mutiny(self, sender, args):
             self.connMgr.send_message("No one joined the mutiny today...")
 
     # if mutiny isn't already running, and no other event is running...
-    mutiny_join(self, sender)
-    thread.start_new_thread(mutiny_thread, (self,))
-    self.connMgr.send_message(sender + " has started a mutiny! Would you like to !join the mutiny, or !defend the Captain?!")
+    #mutiny_join(self, sender)
+    #thread.start_new_thread(mutiny_thread, (self,))
+    #self.connMgr.send_message(sender + " has started a mutiny! Would you like to !join the mutiny, or !defend the Captain?!")
 
 
 def mutiny_join(self, sender):
