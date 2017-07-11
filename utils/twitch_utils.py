@@ -198,12 +198,12 @@ def get_sub_points():
 
 
 def get_subscribers(count=100, offset=0, users = {}):
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.twitch_channel, count, offset)
+    url = "https://api.twitch.tv/kraken/channel/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.twitch_channel, count, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + count)
     try:
         print url
         req = urllib2.Request(url)
-        #req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
+        req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
         req.add_header('Client-ID', twitch.client_id)
         req.add_header('Authorization', 'OAuth '+twitch.access_token)
         response = urllib2.urlopen(req)
