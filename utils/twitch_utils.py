@@ -210,6 +210,7 @@ def get_subscribers(count=100, offset=0, users = {}):
     url = "https://api.twitch.tv/kraken/channel/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, count, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + count)
     try:
+        print url
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
         req.add_header('Client-ID', twitch.client_id)
