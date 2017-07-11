@@ -201,6 +201,7 @@ def get_subscribers(count=100, offset=0, users = {}):
         total = int(data['_total']) - 2
 
         for item in userlist:
+            print item
             users[item['user']['name']] = item['sub_plan']
         if (len(users) + offset) < total:
             users = get_subscribers(count=100, offset=offset + count, users=users)
