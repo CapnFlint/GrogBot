@@ -216,6 +216,6 @@ def get_subscribers(count=100, offset=0, users = {}):
         if (len(users) + offset) < total:
             users = get_subscribers(count=100, offset=offset + count, users=users)
         return users
-    except urllib2.URLError:
-        logging.error("urllib2 error - get_subscribers")
+    except urllib2.URLError e:
+        logging.error("urllib2 error - get_subscribers: " + e.reason)
         return {}
