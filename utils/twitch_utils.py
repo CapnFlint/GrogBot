@@ -203,7 +203,7 @@ def get_subscribers(count=100, offset=0, users = {}):
         for item in userlist:
             users[item['user']['name']] = item['sub_plan']
         if (len(users) + offset) < total:
-            users = get_subscribers(count=100, offset=offset + count, users)
+            users = get_subscribers(count=100, offset=offset + count, users=users)
         return users
     except urllib2.URLError:
         logging.error("urllib2 error - get_subscribers")
