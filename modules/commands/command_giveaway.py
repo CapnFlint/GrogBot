@@ -200,5 +200,5 @@ def get_tickets(self):
         for _ in range(self.giveaway_entries[name]):
             entries.append(name)
     if self.max_entry > 0:
-        entries = entries + twitch.get_subscribers()
+        entries = entries + twitch.get_subscribers().keys()
     return entries

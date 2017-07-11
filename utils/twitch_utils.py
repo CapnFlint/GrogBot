@@ -179,7 +179,16 @@ def get_sub_count():
         logging.error("urllib2 error - get_sub_count")
         return 0
 
-def get_subscribers(count=100, offset=0):
+def get_sub_points():
+    points = 0
+    subs = get_subscribers()
+    points += subs.values().count('1000')
+    points += subs.values().count('2000') * 2
+    points += subs.values().count('3000') * 5
+    return points
+
+
+def get_subscribers(count=100, offset=0, users = {}):
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.twitch_channel, count, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + count)
     try:
@@ -190,11 +199,11 @@ def get_subscribers(count=100, offset=0):
         data = json.load(response)
         userlist = data['subscriptions']
         total = int(data['_total']) - 2
-        users = []
+
         for item in userlist:
-            users.append(item['user']['name'])
+            users[item['user']['name']] = item['sub_plan']
         if (len(users) + offset) < total:
-            users = users + get_subscribers(count=100, offset=offset + count)
+            users = get_subscribers(count=100, offset=offset + count, users)
         return users
     except urllib2.URLError:
         logging.error("urllib2 error - get_subscribers")

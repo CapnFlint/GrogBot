@@ -7,7 +7,7 @@ import modules.overlay.overlay as overlay
 
 @processes('!randomsub', PERM_MOD)
 def command_randomsub(self, sender, args):
-    subs = twitch.get_subscribers()
+    subs = twitch.get_subscribers().keys()
     subs.remove('grogbot')
     subs.remove('capn_flint')
     random.shuffle(subs)
