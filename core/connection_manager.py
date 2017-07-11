@@ -57,7 +57,7 @@ class ConnectionManager():
             overlay.update_stat('subs', stat)
 
     def update_subcount(self):
-        count = twitch.get_sub_count()
+        count = twitch.get_sub_points()
         db.clear_stat('subCount')
         stat = db.add_stat('subCount', int(count))
         logging.debug("New SubCount: " + str(stat))
