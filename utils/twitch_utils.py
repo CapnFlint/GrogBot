@@ -51,7 +51,8 @@ def get_mods():
         return {}
 
 def get_display_name(name):
-    channel_id = get_ids([name])['name']
+    name = name.lower()
+    channel_id = get_ids([name])[name]
     url = "https://api.twitch.tv/kraken/users/" + channel_id
     try:
         req = urllib2.Request(url)
@@ -67,6 +68,7 @@ def get_display_name(name):
         return name
 
 def get_game(name):
+    name = name.lower()
     channel_id = get_ids([name])[name]
     url = "https://api.twitch.tv/kraken/channels/" + channel_id
     try:
@@ -115,6 +117,7 @@ def get_starttime():
         return 0
 
 def check_streamer(name):
+    name = name.lower()
     channel_id = get_ids([name])[name]
     url = "https://api.twitch.tv/kraken/channels/" + channel_id
     try:
@@ -131,6 +134,7 @@ def check_streamer(name):
         return None
 
 def check_follower(name):
+    name = name.lower()
     user_id = get_ids([name])[name]
     url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(user_id, twitch.channel_id)
     if name == twitch.twitch_channel:
@@ -149,6 +153,7 @@ def check_follower(name):
         return False
 
 def check_subscriber(name, channel):
+    name = name.lower()
     user_id = get_ids([name])[name]
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(twitch.channel_id, user_id)
 
