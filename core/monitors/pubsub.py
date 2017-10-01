@@ -147,6 +147,7 @@ class pubsub():
 
     def update_subcount(self):
         count = twitch.get_sub_points()
+        count = count - 2
         db.clear_stat('subCount')
         stat = db.add_stat('subCount', int(count))
         logging.debug("New SubCount: " + str(stat))
