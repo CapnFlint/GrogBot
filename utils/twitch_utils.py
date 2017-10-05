@@ -231,7 +231,7 @@ def get_sub_points():
     points += subs.values().count('1000')
     points += subs.values().count('2000') * 2
     points += subs.values().count('3000') * 5
-    return points
+    return points - 2
 
 
 def get_subscribers(count=100, offset=0, users = {}):
