@@ -220,12 +220,19 @@ def get_sub_points():
     #logging.info("T2 subs: " + str(subs.values().count('2000')))
     points += len(subs['3000']) * 5
     #logging.info("T3 subs: " + str(subs.values().count('3000')))
-    return points - 2
+    return points - 6
 
 
-def get_subscribers(count=100, offset=0, subs = {'1000':[],'2000':[],'3000':[]}):
+def get_subscribers(count=100, offset=0, subs = {}):
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, count, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + count)
+
+    if offset==0:
+        subs = {
+            '1000':[],
+            '2000':[],
+            '3000':[]
+        }
 
     try:
         req = urllib2.Request(url)
