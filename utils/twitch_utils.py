@@ -228,7 +228,7 @@ def get_sub_count():
 def get_sub_points():
     points = 0
     subs = get_subscribers()
-    print subs.values()
+    print subs
     points += subs.values().count('1000')
     logging.info("T1 subs: " + str(subs.values().count('1000')))
     points += subs.values().count('2000') * 2

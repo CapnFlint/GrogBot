@@ -246,7 +246,7 @@ class ConnectionManager():
 
         logging.info("Connected...")
 
-        logging.info("Sub Points: " + twitch.get_sub_points())
+        logging.info("Sub Points: " + str(twitch.get_sub_points()))
 
         # Check for offline subscribers
         self.subscribers()
