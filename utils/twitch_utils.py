@@ -192,22 +192,7 @@ def get_latest_follows(count):
         return {}
 
 def get_latest_subscribers(count, offset=0):
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, count, offset)
-    try:
-        req = urllib2.Request(url)
-        req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
-        req.add_header('Authorization', 'OAuth '+twitch.access_token)
-        response = urllib2.urlopen(req)
-        data = json.load(response)
-        userlist = data['subscriptions']
-        users = []
-        for item in userlist:
-            users.append(item['user']['name'])
-        return users
-    except urllib2.URLError:
-        logging.error("urllib2 error - get_latest_subscribers")
-        return {}
+    return get_subscribers(count, offset)
 
 def get_sub_count():
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, 1, 0)

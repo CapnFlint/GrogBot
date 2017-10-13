@@ -37,12 +37,14 @@ class ConnectionManager():
         logging.info("Checking for Subscribers!")
 
         subs = twitch.get_latest_subscribers(50)
-        print subs
+        sublist = subs['1000'] + subs['2000'] + subs['3000']
+
+        print sublist
         self.update_subcount()
 
         new = []
-        if subs:
-            for user in subs:
+        if sublist:
+            for user in sublist:
                 logging.debug("Processing: " + user)
                 if not self.grog.charMgr.subbed(user):
                     char = self.grog.charMgr.load_character(user)
