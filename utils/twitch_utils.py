@@ -249,7 +249,7 @@ def get_subscribers(count=100, offset=0, users = {}):
         response = urllib2.urlopen(req)
         data = json.load(response)
         userlist = data['subscriptions']
-        total = int(data['_total']) - 2
+        #total = int(data['_total']) - 2
 
         for item in userlist:
             users[item['user']['name']] = item['sub_plan']
