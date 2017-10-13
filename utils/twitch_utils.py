@@ -213,19 +213,22 @@ def get_sub_count():
 def get_sub_points():
     points = 0
     subs = get_subscribers()
-    print subs
     points += len(subs['1000'])
-    #logging.info("T1 subs: " + str(subs.values().count('1000')))
     points += len(subs['2000']) * 2
-    #logging.info("T2 subs: " + str(subs.values().count('2000')))
     points += len(subs['3000']) * 5
-    #logging.info("T3 subs: " + str(subs.values().count('3000')))
-    return points - 6
+    return points - 6 # My subs don't count
 
 
-def get_subscribers(count=100, offset=0, subs = {}):
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, count, offset)
-    print "Retrieving subs " + str(offset) + " to " + str(offset + count)
+def get_subscribers(count=0, offset=0, subs={}):
+    if count == 0:
+        iterate = True
+        limit = 100
+    else:
+        iterate = False
+        limit = count
+
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, limit, offset)
+    print "Retrieving subs " + str(offset) + " to " + str(offset + limit)
 
     if offset==0:
         subs = {
@@ -246,8 +249,8 @@ def get_subscribers(count=100, offset=0, subs = {}):
 
         for item in userlist:
             subs[item['sub_plan']].append(item['user']['name'])
-        if (len(subs) + offset) < total:
-            subs = get_subscribers(count=100, offset=offset + count, subs=subs)
+        if iterate and (count + limit) < total:
+            subs = get_subscribers(offset=offset + limit, subs=subs)
         return subs
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_subscribers: " + e.reason)
