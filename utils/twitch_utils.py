@@ -229,18 +229,19 @@ def get_sub_points():
     points = 0
     subs = get_subscribers()
     print subs
-    points += subs.values().count('1000')
+    points += len(subs['1000'])
     #logging.info("T1 subs: " + str(subs.values().count('1000')))
-    points += subs.values().count('2000') * 2
+    points += len(subs['2000']) * 2
     #logging.info("T2 subs: " + str(subs.values().count('2000')))
-    points += subs.values().count('3000') * 5
+    points += len(subs['3000']) * 5
     #logging.info("T3 subs: " + str(subs.values().count('3000')))
     return points - 2
 
 
-def get_subscribers(count=100, offset=0, users = {}):
+def get_subscribers(count=100, offset=0, subs = {'1000':[],'2000':[],'3000':[]}):
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, count, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + count)
+
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -249,13 +250,13 @@ def get_subscribers(count=100, offset=0, users = {}):
         response = urllib2.urlopen(req)
         data = json.load(response)
         userlist = data['subscriptions']
-        total = int(data['_total']) # - 2
+        total = int(data['_total'])
 
         for item in userlist:
-            users[item['user']['name']] = item['sub_plan']
+            subs[item['sub_plan']].append(item['user']['name'])
         if (len(users) + offset) < total:
-            users = get_subscribers(count=100, offset=offset + count, users=users)
-        return users
+            subs = get_subscribers(count=100, offset=offset + count, subs=subs)
+        return subs
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_subscribers: " + e.reason)
         return {}
