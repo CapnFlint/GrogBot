@@ -14,7 +14,7 @@ def command_top(self, sender, args):
             if char['exp'] > highest['exp']:
                 highest = char
     if highest:
-        self.connMgr.send_message(strings['CMD_TOP_HIGHEST'].format(name=highest['name']))
+        self.connMgr.send_message(strings['CMD_TOP_HIGHEST'].format(rank=self.charMgr.get_rank(highest, False, False), name=highest['name']))
     else:
         self.connMgr.send_message(strings['CMD_TOP_NONE'])
 
