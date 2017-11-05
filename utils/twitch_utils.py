@@ -24,7 +24,7 @@ def get_ids(names):
         return None
 
 def get_viewers(include_mods = True):
-    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['twitch']['channel_id'])
+    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['api']['client_id'])
     try:
         response = urllib2.urlopen(url)
         userlist = json.load(response)['chatters']
@@ -40,7 +40,7 @@ def get_viewers(include_mods = True):
         return {}
 
 def get_mods():
-    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['twitch']['channel_id'])
+    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['api']['client_id'])
     try:
         response = urllib2.urlopen(url)
         userlist = json.load(response)['chatters']
