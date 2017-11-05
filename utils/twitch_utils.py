@@ -251,9 +251,14 @@ def get_subscribers(count=0, offset=0, subs={}):
             subs[item['sub_plan']].append(item['user']['name'])
         if iterate and (count + limit) < total:
             subs = get_subscribers(offset=offset + limit, subs=subs)
-        subs['1000'].remove('capn_flint')
-        subs['1000'].remove('grogbot')
-        subs['3000'].remove('capn_flint')
+
+        if 'capn_flint' in subs['1000']:
+            subs['1000'].remove('capn_flint')
+        if 'grogbot' in subs['1000']:
+            subs['1000'].remove('grogbot')
+        if 'capn_flint' in subs['3000']:
+            subs['3000'].remove('capn_flint')
+        
         return subs
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_subscribers: " + e.reason)
