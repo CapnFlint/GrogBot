@@ -213,9 +213,6 @@ def get_sub_count():
 def get_sub_points():
     points = 0
     subs = get_subscribers()
-    print "T1 Subs: " + str(len(subs['1000']))
-    print "T2 Subs: " + str(len(subs['2000']))
-    print "T3 Subs: " + str(len(subs['3000']))
     points += len(subs['1000'])
     points += len(subs['2000']) * 2
     points += len(subs['3000']) * 6
