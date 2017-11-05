@@ -214,14 +214,11 @@ def get_sub_points():
     points = 0
     subs = get_subscribers()
     print "T1 Subs: " + str(len(subs['1000']))
-    print subs['1000']
     print "T2 Subs: " + str(len(subs['2000']))
-    print subs['2000']
     print "T3 Subs: " + str(len(subs['3000']))
-    print subs['3000']
     points += len(subs['1000'])
     points += len(subs['2000']) * 2
-    points += len(subs['3000']) * 5
+    points += len(subs['3000']) * 6
     return points
 
 
@@ -257,6 +254,9 @@ def get_subscribers(count=0, offset=0, subs={}):
             subs[item['sub_plan']].append(item['user']['name'])
         if iterate and (count + limit) < total:
             subs = get_subscribers(offset=offset + limit, subs=subs)
+        subs['1000'].remove('capn_flint')
+        subs['1000'].remove('grogbot')
+        subs['3000'].remove('capn_flint')
         return subs
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_subscribers: " + e.reason)
