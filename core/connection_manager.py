@@ -293,7 +293,7 @@ class ConnectionManager():
 
                                     overlay.send_emotes(sender, emoteList)
 
-                                if channel == self.CHAN:
+                                if msg['channel'] == self.CHAN:
                                     if message.startswith('!'):
                                         self.grog.msgProc.parse_command(msg)
                                     else:
