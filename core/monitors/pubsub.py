@@ -4,7 +4,7 @@ import thread
 import time
 import json
 
-import config.twitch_config as config
+from config.config import config
 
 import modules.overlay.overlay as overlay
 import utils.db_utils as db
@@ -42,8 +42,8 @@ class pubsub():
             "type": "LISTEN",
             "nonce": "foobar",
             "data": {
-                "topics": ["channel-bits-events-v1." + config.channel_id,"channel-subscribe-events-v1." + config.channel_id],
-                "auth_token": config.access_token
+                "topics": ["channel-bits-events-v1." + config['twitch']['channel_id'],"channel-subscribe-events-v1." + config['twitch']['channel_id']],
+                "auth_token": config['api']['access_token']
             }
         }
 
@@ -90,11 +90,10 @@ class pubsub():
            }
         }
         '''
-        print data["topic"]
-        print config.channel_id
-        if(data["topic"] == "channel-subscribe-events-v1." + config.channel_id):
-            print "Sub message recieved!"
-            print data
+
+        if(data["topic"] == "channel-subscribe-events-v1." + config['twitch']['channel_id']):
+            logging.info("Sub message recieved!")
+
             sub_types = {
                 "Prime":"1",
                 "1000":"1",

@@ -2,7 +2,7 @@ import logging
 import socket
 import re
 
-import config.twitch_config as config
+from config.config import config
 from config.strings import strings
 
 import modules.overlay.overlay as overlay
@@ -16,9 +16,7 @@ class ConnectionManager():
         self.HOST = "irc.chat.twitch.tv"
         self.PORT = 6667
         self.CHAN = "#" + channel
-        self.NICK = config.nickname
-        self.PASS = config.stream_key
-        self.conn = None
+        self.sock = None
         self.running = False
 
 # -----[ Initialization Functions ]---------------------------------------------
@@ -68,14 +66,29 @@ class ConnectionManager():
 
 # -----[ IRC message functions ]------------------------------------------------
 
+    def _connect(self):
+        self.sock = socket.socket()
+        self.sock.connect((config['irc']['HOST'], config['irc']['PORT']))
+        self.sock.send('PASS %s\r\n' % config['irc']['PASS'])
+        self.sock.send('NICK %s\r\n' % config['irc']['NICK'])
+        self.sock.send('JOIN %s\r\n' % self.CHAN)
+
+        logging.info("Connected!")
+
+    def _request_capabilities(self):
+        # Request capabilities
+        self.sock.send('CAP REQ :twitch.tv/membership\r\n')
+        self.sock.send('CAP REQ :twitch.tv/tags\r\n')
+        self.sock.send('CAP REQ :twitch.tv/commands\r\n')
+
     def _send_pong(self, msg):
-        self.con.send('PONG %s\r\n' % msg)
+        self.sock.send('PONG %s\r\n' % msg)
 
     def _send_message(self, msg, chan=None):
         if not chan:
             chan = self.CHAN
         logging.debug('PRIVMSG %s :%s\r\n' % (chan, msg))
-        self.con.send('PRIVMSG %s :%s\r\n' % (chan, msg))
+        self.sock.send('PRIVMSG %s :%s\r\n' % (chan, msg))
 
     def _send_emote(self, msg, chan=None):
         if not chan:
@@ -87,33 +100,12 @@ class ConnectionManager():
         if not chan:
             chan = self.CHAN
         logging.info("Sending NAMES command")
-        self.con.send('NAMES %s\r\n' % chan)
-
-    def _send_nick(self, nick):
-        self.con.send('NICK %s\r\n' % nick)
-
-    def _send_pass(self, password):
-        self.con.send('PASS %s\r\n' % password)
-
-    def _join_channel(self, chan=None):
-        if not chan:
-            chan = self.CHAN
-        self.con.send('JOIN %s\r\n' % chan)
+        self.sock.send('NAMES %s\r\n' % chan)
 
     def _part_channel(self, chan=None):
         if not chan:
             chan = self.CHAN
-        self.con.send('PART %s\r\n' % chan)
-
-    def _register_membership(self):
-        self.con.send('CAP REQ :twitch.tv/membership\r\n')
-
-    def _register_tags(self):
-        self.con.send('CAP REQ :twitch.tv/tags\r\n')
-
-    def _register_commands(self):
-        #TODO: See if this actually works...
-        self.con.send('CAP REQ :twitch.tv/commands\r\n')
+        self.sock.send('PART %s\r\n' % chan)
 
     def _set_color(self):
         self._send_message('Ahoy Mateys! capnHi I heard you needed a bot! capnYarr capnHype')
@@ -154,6 +146,17 @@ class ConnectionManager():
 
 # -----[ IRC Utility Functions ]------------------------------------------------
 
+    def _parse_message(self, message):
+        msg = {}
+
+        msg["sender"] = re.match(':(.*)!', message[1]).group(1).encode('utf-8')
+        msg["text"] = " ".join(message[4:]).lstrip(":")
+        msg['channel'] = message[3]
+        msg['tags'] = self._get_tags(message[0])
+        msg['emotes'] = self._get_emotes(msg['tags'])
+
+        return msg
+
     def _get_sender(self, msg):
         result = ""
         for char in msg:
@@ -178,7 +181,7 @@ class ConnectionManager():
         result = msg[3]
         return result
 
-    def _get_tag_map(self, data):
+    def _get_tags(self, data):
         data = data.split(';')
         tagmap = {}
         for d in data:
@@ -190,7 +193,7 @@ class ConnectionManager():
         '''
         '@color=#5F9EA0;display-name=mr_5ka;emotes=81530:0-7,9-16,18-25;mod=0;room-id=91580306;subscriber=1;turbo=0;user-id=69442368;user-type='
         '''
-        tags = self._get_tag_map(data)
+        tags = self._get_tags(data)
 
         perm = {}
         perm['mod'] = bool(int(tags['mod']))
@@ -198,7 +201,7 @@ class ConnectionManager():
         return perm
 
     def _get_resub_info(self, data):
-        tags = self._get_tag_map(data)
+        tags = self._get_tags(data)
         resub = {}
         if tags['msg-id'] and tags['msg-id'] == 'resub':
             resub['name'] = tags['login']
@@ -209,7 +212,7 @@ class ConnectionManager():
                 resub['message'] = ''
         return resub
 
-    def _get_emotes(self, data):
+    def _get_emotes(self, tags):
         '''
         '@color=#5F9EA0;display-name=mr_5ka;emotes=81530:0-7,9-16,18-25;mod=0;room-id=91580306;subscriber=1;turbo=0;user-id=69442368;user-type='
         data[3] = emotes
@@ -218,7 +221,7 @@ class ConnectionManager():
 
         TODO: Make this more generic (search for the mod and subscriber parameters)
         '''
-        tags = self._get_tag_map(data)
+
         emotes = {}
         emotelist = tags['emotes']
         if emotelist:
@@ -235,20 +238,14 @@ class ConnectionManager():
 # ------------------------------------------------------------------------------
 
     def connect(self):
-        self.con = socket.socket()
-        self.con.connect((self.HOST, self.PORT))
+        self._connect()
+        self._request_capabilities()
 
-        self._send_pass(self.PASS)
-        self._send_nick(self.NICK)
-        self._join_channel(self.CHAN)
-        self._register_membership()
-        self._register_tags()
-        self._register_commands()
         self._set_color()
 
         logging.info("Connected...")
 
-        logging.info("Sub Points: " + str(twitch.get_sub_points()))
+        logging.debug("Sub Points: " + str(twitch.get_sub_points()))
 
         # Check for offline subscribers
         self.subscribers()
@@ -261,7 +258,7 @@ class ConnectionManager():
         try:
             while self.running:
                 try:
-                    data = data + self.con.recv(1024)
+                    data = data + self.sock.recv(1024)
                     data_split = re.split("[\r\n]+", data)
                     data = data_split.pop()
 
@@ -274,38 +271,33 @@ class ConnectionManager():
                                 self._send_pong(line[1])
 
 
-                            elif line[2] == 'USERNOTICE':
-                                print "SUB USERNOTICE!!!"
-                                self._handle_usernotice(line[0])
+                            #elif line[2] == 'USERNOTICE':
+                            #    print "SUB USERNOTICE!!!"
+                            #    self._handle_usernotice(line[0])
 
-                            elif line[1] == 'PRIVMSG':
-                                sender = self._get_sender(line[0])
-                                if sender == 'twitchnotify':
-                                    print "SUB NOTIFY!!!"
-                                    self._handle_notify(self._get_message(line[3:]))
+                            #elif line[1] == 'PRIVMSG':
+                            #    sender = self._get_sender(line[0])
+                            #    if sender == 'twitchnotify':
+                            #        print "SUB NOTIFY!!!"
+                            #        self._handle_notify(self._get_message(line[3:]))
 
 
                             elif line[2] == 'PRIVMSG':
-                                sender = self._get_sender(line[1])
-                                message = self._get_message(line[4:])
-                                channel = self._get_channel(line)
-                                perms = self._get_perms(line[0])
-                                emotes = self._get_emotes(line[0])
+                                msg = self._parse_message(line)
 
-                                if emotes:
+                                if msg['emotes']:
                                     emoteList = []
-                                    for emote in emotes.keys():
-                                        count = emotes[emote]
-                                        for i in range(count):
+                                    for emote in msg['emotes'].keys():
+                                        for i in range(msg['emotes'][emote]):
                                             emoteList.append(emote)
-                                    print emoteList
+
                                     overlay.send_emotes(sender, emoteList)
 
                                 if channel == self.CHAN:
                                     if message.startswith('!'):
-                                        self.grog.msgProc.parse_command(message, sender, perms)
+                                        self.grog.msgProc.parse_command(msg)
                                     else:
-                                        self.grog.msgProc.parse_message(message, sender, perms, emotes)
+                                        self.grog.msgProc.parse_message(msg)
                                 else:
                                     self.grog.msgProc.parse_raid_message(message, sender)
 

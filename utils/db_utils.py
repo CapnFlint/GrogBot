@@ -1,15 +1,16 @@
 import MySQLdb as mdb
-import config.db_config as config
 import datetime
 import random
 import time
+
+from config.config import config
 
 def get_access(name):
     access = 0
     char = None
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -32,7 +33,7 @@ def get_access(name):
 def add_message(message):
     now = int(time.time())
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor()
@@ -48,7 +49,7 @@ def add_message(message):
 
 def clear_messages():
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -64,7 +65,7 @@ def clear_messages():
 
 def clear_stats():
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -80,7 +81,7 @@ def clear_stats():
 
 def clear_stat(name):
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -96,7 +97,7 @@ def clear_stat(name):
 
 def add_stat(name, amount):
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
         value = 0
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -120,7 +121,7 @@ def add_stat(name, amount):
 def get_stat(name):
     value = 0
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -140,7 +141,7 @@ def get_stat(name):
 def get_custom_commands():
     commands = {}
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -164,7 +165,7 @@ def get_custom_commands():
 def del_custom_command(command):
     commands = {}
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor()
@@ -182,7 +183,7 @@ def del_custom_command(command):
 def add_custom_command(command, message):
     commands = {}
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor()
@@ -198,7 +199,7 @@ def add_custom_command(command, message):
 
 def make_mod(name):
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -214,7 +215,7 @@ def make_mod(name):
 
 def make_sub(name):
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -232,7 +233,7 @@ def make_sub(name):
 def random_sub():
     commands = {}
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -252,7 +253,7 @@ def random_sub():
 def sc_register(name, twitch):
     rows = 0
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -272,7 +273,7 @@ def sc_register(name, twitch):
 
 def sc_unregister(name):
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -288,7 +289,7 @@ def sc_unregister(name):
 
 def sc_clearscores():
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -308,7 +309,7 @@ def sc_addpoints(name, newpoints):
     char = None
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -334,7 +335,7 @@ def stats_add_death(game):
 
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
         print "connected"
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -365,7 +366,7 @@ def stats_remove_death(game):
 
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("SELECT * from deaths where game = %s", (game,))
@@ -389,7 +390,7 @@ def sr_add_song(songid, songname, requestor):
     rows = 0
     ret = False
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("INSERT INTO songrequests (songid, songname, requestor) VALUES (%s, %s, %s)", (songid, songname, requestor))
@@ -409,7 +410,7 @@ def sr_remove_song(songid):
     rows = 0
     ret = False
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("DELETE FROM songrequests WHERE id = %s", (songid,))
@@ -428,7 +429,7 @@ def sr_remove_song(songid):
 def sr_song_count(user):
     count = 0
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -455,7 +456,7 @@ def qu_add_quote(quote, name, game):
     date = datetime.date.today()
 
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("INSERT INTO quotes (quote, date, name, game) VALUES (%s, %s, %s, %s)", (quote, date, name, game))
@@ -474,7 +475,7 @@ def qu_get_quote():
     quote = []
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -501,7 +502,7 @@ def qu_get_quote_id(quid):
     quote = []
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -523,7 +524,7 @@ def mq_add_message(mtype, priority, message, sound):
     ret = False
     con = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -541,7 +542,7 @@ def mq_add_message(mtype, priority, message, sound):
 
 def eco_set_total(total):
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -557,7 +558,7 @@ def eco_set_total(total):
 def eco_get_total():
     total = 0
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -576,7 +577,7 @@ def eco_get_total():
 def getEvent():
     event = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, "events")
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], "events")
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -595,7 +596,7 @@ def getEvent():
 def getEventById(evtid):
     event = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, "events")
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], "events")
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -614,7 +615,7 @@ def getEventById(evtid):
 def getEventCommands(event):
     commands = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, "events")
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], "events")
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -633,7 +634,7 @@ def getEventCommands(event):
 def get_message(msg_idx):
     event = None
     try:
-        con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)

@@ -45,36 +45,35 @@ class MessageProcessor():
         else:
             self.connMgr.send_message("Command " + command + " not found!")
 
-    def parse_command(self, msg, sender, perms):
-        logging.debug('[CMD] ' + sender + ": " + msg)
-        logging.debug('[PERMS]' + str(perms))
-        logging.debug('Sub: ' + str(self.grog.charMgr.subbed(sender)))
+    def parse_command(self, msg):#, sender, perms):
+        logging.debug('[CMD] ' + msg['sender'] + ": " + msg['text'])
+        logging.debug('Sub: ' + str(self.grog.charMgr.subbed(msg['sender'])))
 
-        if perms['sub'] and not self.grog.charMgr.subbed(sender):
-            self.grog.charMgr.subbed(sender, force_check = True)
+        if perms['sub'] and not self.grog.charMgr.subbed(msg['sender']):
+            self.grog.charMgr.subbed(msg['sender'], force_check = True)
 
-        if len(msg) >= 1:
-            msg = msg.split(' ')[:-1]
-            cmd = msg.pop(0).lower()
+        if len(msg['text']) >= 1:
+            msg['text'] = msg['text'].split(' ')[:-1]
+            cmd = msg['text'].pop(0).lower()
 
-            if self.grog.charMgr.is_alive(sender):
+            if self.grog.charMgr.is_alive(msg['sender']):
                 if cmd in self.options.keys():
-                    self.options[cmd](self, sender, msg)
+                    self.options[cmd](self, msg['sender'], msg['text'])
                 elif cmd in self.custom_commands.keys():
                     self.grog.connMgr.send_message(self.custom_commands[cmd])
                 else:
                     logging.debug("Unknown command: " + cmd)
             else:
-                self.grog.connMgr.send_message('Shhhh ' + sender + "... You're dead! capnRIP")
+                self.grog.connMgr.send_message('Shhhh ' + msg['sender'] + "... You're dead! capnRIP")
 
 
-    def parse_message(self, msg, sender, perms, emotes):
+    def parse_message(self, msg): #, sender, perms, emotes):
         # Do any normal message parsing we need here, e.g. spam/banned word checks
         # capnHi = 81912
 
         #hi_reg = '(^|\s)capnHi(\s)+'
-        if perms['sub']:
-            if '81912' in emotes.keys():
+        if msg['tags']['sub'] == '1':
+            if '81912' in msg['emotes'].keys():
                 if sender not in self.seen_senders:
                     self.seen_senders.append(sender)
                     overlay.alert_hello(sender)

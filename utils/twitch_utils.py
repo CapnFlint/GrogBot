@@ -3,14 +3,14 @@ import urllib
 import json
 import logging
 
-import config.twitch_config as twitch
+from config.config import config
 
 def get_ids(names):
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
@@ -24,7 +24,7 @@ def get_ids(names):
         return None
 
 def get_viewers(include_mods = True):
-    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(twitch.twitch_channel, twitch.client_id)
+    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['twitch']['channel_id'])
     try:
         response = urllib2.urlopen(url)
         userlist = json.load(response)['chatters']
@@ -40,7 +40,7 @@ def get_viewers(include_mods = True):
         return {}
 
 def get_mods():
-    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(twitch.twitch_channel, twitch.client_id)
+    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['twitch']['channel_id'])
     try:
         response = urllib2.urlopen(url)
         userlist = json.load(response)['chatters']
@@ -57,7 +57,7 @@ def get_display_name(name):
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
@@ -74,7 +74,7 @@ def get_game(name):
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
@@ -85,11 +85,11 @@ def get_game(name):
         return None
 
 def get_viewcount():
-    url = "https://api.twitch.tv/kraken/streams/{0}".format(twitch.channel_id)
+    url = "https://api.twitch.tv/kraken/streams/{0}".format(config['twitch']['channel_id'])
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if data['stream']:
@@ -101,11 +101,11 @@ def get_viewcount():
         return 0
 
 def get_starttime():
-    url = "https://api.twitch.tv/kraken/streams/{0}".format(twitch.channel_id)
+    url = "https://api.twitch.tv/kraken/streams/{0}".format(config['twitch']['channel_id'])
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if data['stream']:
@@ -123,7 +123,7 @@ def check_streamer(name):
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
@@ -136,13 +136,13 @@ def check_streamer(name):
 def check_follower(name):
     name = name.lower()
     user_id = get_ids([name])[name]
-    url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(user_id, twitch.channel_id)
-    if name == twitch.twitch_channel:
+    url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(user_id, config['twitch']['channel_id'])
+    if name == config['twitch']['channel']:
         return True
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
@@ -155,13 +155,13 @@ def check_follower(name):
 def check_subscriber(name, channel):
     name = name.lower()
     user_id = get_ids([name])[name]
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(twitch.channel_id, user_id)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
 
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
-        req.add_header('Authorization', 'OAuth '+twitch.access_token)
+        req.add_header('Client-ID', config['api']['client_id'])
+        req.add_header('Authorization', 'OAuth '+config['api']['access_token'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         #print data['created_at']
@@ -176,11 +176,11 @@ def check_subscriber(name, channel):
         return ""
 
 def get_latest_follows(count):
-    url = "https://api.twitch.tv/kraken/channels/{0}/follows?limit={1}".format(twitch.channel_id, str(int(count)))
+    url = "https://api.twitch.tv/kraken/channels/{0}/follows?limit={1}".format(config['twitch']['channel_id'], str(int(count)))
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
+        req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         userlist = json.load(response)['follows']
         users = []
@@ -195,12 +195,12 @@ def get_latest_subscribers(count, offset=0):
     return get_subscribers(count, offset)
 
 def get_sub_count():
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, 1, 0)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(config['twitch']['channel_id'], 1, 0)
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
-        req.add_header('Authorization', 'OAuth '+twitch.access_token)
+        req.add_header('Client-ID', config['api']['client_id'])
+        req.add_header('Authorization', 'OAuth '+ config['api']['access_token'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         count = int(data['_total']) - 2
@@ -216,7 +216,7 @@ def get_sub_points():
     points += len(subs['1000'])
     points += len(subs['2000']) * 2
     points += len(subs['3000']) * 5
-    return points - 6 # My subs don't count
+    return points - 4 # My subs don't count
 
 
 def get_subscribers(count=0, offset=0, subs={}):
@@ -227,7 +227,7 @@ def get_subscribers(count=0, offset=0, subs={}):
         iterate = False
         limit = count
 
-    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(twitch.channel_id, limit, offset)
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(config['twitch']['channel_id'], limit, offset)
     print "Retrieving subs " + str(offset) + " to " + str(offset + limit)
 
     if offset==0:
@@ -240,8 +240,8 @@ def get_subscribers(count=0, offset=0, subs={}):
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', twitch.client_id)
-        req.add_header('Authorization', 'OAuth '+twitch.access_token)
+        req.add_header('Client-ID', config['api']['client_id'])
+        req.add_header('Authorization', 'OAuth '+ config['api']['access_token'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         userlist = data['subscriptions']

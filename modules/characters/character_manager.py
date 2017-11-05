@@ -10,7 +10,7 @@ import MySQLdb as mdb
 
 import utils.twitch_utils as utils
 import modules.overlay.overlay as overlay
-import config.db_config as config
+from config.config import config
 from config.strings import strings
 
 from passive_exp import passive_exp
@@ -91,7 +91,7 @@ class CharacterManager():
     def char_exists(self, name):
         user = None
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db);
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
                 cur.execute("SELECT * from characters where name = %s", (name,))
@@ -113,7 +113,7 @@ class CharacterManager():
         user = None
         if name:
             try:
-                con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
+                con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
                     cur.execute("SELECT * from characters where name = %s", (name,))
@@ -135,7 +135,7 @@ class CharacterManager():
 
     def save_character(self, char):
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
 
             with con:
                 cur = con.cursor()
@@ -157,7 +157,7 @@ class CharacterManager():
 
     def delete_character(self, name):
         try:
-            con = mdb.connect(config.db_host, config.db_user, config.db_pass, config.db_db, use_unicode=True, charset="utf8");
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
 
             with con:
                 cur = con.cursor()

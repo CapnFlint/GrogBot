@@ -5,7 +5,7 @@ import random
 import thread
 import time
 
-import config.twitch_config as config
+from config.config import config
 
 '''
 connect to wss://pubsub-edge.twitch.tv
@@ -77,7 +77,7 @@ class twitchsocket():
     def register(self, ws):
         data = {}
         data['topics'] = self.topics
-        data['auth_token'] = config.access_token
+        data['auth_token'] = config['api']['access_token']
         message = {}
         message['type'] = "LISTEN"
         message['nonce'] = self.generate_nonce()
