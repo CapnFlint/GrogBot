@@ -70,7 +70,7 @@ class MessageProcessor():
         # capnHi = 81912
 
         #hi_reg = '(^|\s)capnHi(\s)+'
-        if msg['tags']['sub'] == '1':
+        if msg['perms']['sub'] == '1':
             if '81912' in msg['emotes'].keys():
                 if msg['sender'] not in self.seen_senders:
                     self.seen_senders.append(msg['sender'])
