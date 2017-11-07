@@ -19,11 +19,11 @@ def feed_milo(self, name):
 # ------------------------------------------------------------------------------
 
 @processes('!milo')
-def command_milo(self, sender, args):
+def command_milo(self, data):
     global last_milo
     now = time.time()
     if int(now - last_milo) > 600: # Flood protection on !exp command
-        if feed_milo(self, sender):
+        if feed_milo(self, data['sender']):
             last_milo = now
     else:
         self.connMgr.send_message("Milo is a little full right now, but thanks for the offer!")

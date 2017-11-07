@@ -119,13 +119,13 @@ class Event():
         self.connMgr.send_message(text)
 
     def anon_instant_result(self, command, name):
-        def anonfunc(self, sender, args):
-            self.connMgr.send_message(command['text'].format(sender))
-            self.charMgr.give_exp(command['exp'], [sender])
+        def anonfunc(self, data):
+            self.connMgr.send_message(command['text'].format(data['sender']))
+            self.charMgr.give_exp(command['exp'], [data['sender']])
             if command['exp'] > 0:
-                self.connMgr.send_message(sender + " has gained experience! R)")
+                self.connMgr.send_message(data['sender'] + " has gained experience! R)")
             elif command['exp'] < 0:
-                self.connMgr.send_message(sender + " has lost experience! capnRIP")
+                self.connMgr.send_message(data['sender'] + " has lost experience! capnRIP")
             self.remove_command(command['command'])
             if command['next']:
                 self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
@@ -134,22 +134,22 @@ class Event():
         return anonfunc
 
     def anon_register_entry(self, command, name):
-        def anonfunc(self, sender, args):
-            self.eventMgr.record_entry(sender, command['command'])
+        def anonfunc(self, data):
+            self.eventMgr.record_entry(data['sender'], command['command'])
         anonfunc.__name__ = name
         return anonfunc
 
     def anon_register_bet(self, command, name):
-        def anonfunc(self, sender, args):
-            self.eventMgr.record_entry(sender, command['command'])
+        def anonfunc(self, data):
+            self.eventMgr.record_entry(data['sender'], command['command'])
             amount = int(args[0])
-            char = self.charMgr.load_character(sender)
+            char = self.charMgr.load_character(data['sender'])
             if char['booty'] >= amount:
                 char['booty'] -= amount
                 #self.charMgr.save_character(char)
                 self.prizeFund += int(args[0])
             else:
-                self.connMgr.send_message("Sorry " + sender + ", you don't have that much booty!")
+                self.connMgr.send_message("Sorry " + data['sender'] + ", you don't have that much booty!")
         anonfunc.__name__ = name
         return anonfunc
 

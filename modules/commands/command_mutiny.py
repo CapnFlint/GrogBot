@@ -4,7 +4,7 @@ import random
 
 from helper import *
 
-@processes("!mutiny", PERM_MOD)
+#@processes("!mutiny", PERM_MOD)
 def command_mutiny(self, sender, args):
     self.mutineers = {}
     self.defenders = {}

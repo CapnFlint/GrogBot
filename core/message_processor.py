@@ -47,18 +47,16 @@ class MessageProcessor():
 
     def parse_command(self, msg):#, sender, perms):
         logging.debug('[CMD] ' + msg['sender'] + ": " + msg['text'])
-        logging.debug('Sub: ' + str(self.grog.charMgr.subbed(msg['sender'])))
-
-        if perms['sub'] and not self.grog.charMgr.subbed(msg['sender']):
-            self.grog.charMgr.subbed(msg['sender'], force_check = True)
+        logging.debug('Sub: ' + str(msg['perms']['sub']))
+        logging.debug('Mod: ' + str(msg['perms']['mod']))
 
         if len(msg['text']) >= 1:
-            msg['text'] = msg['text'].split(' ')[:-1]
-            cmd = msg['text'].pop(0).lower()
+            msg['args'] = msg['text'].split(' ')[:-1]
+            cmd = msg['args'].pop(0).lower()
 
             if self.grog.charMgr.is_alive(msg['sender']):
                 if cmd in self.options.keys():
-                    self.options[cmd](self, msg['sender'], msg['text'])
+                    self.options[cmd](self, msg)
                 elif cmd in self.custom_commands.keys():
                     self.grog.connMgr.send_message(self.custom_commands[cmd])
                 else:
@@ -74,15 +72,10 @@ class MessageProcessor():
         #hi_reg = '(^|\s)capnHi(\s)+'
         if msg['tags']['sub'] == '1':
             if '81912' in msg['emotes'].keys():
-                if sender not in self.seen_senders:
-                    self.seen_senders.append(sender)
-                    overlay.alert_hello(sender)
-        logging.debug('[MSG] ' + sender + ": " + msg)
-
-    def parse_raid_message(self, msg, sender):
-        if self.raid_running:
-            if self.grog.charMgr.char_exists(sender):
-                logging.debug(sender + " has taken part in the raid!!!")
+                if msg['sender'] not in self.seen_senders:
+                    self.seen_senders.append(msg['sender'])
+                    overlay.alert_hello(msg['sender'])
+        logging.debug('[MSG] ' + msg['sender'] + ": " + msg['text'])
 
 
 
@@ -104,22 +97,22 @@ class MessageProcessor():
             logging.warning("Command not valid: " + cmd)
 
     @processes('!quit', PERM_MOD)
-    def command_quit(self, sender, args):
+    def command_quit(self, data):
         #self.run_command("!clearstats", [])
         self.grog.connMgr.send_message('Bye!')
         self.grog.connMgr.running = False
 
     @processes('!delete', PERM_ADMIN)
-    def command_delete(self, sender, args):
-        target = args[0]
+    def command_delete(self, data):
+        target = data['args'][0]
         self.grog.charMgr.delete_character(target)
         self.grog.connMgr.send_message(target + ' has been deleted.')
 
     @processes('!event', PERM_MOD)
-    def command_event(self, sender, args):
+    def command_event(self, data):
         evtID = 0
         if args:
-            evtID = int(args[0])
+            evtID = int(data['args'][0])
         if evtID > 0:
             self.grog.eventMgr.loadAndRun(evtID)
         else:

@@ -154,6 +154,7 @@ class ConnectionManager():
         msg['channel'] = message[3]
         msg['tags'] = self._get_tags(message[0])
         msg['emotes'] = self._get_emotes(msg['tags'])
+        msg['perms'] = self._get_perms(msg['tags'])
 
         return msg
 
@@ -167,20 +168,6 @@ class ConnectionManager():
         result = result.encode('utf-8')
         return result
 
-    def _get_message(self, msg):
-        result = ""
-        i = 0
-        length = len(msg)
-        while i < length:
-            result += msg[i] + " "
-            i += 1
-        result = result.lstrip(':')
-        return result
-
-    def _get_channel(self, msg):
-        result = msg[3]
-        return result
-
     def _get_tags(self, data):
         data = data.split(';')
         tagmap = {}
@@ -189,28 +176,28 @@ class ConnectionManager():
             tagmap[key] = val;
         return tagmap
 
-    def _get_perms(self, data):
+    def _get_perms(self, tags):
         '''
         '@color=#5F9EA0;display-name=mr_5ka;emotes=81530:0-7,9-16,18-25;mod=0;room-id=91580306;subscriber=1;turbo=0;user-id=69442368;user-type='
         '''
-        tags = self._get_tags(data)
 
         perm = {}
         perm['mod'] = bool(int(tags['mod']))
         perm['sub'] = bool(int(tags['subscriber']))
+        
         return perm
 
-    def _get_resub_info(self, data):
-        tags = self._get_tags(data)
-        resub = {}
-        if tags['msg-id'] and tags['msg-id'] == 'resub':
-            resub['name'] = tags['login']
-            resub['length'] = tags['msg-param-months']
-            if tags['system-msg']:
-                resub['message'] = tags['system-msg']
-            else:
-                resub['message'] = ''
-        return resub
+#    def _get_resub_info(self, data):
+#        tags = self._get_tags(data)
+#        resub = {}
+#        if tags['msg-id'] and tags['msg-id'] == 'resub':
+#            resub['name'] = tags['login']
+#            resub['length'] = tags['msg-param-months']
+#            if tags['system-msg']:
+#                resub['message'] = tags['system-msg']
+#            else:
+#                resub['message'] = ''
+#        return resub
 
     def _get_emotes(self, tags):
         '''
@@ -294,7 +281,7 @@ class ConnectionManager():
                                     overlay.send_emotes(sender, emoteList)
 
                                 if msg['channel'] == self.CHAN:
-                                    if message.startswith('!'):
+                                    if msg['text'].startswith('!'):
                                         self.grog.msgProc.parse_command(msg)
                                     else:
                                         self.grog.msgProc.parse_message(msg)

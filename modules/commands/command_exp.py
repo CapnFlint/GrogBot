@@ -4,7 +4,7 @@ import time
 
 last_exp = 0
 
-@processes('!exp', PERM_MOD)
+#@processes('!exp', PERM_MOD)
 def command_exp(self, sender, args):
     global last_exp
     now = time.time()

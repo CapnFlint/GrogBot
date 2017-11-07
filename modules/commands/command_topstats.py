@@ -3,7 +3,7 @@ import utils.twitch_utils as utils
 from config.strings import strings
 
 @processes('!top')
-def command_top(self, sender, args):
+def command_top(self, data):
     viewers = utils.get_viewers(False)
     highest = None
     for viewer in viewers:
@@ -19,7 +19,7 @@ def command_top(self, sender, args):
         self.connMgr.send_message(strings['CMD_TOP_NONE'])
 
 @processes('!topbooty')
-def command_topbooty(self, sender, args):
+def command_topbooty(self, data):
     viewers = utils.get_viewers(False)
     highest = None
     for viewer in viewers:

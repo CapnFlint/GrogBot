@@ -8,7 +8,7 @@ import urlparse
 
 songrequests_on = False
 
-@processes("!togglesong", PERM_MOD)
+#@processes("!togglesong", PERM_MOD)
 def command_togglesong(self, sender, args):
     global songrequests_on
     songrequests_on = not songrequests_on
@@ -17,7 +17,7 @@ def command_togglesong(self, sender, args):
     else:
         self.connMgr.send_message("Song requests turned off!")
 
-@processes("!removesong", PERM_MOD)
+#@processes("!removesong", PERM_MOD)
 def command_removesong(self, sender, args):
     if args:
         try:
@@ -28,8 +28,8 @@ def command_removesong(self, sender, args):
     else:
         self.connMgr.send_message("To remove a song use: !removesong <id>")
 
-@processes("!songrequest")
-@processes("!requestsong")
+#@processes("!songrequest")
+#@processes("!requestsong")
 def command_requestsong(self, sender, args):
     global songrequests_on
 

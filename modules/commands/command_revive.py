@@ -1,9 +1,9 @@
 from helper import *
 
 @processes('!revive', PERM_MOD)
-def command_revive(self, sender, args):
-    if args:
-        target = args[0].lower()
+def command_revive(self, data):
+    if data['args']:
+        target = data['args'][0].lower()
         if target and self.charMgr.char_exists(target):
             revived = self.charMgr.revive_character(target)
             if revived:

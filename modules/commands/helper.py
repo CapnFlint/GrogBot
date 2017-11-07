@@ -11,11 +11,19 @@ PERM_ADMIN = 2
 PERM_FOLLOWS = 3
 PERM_SUBSCRIBER = 4
 
-def check_permission(user, level):
-    access = db.get_access(user)
+def check_permission(data, level):
+    access = db.get_access(data['sender'])
 
-    if access >= level:
-        return True
+    if level == PERM_MOD:
+        if data['perm']['mod']:
+            return True
+    elif level == PERM_SUBSCRIBER:
+        if data['perm']['sub']:
+            return True
+    else:
+        if access >= level:
+            return True
+
     return False
 
 def get_commands():
@@ -27,9 +35,9 @@ def processes(command, perm=PERM_NONE):
     def wrap(func):
         # do pre-wrap
         print "Registering command: " + command
-        def wrapped(self, sender, args):
-            if check_permission(sender, perm):
-                func(self, sender, args)
+        def wrapped(self, data):
+            if check_permission(data, perm):
+                func(self, data)
             else:
                 self.connMgr.send_message('No permissions for that!')
         command_dict[command] = wrapped
@@ -37,17 +45,3 @@ def processes(command, perm=PERM_NONE):
         return wrapped
         # do post-wrap
     return wrap
-
-"""
-def permission(perm):
-    def wrap(func):
-        def wrapped(self, sender, args):
-            if check_permission(sender, perm):
-                func(self,sender,args)
-            else:
-                self.connMgr.send_message('No permissions for that!')
-        wrapped.__name__ = func.__name__
-        opsListDic[perm].append("!" + func.__name__.split('_')[1])
-        return wrapped
-    return wrap
-"""

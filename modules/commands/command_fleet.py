@@ -4,8 +4,8 @@ import utils.twitch_utils as twitch
 import modules.overlay.overlay as overlay
 
 @processes("!fleet", PERM_MOD)
-def command_fleet(self, sender, args):
-    self.connMgr.send_message(sender + " calls forth the fleet!")
+def command_fleet(self, data):
+    self.connMgr.send_message(data['sender'] + " calls forth the fleet!")
     viewers = twitch.get_viewers()
     if len(viewers) == 0:
         print "No viewers :("

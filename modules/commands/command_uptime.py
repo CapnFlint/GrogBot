@@ -3,7 +3,7 @@ from datetime import datetime
 import utils.twitch_utils as twitch
 
 @processes("!uptime")
-def command_uptime(self, sender, args):
+def command_uptime(self, data):
     start = twitch.get_starttime()
     start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%SZ')
     now = datetime.utcnow()

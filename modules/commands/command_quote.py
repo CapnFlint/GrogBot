@@ -14,30 +14,28 @@ Quote #123: "I like to make quotes!" - Capn_Flint 02-01-2015 (Creative)
 """
 
 @processes("!addquote", PERM_MOD)
-def command_addquote(self, sender, args):
-    if args:
-        if len(args) > 1:
-            name = args[0]
-            quote = " ".join(args[1:])
-            if self.charMgr.char_exists(name):
-                game = utils.get_game("capn_flint")
-                db.qu_add_quote(quote, utils.get_display_name(name), game)
-                self.connMgr.send_message("quote successfully added!")
-                return
-            else:
-                self.connMgr.send_message(name + " doesn't exist!")
-                return
+def command_addquote(self, data):
+    if data['args'] and len(data['args']) > 1:
+        name = data['args'][0]
+        quote = " ".join(data['args'][1:])
+        if self.charMgr.char_exists(name):
+            game = utils.get_game("capn_flint")
+            db.qu_add_quote(quote, utils.get_display_name(name), game)
+            self.connMgr.send_message("quote successfully added!")
+            return
+        else:
+            self.connMgr.send_message(name + " doesn't exist!")
+            return
     self.connMgr.send_message("To add a quote use: !quote <char> <quote>")
 
 # retrieves a quote
 @processes("!quote")
-def command_quote(self, sender, args):
+def command_quote(self, data):
     quid = 0
     quote = ""
-    print "args: " + str(args)
-    if args:
+    if data['args']:
         try:
-            quid = int(args[0])
+            quid = int(data['args'][0])
         except:
             quid = 0
         print quid

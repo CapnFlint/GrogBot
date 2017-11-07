@@ -5,7 +5,7 @@ import utils.twitch_utils as twitch
 import modules.overlay.overlay as overlay
 
 
-@processes('!randomsub', PERM_MOD)
+#@processes('!randomsub', PERM_MOD)
 def command_randomsub(self, sender, args):
     subs = twitch.get_subscribers()
     sublist = subs['1000'] + subs['2000'] + subs['3000']

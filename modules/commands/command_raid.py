@@ -6,7 +6,7 @@ import utils.twitch_utils as utils
 
 raiding = False
 
-@processes('!raid', PERM_MOD)
+#@processes('!raid', PERM_MOD)
 def command_raid(self, sender, args):
     global raiding
     target = args[0]

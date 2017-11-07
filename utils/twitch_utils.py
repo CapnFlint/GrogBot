@@ -175,6 +175,35 @@ def check_subscriber(name, channel):
         logging.error("urllib2 error - check_subscriber")
         return ""
 
+def get_subscription(name):
+    name = name.lower()
+    user_id = get_ids([name])[name]
+    url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
+
+    sub = {}
+
+    try:
+        req = urllib2.Request(url)
+        req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
+        req.add_header('Client-ID', config['api']['client_id'])
+        req.add_header('Authorization', 'OAuth '+config['api']['access_token'])
+        response = urllib2.urlopen(req)
+        data = json.load(response)
+
+        if 'error' in data.keys():
+            return sub
+
+        sub['created'] = data['created_at']
+        sub['sub_plan'] = data['sub_plan']
+        sub['name'] = data['user']['display_name']
+
+    except urllib2.HTTPError, e:
+        logging.info(name + " is not subscribed!")
+    except urllib2.URLError, e:
+        logging.error("urllib2 error - check_subscriber")
+    finally:
+        return sub
+
 def get_latest_follows(count):
     url = "https://api.twitch.tv/kraken/channels/{0}/follows?limit={1}".format(config['twitch']['channel_id'], str(int(count)))
     try:
@@ -258,7 +287,7 @@ def get_subscribers(count=0, offset=0, subs={}):
             subs['1000'].remove('grogbot')
         if 'capn_flint' in subs['3000']:
             subs['3000'].remove('capn_flint')
-        
+
         return subs
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_subscribers: " + e.reason)

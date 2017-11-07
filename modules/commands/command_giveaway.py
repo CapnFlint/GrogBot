@@ -11,7 +11,7 @@ giveaway_picked = ""
 #winner = ""
 #claimed = False
 
-@processes('!giveaway')
+#@processes('!giveaway')
 def command_giveaway(self, sender, args):
     global giveaway_running, giveaway_picked
 

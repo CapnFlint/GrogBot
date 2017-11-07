@@ -4,8 +4,8 @@ import time
 from config.strings import strings
 
 @processes('!booty')
-def command_booty(self, sender, args):
-    char = self.charMgr.load_character(sender)
+def command_booty(self, data):
+    char = self.charMgr.load_character(data['sender'])
     booty = char['booty']
 
     try:

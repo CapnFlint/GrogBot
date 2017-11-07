@@ -1,7 +1,7 @@
 from helper import *
 import modules.overlay.overlay as overlay
 
-@processes("!timerfix", PERM_ADMIN)
+#@processes("!timerfix", PERM_ADMIN)
 def command_timerfix(self, sender, args):
     if args:
         try:

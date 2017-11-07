@@ -9,18 +9,18 @@ from config.strings import strings
 bet_rollover = 0
 
 @processes('!runbet', PERM_MOD)
-def command_runbet(self, sender, args):
+def command_runbet(self, data):
     global bet_rollover
-    self.bet_options = args[:6]
+    self.bet_options = data['args'][:6]
     self.bet_entries = defaultdict(list)
     #self.bet_rollover = bet_rollover
     bet_len = 120
     if len(self.bet_options) > 1:
         self.connMgr.send_message('Betting has opened!', screen=True, chat=False)
 
-        def command_bet(self, sender, args):
-            if check_permission(sender, PERM_NONE):
-                register_bet(self, sender, args)
+        def command_bet(self, data):
+            if check_permission(data, PERM_NONE):
+                register_bet(self, data)
 
         self.add_command('!bet', command_bet)
         option_text = "Place your bets! Your choices are: "
@@ -30,8 +30,8 @@ def command_runbet(self, sender, args):
         self.connMgr.send_message('You have ' + str(bet_len) + 's, so get betting!')
 
         def bet_thread(self, countdown):
-            def bet_winner(self, sender, args):
-                winner = args[0]
+            def bet_winner(self, data):
+                winner = data['args'][0]
                 if winner in self.bet_options:
                     pay_winners(self,winner)
                     self.remove_command('!winner')
@@ -49,36 +49,36 @@ def command_runbet(self, sender, args):
 
         thread.start_new_thread(bet_thread, (self,bet_len))
 
-def register_bet(self, user, args):
+def register_bet(self, data):
     global bet_rollover
-    if len(args) > 1:
-        choice = args[0].lower()
+    if len(data['args']) > 1:
+        choice = data['args'][0].lower()
         try:
-            amount = int(args[1])
+            amount = int(data['args'][1])
         except:
             amount = 0
         if amount <= 0:
-            self.connMgr.send_message("Sorry " + user + ", but that isn't a valid amount")
+            self.connMgr.send_message("Sorry " + data['sender'] + ", but that isn't a valid amount")
             return
 
-        char = self.charMgr.load_character(user)
+        char = self.charMgr.load_character(data['sender'])
 
         if char['booty'] >= amount:
             if choice in self.bet_options:
-                if not user in list(chain.from_iterable([[b[0] for b in self.bet_entries[a]] for a in self.bet_entries])):
-                    self.bet_entries[choice].append((user,amount))
+                if not data['sender'] in list(chain.from_iterable([[b[0] for b in self.bet_entries[a]] for a in self.bet_entries])):
+                    self.bet_entries[choice].append((data['sender'],amount))
                     char['booty'] -= amount
                     print "bet - " + str(amount)
                     bet_rollover += 2
                     print "rollover - " + str(bet_rollover)
                     self.charMgr.save_character(char)
-                    self.connMgr.send_message(str(amount) + " placed on " + choice + " by " + user)
+                    self.connMgr.send_message(str(amount) + " placed on " + choice + " by " + data['sender'])
                 else:
-                    self.connMgr.send_message(user + " you have already placed a bet!")
+                    self.connMgr.send_message(data['sender'] + " you have already placed a bet!")
             else:
-                self.connMgr.send_message("Sorry " + user + ", but that isn't a valid choice")
+                self.connMgr.send_message("Sorry " + data['sender'] + ", but that isn't a valid choice")
         else:
-            self.connMgr.send_message("Sorry " + user + ", you don't have that much booty!")
+            self.connMgr.send_message("Sorry " + data['sender'] + ", you don't have that much booty!")
     else:
         self.connMgr.send_message("To bet, it's: !bet <choice> <amount>")
 

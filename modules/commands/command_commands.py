@@ -1,7 +1,7 @@
 from helper import *
 
 @processes('!commands')
-def command_commands(self, sender, args):
+def command_commands(self, data):
     self.connMgr.send_message("To see all the available commands, visit: http://capnflint.com/commands.php")
     '''perm_lvl = db.get_access(sender)
 

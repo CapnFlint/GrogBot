@@ -2,7 +2,7 @@ from helper import *
 import random
 
 @processes('!ask')
-def command_ask(self, sender, args):
+def command_ask(self, data):
     options = [
         "Signs point to Aye.",
         "Aye.",
@@ -40,4 +40,4 @@ def command_ask(self, sender, args):
         "Ferget 'bout it"
     ]
     picked = random.choice(options)
-    self.connMgr.send_message(sender + ", " + picked)
+    self.connMgr.send_message(data['sender'] + ", " + picked)

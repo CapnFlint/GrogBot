@@ -1,7 +1,7 @@
 from helper import *
 import modules.overlay.overlay as overlay
 
-@processes("!timeradd", PERM_MOD)
+#@processes("!timeradd", PERM_MOD)
 def command_timeradd(self, sender, args):
     if args:
         try:

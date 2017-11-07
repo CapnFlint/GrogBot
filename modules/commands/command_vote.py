@@ -3,7 +3,7 @@ import time
 
 from helper import *
 
-@processes('!runvote', PERM_MOD)
+#@processes('!runvote', PERM_MOD)
 def command_runvote(self, sender, args):
     self.vote_entries = defaultdict(list)
     self.vote_options = args[:6]

@@ -4,7 +4,7 @@ import random
 temp_store = 0;
 total = 0
 
-@processes('!ecorp')
+#@processes('!ecorp')
 def command_ecorp(self, sender, args):
     global temp_store
     if args and check_permission(sender, PERM_MOD):

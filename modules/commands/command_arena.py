@@ -11,7 +11,7 @@ last_arena = 0
 cooldown = 0
 
 @processes("!startarena", PERM_MOD)
-def command_startarena(self, sender, args):
+def command_startarena(self, data):
     global arena_running
     self.arena_entries = {}
 
@@ -19,13 +19,13 @@ def command_startarena(self, sender, args):
     def arena_thread(self):
         countdown = 120
         # add !joinarena command
-        def command_joinarena(self, sender, args):
-            if check_permission(sender, PERM_NONE):
-                arena_register_entry(self, sender, args)
+        def command_joinarena(self, data):
+            if check_permission(data, PERM_NONE):
+                arena_register_entry(self, data)
         self.add_command("!joinarena", command_joinarena)
 
         self.connMgr.send_message("A winner takes all Arena Battle has been started by "
-                                    + sender
+                                    + data['sender']
                                     + "! To enter type !joinarena now! The entry fee is "
                                     + str(self.arena_max_bet) + " Doubloon(s)")
 
@@ -54,7 +54,7 @@ def command_startarena(self, sender, args):
         self.arena_max_bet = 0
 
         try:
-            self.arena_max_bet = int(args[0])
+            self.arena_max_bet = int(data['args'][0])
         except:
             self.connMgr.send_message("Invalid value specified for !startarena. Specify an number between 1 and 100")
             return
@@ -69,16 +69,17 @@ def command_startarena(self, sender, args):
 
         thread.start_new_thread(arena_thread, (self,))
 
-def arena_register_entry(self, sender, args):
-    char = self.charMgr.load_character(sender)
+def arena_register_entry(self, data):
+    name = data['sender']
+    char = self.charMgr.load_character(name)
     if char['follows']:
         if char['booty'] >= self.arena_max_bet:
-            self.arena_entries[sender] = self.arena_max_bet
-            self.connMgr.send_message(sender + " has entered the arena!")
+            self.arena_entries[name] = self.arena_max_bet
+            self.connMgr.send_message(name + " has entered the arena!")
         else:
-            self.connMgr.send_message("Sorry " + sender + ", you don't have enough booty to enter :(")
+            self.connMgr.send_message("Sorry " + name + ", you don't have enough booty to enter :(")
     else:
-        self.connMgr.send_message("Sorry " + sender + ", you need to be a follower to do battle in the arena!")
+        self.connMgr.send_message("Sorry " + name + ", you need to be a follower to do battle in the arena!")
 
 def arena_prize_fund(self):
     total = 0

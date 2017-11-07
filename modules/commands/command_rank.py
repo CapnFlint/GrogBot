@@ -4,14 +4,14 @@ import time
 
 @processes('!rank')
 @processes('!level')
-def command_level(self, sender, args):
-    name = sender
-    if check_permission(sender, PERM_MOD):
-        if args:
-            if self.charMgr.char_exists(args[0]):
-                name = args[0]
+def command_level(self, data):
+    name = data['sender']
+    if check_permission(data, PERM_MOD):
+        if data['args']:
+            if self.charMgr.char_exists(data['args'][0]):
+                name = data['args'][0]
             else:
-                self.connMgr.send_message("Character " + args[0] + " doesn't exist!")
+                self.connMgr.send_message("Character " + data['args'][0] + " doesn't exist!")
                 return
 
     try:

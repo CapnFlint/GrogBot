@@ -3,7 +3,7 @@ import utils.db_utils as db
 
 import modules.overlay.overlay as overlay
 
-@processes('!plank', PERM_MOD)
+#@processes('!plank', PERM_MOD)
 def command_plank(self, sender, args):
     target = args[0]
     if len(args) > 1:

@@ -6,7 +6,7 @@ import modules.overlay.overlay as overlay
 
 duel_active = False
 
-@processes("!toggleduel", PERM_MOD)
+#@processes("!toggleduel", PERM_MOD)
 def command_toggleduel(self, sender, args):
     try:
         self.duel_toggle
@@ -18,7 +18,7 @@ def command_toggleduel(self, sender, args):
     else:
         self.connMgr.send_message("Dueling has been disabled.")
 
-@processes("!duel")
+#@processes("!duel")
 def command_duel(self, sender, args):
     global duel_active
 

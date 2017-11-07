@@ -4,7 +4,7 @@ import random
 
 @processes("!tweet")
 @processes("!rt")
-def command_tweet(self, sender, args):
+def command_tweet(self, data):
     messages = [
         "If you want to support the stream, please like and retweet: ",
         "capnMilo loves retweets! - ",
