@@ -190,18 +190,6 @@ class ConnectionManager():
 
         return perm
 
-#    def _get_resub_info(self, data):
-#        tags = self._get_tags(data)
-#        resub = {}
-#        if tags['msg-id'] and tags['msg-id'] == 'resub':
-#            resub['name'] = tags['login']
-#            resub['length'] = tags['msg-param-months']
-#            if tags['system-msg']:
-#                resub['message'] = tags['system-msg']
-#            else:
-#                resub['message'] = ''
-#        return resub
-
     def _get_emotes(self, tags):
         '''
         '@color=#5F9EA0;display-name=mr_5ka;emotes=81530:0-7,9-16,18-25;mod=0;room-id=91580306;subscriber=1;turbo=0;user-id=69442368;user-type='
@@ -259,18 +247,6 @@ class ConnectionManager():
                         if len(line) >= 1:
                             if line[0] == 'PING':
                                 self._send_pong(line[1])
-
-
-                            #elif line[2] == 'USERNOTICE':
-                            #    print "SUB USERNOTICE!!!"
-                            #    self._handle_usernotice(line[0])
-
-                            #elif line[1] == 'PRIVMSG':
-                            #    sender = self._get_sender(line[0])
-                            #    if sender == 'twitchnotify':
-                            #        print "SUB NOTIFY!!!"
-                            #        self._handle_notify(self._get_message(line[3:]))
-
 
                             elif line[2] == 'PRIVMSG':
                                 msg = self._parse_message(line)

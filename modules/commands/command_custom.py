@@ -12,7 +12,7 @@ def command_addcmd(self, data):
 
 @processes('!removecmd', PERM_MOD)
 def command_removecmd(self, data):
-    if len(args) > 0:
+    if len(data['args']) > 0:
         command = "!" + data['args'][0].lstrip('!')
         self.remove_custom_command(command)
     else:

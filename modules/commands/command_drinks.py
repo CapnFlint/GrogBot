@@ -9,13 +9,13 @@ def buy_drink(self, name):
     else:
         self.connMgr.send_message("Sorry " + name + ", but you don't have enough booty to buy a drink.")
 
-#@processes('!ale')
-#@processes('!beer')
-#@processes('!rum')
-#@processes('!grog')
-def command_buydrink(self, sender, args):
-    buy_drink(self, sender)
+@processes('!ale')
+@processes('!beer')
+@processes('!rum')
+@processes('!grog')
+def command_buydrink(self, data):
+    buy_drink(self, data['sender'])
 
-#@processes('!onthehouse', PERM_MOD)
-def command_onthehouse(self, sender, args):
-    self.connMgr.send_message(sender + ' buys everyone a drink! Cheers!')
+@processes('!onthehouse', PERM_MOD)
+def command_onthehouse(self, data):
+    self.connMgr.send_message(data['sender'] + ' buys everyone a drink! Cheers!')
