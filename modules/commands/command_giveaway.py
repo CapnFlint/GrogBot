@@ -57,7 +57,7 @@ def command_giveaway(self, sender, args):
                         self.winner = giveaway_picked
                     else:
                         self.connMgr.send_message("Scurvy landlubbers trying to claim capnBooty they did not win must walk the plank!")
-                        self.run_command("!plank",{'args':[sender]})
+                        self.run_command("!plank",{'args':[sender],'sender':'grogbot'})
                 self.add_command("!claim", claim_prize)
 
                 def pass_prize(self, data):

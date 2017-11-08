@@ -89,7 +89,7 @@ class MessageProcessor():
         if option in self.options:
             del self.options[option]
 
-    def run_command(self, cmd, data = {}):
+    def run_command(self, cmd, data = {'sender':'grogbot'}):
         logging.info("Running command: " + cmd)
         if cmd in self.options.keys():
             self.options[cmd](self, data)
