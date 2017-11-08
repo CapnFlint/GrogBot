@@ -15,10 +15,10 @@ def check_permission(data, level):
     access = db.get_access(data['sender'])
 
     if level == PERM_MOD:
-        if data['perm']['mod']:
+        if data['perms']['mod']:
             return True
     elif level == PERM_SUBSCRIBER:
-        if data['perm']['sub']:
+        if data['perms']['sub']:
             return True
     else:
         if access >= level:
