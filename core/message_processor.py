@@ -51,6 +51,7 @@ class MessageProcessor():
         logging.debug('Mod: ' + str(msg['perms']['mod']))
 
         if len(msg['text']) >= 1:
+            logging.debug("[" + msg['text'] + "]")
             msg['args'] = msg['text'].split(' ')[:-1]
             cmd = msg['args'].pop(0).lower()
 
