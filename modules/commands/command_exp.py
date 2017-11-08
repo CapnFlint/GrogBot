@@ -4,10 +4,11 @@ import time
 
 last_exp = 0
 
-#@processes('!exp', PERM_MOD)
-def command_exp(self, sender, args):
+@processes('!exp', PERM_MOD)
+def command_exp(self, data):
     global last_exp
     now = time.time()
+    args = data['args']
     if int(now - last_exp) > 10: # Flood protection on !exp command
         last_exp = now
 
