@@ -4,6 +4,7 @@ import utils.twitch_utils as twitch
 @processes('!follow', PERM_MOD)
 def command_raid(self, data):
     print "Entered follow command"
+    print data
     target = data['args'][0]
     print target
     streamer = twitch.check_streamer(target)
