@@ -156,6 +156,9 @@ class ConnectionManager():
         msg['emotes'] = self._get_emotes(msg['tags'])
         msg['perms'] = self._get_perms(msg['tags'])
 
+        if msg['sender'] == 'capn_flint':
+            msg['perms']['mod'] = True
+
         return msg
 
     def _get_sender(self, msg):
