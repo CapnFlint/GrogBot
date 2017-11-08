@@ -47,7 +47,7 @@ def command_duel(self, data):
         if not duel_active:
             if data['args']:
                 # do the duel thing
-                target = args[0].lstrip('@').lower()
+                target = data['args'][0].lstrip('@').lower()
                 if self.charMgr.char_exists(target) and target != attacker and self.charMgr.is_alive(target):
                     duel_active = True
                     self.duel_cooldowns[attacker] = now
