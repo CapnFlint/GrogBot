@@ -26,7 +26,7 @@ def command_giveaway(self, data):
 
         def command_enter(self, data):
             if check_permission(data, PERM_NONE):
-                register_entry(self, data['sender'], data['args'])
+                register_entry(self, data)
         self.add_command("!enter", command_enter)
 
         self.connMgr.send_message("Type !enter [x] now, with x being the number of tickets (max " + str(self.max_entry) + "), for a chance to win! You must be a follower to enter!")
