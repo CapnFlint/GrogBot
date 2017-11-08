@@ -116,6 +116,7 @@ def command_giveaway(self, data):
         if check_permission(data['sender'], PERM_MOD):
             if data['args']:
                 args = data['args']
+                print args
                 try:
                     max_entry = int(args[len(args)-1])
                     item = " ".join(args[:-1])
