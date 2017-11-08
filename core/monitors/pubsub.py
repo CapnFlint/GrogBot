@@ -104,7 +104,7 @@ class pubsub():
             msg = json.loads(data['message'])
 
             name = msg['user_name']
-            sub_type = sub_types[msg['sub_plan']]
+            sub_type = msg['sub_plan']
             count = msg['months']
             time = msg['time']
             context = msg['context']

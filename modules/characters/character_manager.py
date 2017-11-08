@@ -290,40 +290,19 @@ class CharacterManager():
         subbed = False
 
         if char:
+            now = datetime.now()
+            last_check = char['checked_sub']
+            if (now - last_check) > 86400:
+                sub = utils.get_subscription(name)
+                if sub:
+                    self.update_subscriber(char, sub['created'], sub['sub_plan'])
+                    subbed = True
+                elif char['subscriber']:
+                    self.remove_subscriber(char)
+                char['checked_sub'] = now
 
             if char['name'] == "Capn_Flint":
                 subbed = True
-
-            # code to check current subscribers for an unsub. Done monthly.
-            elif not char['subscriber'] and force_check:
-                #TODO: see if we can remove this
-                date = utils.check_subscriber(name, 'capn_flint')
-                # is actually a sub, update to make a subscriber
-                if date != "":
-                    self.update_subscriber(char, date, "1", 1)
-                    subbed = True
-
-            elif char['subscriber']:
-                if char['sub_date']:
-                    now = datetime.now()
-                    sub_date = datetime.strptime(char['sub_date'],"%Y-%m-%dT%H:%M:%SZ")
-                    if (now - sub_date) > (timedelta(days=31) * char['sub_count']):
-                        date = utils.check_subscriber(name, 'capn_flint')
-                        if date != "":
-                            #TODO: Get the current sub_type of char and carry over
-                            self.update_subscriber(char, date)
-                            subbed = True
-                        else:
-                            self.remove_subscriber(char)
-                    else:
-                        subbed = True
-                else:
-                    date = utils.check_subscriber(name, 'capn_flint')
-                    if date != "":
-                        self.update_subscriber(char, date)
-                        subbed = True
-                    else:
-                        self.remove_subscriber(char)
 
             self.save_character(char)
         return subbed
