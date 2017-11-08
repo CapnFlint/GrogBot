@@ -3,7 +3,7 @@ import utils.twitch_utils as utils
 
 from config.strings import strings
 
-#@processes('!give')
+@processes('!give')
 def command_give(self, data):
     args = data['args']
     try:
