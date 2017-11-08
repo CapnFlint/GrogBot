@@ -19,12 +19,12 @@ def command_mutiny(self, sender, args):
         countdown = 120
 
         def command_join(self, sender, args):
-            if check_permission(sender, PERM_NONE):
+            if check_permission(data, PERM_NONE):
                 mutiny_join(self, sender)
         self.add_command("!join", command_join)
 
         def command_defend(self, sender, args):
-            if check_permission(sender, PERM_NONE):
+            if check_permission(data, PERM_NONE):
                 mutiny_defend(self, sender)
         self.add_command("!defend", command_defend)
 

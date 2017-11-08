@@ -15,7 +15,7 @@ raffle_picked = ""
 def command_raffle(self, sender, args):
     global raffle_running, raffle_picked
 
-    if args and check_permission(sender, PERM_MOD):
+    if args and check_permission(data, PERM_MOD):
         if self.grog.event_running and not raffle_running:
             self.connMgr.send_message("Cannot start a raffle while an event is running!")
         if not raffle_running:
@@ -39,7 +39,7 @@ def command_raffle(self, sender, args):
                 if command == "end":
                     end_raffle()
         else:
-            if check_permission(sender, PERM_MOD):
+            if check_permission(data, PERM_MOD):
                 self.connMgr.send_message("Raffle already started!")
             else:
                 self.connMgr.send_message("To enter the current raffle, type !" + keyword + " ONCE now! You can type !booty to check how many tickets you can afford.")
@@ -57,7 +57,7 @@ def raffle_thread(self, keyword):
     self.max_entry = max_entry
 
     def command_raffle_enter(self, sender, args):
-        if check_permission(sender, PERM_NONE):
+        if check_permission(data, PERM_NONE):
             raffle_entry(self, sender, args)
     self.add_command("!" + keyword, command_raffle_enter)
 

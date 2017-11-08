@@ -12,7 +12,7 @@ def command_runvote(self, sender, args):
         self.connMgr.send_message('A vote has started!')
 
         def command_vote(self, sender, args):
-            if check_permission(sender, PERM_NONE):
+            if check_permission(data, PERM_NONE):
                 register_vote(self, sender, args)
 
         self.add_command('!vote', command_vote)

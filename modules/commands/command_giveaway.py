@@ -25,7 +25,7 @@ def command_giveaway(self, data):
         self.max_entry = max_entry
 
         def command_enter(self, data):
-            if check_permission(data['sender'], PERM_NONE):
+            if check_permission(data, PERM_NONE):
                 register_entry(self, data['sender'], data['args'])
         self.add_command("!enter", command_enter)
 
@@ -113,10 +113,9 @@ def command_giveaway(self, data):
     if self.grog.event_running and not giveaway_running:
         self.connMgr.send_message("Cannot start a giveaway while an event is running!")
     if not giveaway_running:
-        if check_permission(data['sender'], PERM_MOD):
+        if check_permission(data, PERM_MOD):
             if data['args']:
                 args = data['args']
-                print args
                 try:
                     max_entry = int(args[len(args)-1])
                     item = " ".join(args[:-1])
@@ -137,7 +136,7 @@ def command_giveaway(self, data):
         else:
             self.connMgr.send_message("Giveaways are started whenever target follower goals are met and other special occasions. The prize will be either one of the games listed below the stream, or will be announced when the giveaway is started! You must follow to enter giveaways.")
     else:
-        if check_permission(data['sender'], PERM_MOD):
+        if check_permission(data, PERM_MOD):
             self.connMgr.send_message("Giveaway already started!")
         else:
             self.connMgr.send_message("To enter the current giveaway, type !enter [x] now! You can type !booty to check how many tickets you can afford.")
