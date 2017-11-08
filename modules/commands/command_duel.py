@@ -106,7 +106,7 @@ def end_duel(self):
 def fight_duel(self, player1, player2):
     self.connMgr.send_message(player1 + " has challenged " + player2 + " to a duel to the DEATH! Who will win?")
     # start betting
-    self.run_command("!runbet", {'args':[player1, player2],'sender':'grogbot'})
+    self.run_command("!runbet", {'args':[player1, player2]})
     time.sleep(125)
 
     fight_array = []
@@ -130,7 +130,7 @@ def fight_duel(self, player1, player2):
     self.charMgr.give_exp(-exp, [loser])
     self.connMgr.send_message(winner + " wins! (+" + str(exp) + "exp)")
     time.sleep(5)
-    self.run_command("!winner", {'args':[winner],'sender':'grogbot'})
+    self.run_command("!winner", {'args':[winner]})
     time.sleep(900)
     self.connMgr.send_message("The Dueling arena has been cleaned and is ready for the next match!")
     end_duel(self)

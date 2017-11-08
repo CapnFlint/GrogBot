@@ -121,7 +121,7 @@ def arena_fight_battles(self):
             blue = temp.pop(0)
             self.connMgr.send_message(red + " is facing " + blue + " in a fight to the DEATH! Who will win?")
             # start betting
-            self.run_command("!runbet", {'args':[red,blue],'sender':'grogbot'})
+            self.run_command("!runbet", {'args':[red,blue]})
             time.sleep(125)
 
             fight_array = []
@@ -144,7 +144,7 @@ def arena_fight_battles(self):
             self.charMgr.give_exp(exp, [winner])
             self.connMgr.send_message(winner + " wins! (+" + str(exp) + "exp)")
             time.sleep(5)
-            self.run_command("!winner", {'args':[winner],'sender':'grogbot'})
+            self.run_command("!winner", {'args':[winner]})
             time.sleep(30)
             # bet winner
         rnd += 1
