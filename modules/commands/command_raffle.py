@@ -79,20 +79,20 @@ def raffle_thread(self, keyword):
             overlay.raffle_winner(raffle_picked, [x.lower() for x in get_entries(self)])
             self.connMgr.send_message("Drawing a winner!")
 
-            def claim_prize(self, sender, args):
-                print "INFO: " + sender + " is trying to claim! (" + raffle_picked + ")"
-                if sender == raffle_picked.lower():
+            def claim_prize(self, data):
+                print "INFO: " + data['sender'] + " is trying to claim! (" + raffle_picked + ")"
+                if data['sender'] == raffle_picked.lower():
                     print "INFO: Claimed!!!"
                     self.claimed = True
                     self.winner = giveaway_picked
                 else:
                     self.connMgr.send_message("Scurvy landlubbers trying to claim capnBooty they did not win must walk the plank!")
-                    self.run_command("!plank",[sender])
+                    self.run_command("!plank",{'args':[data['sender']]})
             self.add_command("!claim", claim_prize)
 
-            def pass_prize(self, sender, args):
-                print "PASS: " + sender + " :: " + raffle_picked
-                if sender == raffle_picked.lower():
+            def pass_prize(self, data):
+                print "PASS: " + data['sender'] + " :: " + raffle_picked
+                if data['sender'] == raffle_picked.lower():
                     if raffle_picked in self.raffle_entries.keys():
                         del self.raffle_entries[raffle_picked]
                     self.connMgr.send_message(raffle_picked + " has passed on the prize!")

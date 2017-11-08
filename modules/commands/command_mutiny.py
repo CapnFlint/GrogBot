@@ -9,7 +9,7 @@ def command_mutiny(self, sender, args):
     self.mutineers = {}
     self.defenders = {}
     self.connMgr.send_message("The Capn catches " + sender + " trying to start a mutiny!")
-    self.run_command("!plank", [sender, 15])
+    self.run_command("!plank", {'args':[sender, 15]})
 
     # Have a mutiny window... Random event every X to Y minutes.
     # a viewer starts a mutiny... anyone or subscriber?

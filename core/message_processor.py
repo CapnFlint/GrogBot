@@ -51,7 +51,6 @@ class MessageProcessor():
         logging.debug('Mod: ' + str(msg['perms']['mod']))
 
         if len(msg['text']) >= 1:
-            logging.debug("[" + msg['text'] + "]")
             msg['args'] = msg['text'].split(' ')
             cmd = msg['args'].pop(0).lower()
 
@@ -90,10 +89,10 @@ class MessageProcessor():
         if option in self.options:
             del self.options[option]
 
-    def run_command(self, cmd, args=[]):
+    def run_command(self, cmd, data = {}):
         logging.info("Running command: " + cmd)
         if cmd in self.options.keys():
-            self.options[cmd](self, twitch.twitch_channel, args)
+            self.options[cmd](self, data)
         else:
             logging.warning("Command not valid: " + cmd)
 

@@ -57,12 +57,12 @@ def command_giveaway(self, sender, args):
                         self.winner = giveaway_picked
                     else:
                         self.connMgr.send_message("Scurvy landlubbers trying to claim capnBooty they did not win must walk the plank!")
-                        self.run_command("!plank",[sender])
+                        self.run_command("!plank",{'args':[sender]})
                 self.add_command("!claim", claim_prize)
 
-                def pass_prize(self, sender, args):
-                    print "PASS: " + sender + " :: " + giveaway_picked
-                    if sender == giveaway_picked.lower():
+                def pass_prize(self, data):
+                    print "PASS: " + data['sender'] + " :: " + giveaway_picked
+                    if data['sender'] == giveaway_picked.lower():
                         if giveaway_picked in self.giveaway_entries.keys():
                             del self.giveaway_entries[giveaway_picked]
                         self.connMgr.send_message(giveaway_picked + " has passed on the prize!")
