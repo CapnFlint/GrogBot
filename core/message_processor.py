@@ -52,7 +52,7 @@ class MessageProcessor():
 
         if len(msg['text']) >= 1:
             logging.debug("[" + msg['text'] + "]")
-            msg['args'] = msg['text'].split(' ')[:-1]
+            msg['args'] = msg['text'].split(' ')
             cmd = msg['args'].pop(0).lower()
 
             if self.grog.charMgr.is_alive(msg['sender']):
