@@ -115,27 +115,27 @@ class ConnectionManager():
 
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
-    def _handle_join(self, sender):
+    def _handle_join(self, user):
         ''' We force a verification here whenever someone joins the channel '''
-        if self.grog.charMgr.subbed(sender, force_check = True):
-            char = self.grog.charMgr.load_character(sender)
+        if self.grog.charMgr.subbed(user, force_check = True):
+            char = self.grog.charMgr.load_character(user)
             if char['ship'] > 0:
                 ship = char['ship']
             else:
                 ship = char['sub_count']
-            overlay.ship("join", sender, ship)
+            overlay.ship("join", user, ship)
 
-    def _handle_part(self, sender):
-        char = self.grog.charMgr.load_character(sender)
+    def _handle_part(self, user):
+        char = self.grog.charMgr.load_character(user)
         if char['subscriber']:
             if char['ship'] > 0:
                 ship = char['ship']
             else:
                 ship = char['sub_count']
-            overlay.ship("leave", sender, ship)
+            overlay.ship("leave", user, ship)
 
-    def _handle_mode(self, sender):
-        logging.debug(sender + " is a mod!")
+    def _handle_mode(self, user):
+        logging.debug(user + " is a mod!")
 
     def _handle_notify(self, msg):
         pass
@@ -184,7 +184,7 @@ class ConnectionManager():
         perm = {}
         perm['mod'] = bool(int(tags['mod']))
         perm['sub'] = bool(int(tags['subscriber']))
-        
+
         return perm
 
 #    def _get_resub_info(self, data):
@@ -278,7 +278,7 @@ class ConnectionManager():
                                         for i in range(msg['emotes'][emote]):
                                             emoteList.append(emote)
 
-                                    overlay.send_emotes(sender, emoteList)
+                                    overlay.send_emotes(msg['sender'], emoteList)
 
                                 if msg['channel'] == self.CHAN:
                                     if msg['text'].startswith('!'):
@@ -286,7 +286,7 @@ class ConnectionManager():
                                     else:
                                         self.grog.msgProc.parse_message(msg)
                                 else:
-                                    self.grog.msgProc.parse_raid_message(message, sender)
+                                    self.grog.msgProc.parse_raid_message(message, msg['sender'])
 
                             elif line[1] == 'JOIN':
                                 self._handle_join(self._get_sender(line[0]))
