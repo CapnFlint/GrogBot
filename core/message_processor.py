@@ -91,7 +91,7 @@ class MessageProcessor():
 
     def run_command(self, cmd, data = {}):
         logging.info("Running command: " + cmd)
-        if not data['sender']:
+        if not 'sender' in data.keys():
             data['sender'] = 'grogbot'
             data['perms'] = {'mod':True,'sub':True}
         if cmd in self.options.keys():
