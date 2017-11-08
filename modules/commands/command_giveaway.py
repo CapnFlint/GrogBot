@@ -50,8 +50,8 @@ def command_giveaway(self, data):
                 self.connMgr.send_message("The winner is: " + giveaway_picked + "! You have two minutes to !claim or !pass the booty!")
 
                 def claim_prize(self, data):
-                    print "INFO: " + sender + " is trying to claim! (" + giveaway_picked + ")"
-                    if sender == giveaway_picked.lower():
+                    logging.debug("INFO: " + data['sender'] + " is trying to claim! (" + giveaway_picked + ")")
+                    if data['sender'] == giveaway_picked.lower():
                         print "INFO: Claimed!!!"
                         self.claimed = True
                         self.winner = giveaway_picked
