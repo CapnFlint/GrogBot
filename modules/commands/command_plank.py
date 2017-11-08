@@ -6,7 +6,7 @@ import modules.overlay.overlay as overlay
 @processes('!plank', PERM_MOD)
 def command_plank(self, data):
     target = data['args'][0]
-    if len(args) > 1:
+    if len(data['args']) > 1:
         try:
             duration = int(data['args'][1])
         except:
