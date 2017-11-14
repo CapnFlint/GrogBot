@@ -138,8 +138,12 @@ class CharacterManager():
             con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
 
             with con:
+                cols = sorted(char.keys())
                 cur = con.cursor()
-                cur.execute("REPLACE INTO characters (user_id, name, level, exp, booty, access, follows, checked_follow, subscriber, sub_date, sub_max, sub_count, sub_type, ship) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (char['user_id'], char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['sub_date'], char['sub_max'], char['sub_count'], char['sub_type'], char['ship']))
+                cur.execute("REPLACE INTO foo (" + ", ".join(cols) + ") VALUES (%{" + "}s, {".join(cols) + "}s)", char)
+                #cur.execute("REPLACE INTO characters (user_id, name, level, exp, booty, access, follows, checked_follow, subscriber, checked_sub, sub_date, sub_max, sub_count, sub_type, ship)\
+                # VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                # (char['user_id'], char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['checked_sub'], char['sub_date'], char['sub_max'], char['sub_count'], char['sub_type'], char['ship']))
                 con.commit()
             return 1
         except mdb.Error, e:
@@ -147,7 +151,7 @@ class CharacterManager():
             if con:
                 con.rollback()
 
-            logging("DB Error %d: %s" % (e.args[0],e.args[1]))
+            logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
             return 0
 
         finally:
