@@ -140,7 +140,7 @@ class CharacterManager():
             with con:
                 cols = sorted(char.keys())
                 cur = con.cursor()
-                sql = "REPLACE INTO foo (" + ", ".join(cols) + ") VALUES (%(" + ")s, %(".join(cols) + ")s)"
+                sql = "REPLACE INTO characters (" + ", ".join(cols) + ") VALUES (%(" + ")s, %(".join(cols) + ")s)"
                 print sql
                 cur.execute(sql, char)
                 #cur.execute("REPLACE INTO characters (user_id, name, level, exp, booty, access, follows, checked_follow, subscriber, checked_sub, sub_date, sub_max, sub_count, sub_type, ship)\
