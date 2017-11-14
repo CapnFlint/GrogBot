@@ -141,11 +141,7 @@ class CharacterManager():
                 cols = sorted(char.keys())
                 cur = con.cursor()
                 sql = "REPLACE INTO characters (" + ", ".join(cols) + ") VALUES (%(" + ")s, %(".join(cols) + ")s)"
-                print sql
                 cur.execute(sql, char)
-                #cur.execute("REPLACE INTO characters (user_id, name, level, exp, booty, access, follows, checked_follow, subscriber, checked_sub, sub_date, sub_max, sub_count, sub_type, ship)\
-                # VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-                # (char['user_id'], char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['checked_sub'], char['sub_date'], char['sub_max'], char['sub_count'], char['sub_type'], char['ship']))
                 con.commit()
             return 1
         except mdb.Error, e:
