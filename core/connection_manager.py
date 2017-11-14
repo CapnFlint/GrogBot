@@ -51,7 +51,7 @@ class ConnectionManager():
                     new_subs.append(char['name'])
                     self.grog.charMgr.give_booty(50, [user])
                     self.grog.charMgr.subbed(user, force_check=True)
-        if new:
+        if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
             stat = db.add_stat('sessionSubs', len(new_subs))
             overlay.update_stat('subs', stat)
