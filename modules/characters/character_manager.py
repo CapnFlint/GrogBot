@@ -291,14 +291,20 @@ class CharacterManager():
         char = self.load_character(name)
         subbed = False
 
+        logging.debug(char)
+
         if char:
             now = int(time.time())
             last_check = char['checked_sub']
+
             if char['subscriber']:
+                logging.debug(char['name'] + " is subscribed")
                 recheck = 2678400 # 31 days
             else:
+                logging.debug(char['name'] + " is NOT subscribed")
                 recheck = 86400 # 24 hours
             if (now - last_check) > recheck:
+                logging.debug("Rechecking...")
                 sub = utils.get_subscription(name)
                 if sub:
                     self.update_subscriber(char, sub['created'], sub['sub_plan'])
