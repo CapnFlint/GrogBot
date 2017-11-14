@@ -34,13 +34,13 @@ class ConnectionManager():
     def subscribers(self):
         logging.info("Checking for Subscribers!")
 
-        subs = twitch.get_latest_subscribers(50)
+        subs = twitch.get_latest_subscribers(100)
         sublist = subs['1000'] + subs['2000'] + subs['3000']
 
         print sublist
         self.update_subcount()
 
-        new = []
+        new_subs = []
         if sublist:
             for user in sublist:
                 logging.debug("Processing: " + user)
@@ -48,12 +48,12 @@ class ConnectionManager():
                     char = self.grog.charMgr.load_character(user)
                     logging.info("[NEW SUBSCRIBER] " + char['name'])
                     overlay.alert_sub(char['name'])
-                    new.append(char['name'])
+                    new_subs.append(char['name'])
                     self.grog.charMgr.give_booty(50, [user])
                     self.grog.charMgr.subbed(user, force_check=True)
         if new:
-            self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new)))
-            stat = db.add_stat('sessionSubs', len(new))
+            self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
+            stat = db.add_stat('sessionSubs', len(new_subs))
             overlay.update_stat('subs', stat)
 
     def update_subcount(self):
