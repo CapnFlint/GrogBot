@@ -300,6 +300,7 @@ class CharacterManager():
             if char['subscriber']:
                 logging.debug(char['name'] + " is subscribed")
                 recheck = 2678400 # 31 days
+                subbed = True
             else:
                 logging.debug(char['name'] + " is NOT subscribed")
                 recheck = 86400 # 24 hours
