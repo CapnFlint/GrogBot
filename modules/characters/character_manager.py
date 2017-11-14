@@ -290,9 +290,13 @@ class CharacterManager():
         subbed = False
 
         if char:
-            now = datetime.now()
+            now = int(time.time())
             last_check = char['checked_sub']
-            if (now - last_check) > 86400:
+            if char['subscriber']:
+                recheck = 2678400 # 31 days
+            else:
+                recheck = 86400 # 24 hours
+            if (now - last_check) > recheck:
                 sub = utils.get_subscription(name)
                 if sub:
                     self.update_subscriber(char, sub['created'], sub['sub_plan'])
