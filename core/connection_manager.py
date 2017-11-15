@@ -227,7 +227,7 @@ class ConnectionManager():
         logging.debug("Sub Points: " + str(twitch.get_sub_points()))
 
         # Check for offline subscribers
-        thread.start_new_thread(self.subscribers)
+        thread.start_new_thread(self.subscribers, ())
 
         data = ""
 
