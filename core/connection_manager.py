@@ -1,6 +1,7 @@
 import logging
 import socket
 import re
+import thread
 
 from config.config import config
 from config.strings import strings
@@ -55,6 +56,7 @@ class ConnectionManager():
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
             stat = db.add_stat('sessionSubs', len(new_subs))
             overlay.update_stat('subs', stat)
+        logging.info("Subscriber check done!")
 
     def update_subcount(self):
         count = twitch.get_sub_points()
@@ -116,9 +118,8 @@ class ConnectionManager():
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
     def _handle_join(self, user):
-        ''' We force a verification here whenever someone joins the channel '''
-        if self.grog.charMgr.subbed(user, force_check = True):
-            char = self.grog.charMgr.load_character(user)
+        char = self.grog.charMgr.load_character(user)
+        if char['subscriber']:
             if char['ship'] > 0:
                 ship = char['ship']
             else:
@@ -226,8 +227,7 @@ class ConnectionManager():
         logging.debug("Sub Points: " + str(twitch.get_sub_points()))
 
         # Check for offline subscribers
-        self.subscribers()
-        logging.info("Subscriber check done!")
+        thread.start_new_thread(subscribers, (self,))
 
         data = ""
 

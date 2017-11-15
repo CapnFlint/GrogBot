@@ -103,6 +103,9 @@ class pubsub():
 
             msg = json.loads(data['message'])
 
+            if msg['sub_plan'] == 'Prime':
+                msg['sub_plan'] = '1000'
+
             name = msg['user_name']
             sub_type = msg['sub_plan']
             count = msg['months']

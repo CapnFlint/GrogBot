@@ -287,7 +287,7 @@ class CharacterManager():
         # Fill this in later to grab the list of subbed users, and force a check on each of them.
         pass
 
-    def subbed(self, name, force_check=False, skip_check=False):
+    def subbed(self, name):
         char = self.load_character(name)
         subbed = False
 
