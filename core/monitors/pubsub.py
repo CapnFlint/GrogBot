@@ -123,19 +123,19 @@ class pubsub():
             #TODO: update so higher sub tiers add more to the subathon timer
             if context == "sub":
                 self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
-                if sub_type == "1":
+                if sub_type in ["1000","Prime"]:
                     overlay.update_timer(10)
-                elif sub_type == "2":
+                elif sub_type == "2000":
                     overlay.update_timer(20)
-                elif sub_type == "3":
+                elif sub_type == "3000":
                     overlay.update_timer(50)
             else:
                 self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
-                if sub_type == "1":
+                if sub_type in ["1000","Prime"]:
                     overlay.update_timer(5)
-                elif sub_type == "2":
+                elif sub_type == "2000":
                     overlay.update_timer(10)
-                elif sub_type == "3":
+                elif sub_type == "3000":
                     overlay.update_timer(25)
 
             self.grog.charMgr.give_booty(50, [name])

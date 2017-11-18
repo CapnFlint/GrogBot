@@ -141,7 +141,46 @@ class ConnectionManager():
     def _handle_notify(self, msg):
         pass
 
-    def _handle_usernotice(self, tags):
+    def _handle_usernotice(self, msg):
+        '''
+        @badges=<badges>;color=<color>;display-name=<display-name>;emotes=<emotes>;id=<id-of-msg>;login=<user>;mod=<mod>;msg-id=<msg-id>;room-id=<room-id>;subscriber=<subscriber>;system-msg=<system-msg>;tmi-sent-ts=<timestamp>;turbo=<turbo>;user-id=<user-id>;user-type=<user-type> :tmi.twitch.tv USERNOTICE #<channel> :<message>
+        '''
+        if msg['tags']['msg-id'] == 'ritual':
+            # A "Ritual" message, like new person's first message.
+            pass
+        elif msg['tags']['msg-id'] == 'raid': # A raid
+            pass
+        elif msg['tags']['msg-id'] in ['sub','resub']: #Subscription
+            ''' Chilly613 gifted a $4.99 sub to Sgt_Cracker! '''
+            sysmsg = msg['tags']['system-msg'].split()
+            if sysmsg[1] == 'gifted': # Gift Sub!
+                sender = sysmsg[0]
+                name = sysmsg[6]
+                sub_type = msg['tags']['msg-param-sub-plan']
+                count = msg['tags']['msg-param-months']
+                self.grog.charMgr.add_sub(name, sub_type, 0, count)
+
+                if msg['tags']['msg-id'] == "sub":
+                    self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
+                    if sub_type in ["1000","Prime"]:
+                        overlay.update_timer(10)
+                    elif sub_type == "2000":
+                        overlay.update_timer(20)
+                    elif sub_type == "3000":
+                        overlay.update_timer(50)
+                else:
+                    self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
+                    if sub_type in ["1000","Prime"]:
+                        overlay.update_timer(5)
+                    elif sub_type == "2000":
+                        overlay.update_timer(10)
+                    elif sub_type == "3000":
+                        overlay.update_timer(25)
+
+                self.grog.charMgr.give_booty(50, [name,sender])
+                overlay.ship("sub", name, count)
+                overlay.alert_sub(name, sub_type, count, msg['tags']['msg-id'], msg['text'])
+                self.update_subcount()
         pass
 # ------------------------------------------------------------------------------
 
@@ -266,6 +305,11 @@ class ConnectionManager():
                                         self.grog.msgProc.parse_message(msg)
                                 else:
                                     self.grog.msgProc.parse_raid_message(message, msg['sender'])
+
+                            elif line[2] == 'USERNOTICE':
+                                msg = self._parse_message(line[1])
+
+                                self._handle_usernotice(msg)
 
                             elif line[1] == 'JOIN':
                                 self._handle_join(self._get_sender(line[0]))
