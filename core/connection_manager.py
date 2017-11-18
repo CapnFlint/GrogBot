@@ -38,7 +38,6 @@ class ConnectionManager():
         subs = twitch.get_latest_subscribers(100)
         sublist = subs['1000'] + subs['2000'] + subs['3000']
 
-        print sublist
         self.update_subcount()
 
         new_subs = []
@@ -144,6 +143,9 @@ class ConnectionManager():
     def _handle_usernotice(self, msg):
         '''
         @badges=<badges>;color=<color>;display-name=<display-name>;emotes=<emotes>;id=<id-of-msg>;login=<user>;mod=<mod>;msg-id=<msg-id>;room-id=<room-id>;subscriber=<subscriber>;system-msg=<system-msg>;tmi-sent-ts=<timestamp>;turbo=<turbo>;user-id=<user-id>;user-type=<user-type> :tmi.twitch.tv USERNOTICE #<channel> :<message>
+
+        USERNOTICE: @badges=subscriber/24;color=#5F9EA0;display-name=LeJavJav;emotes=;id=2c038892-6d92-432c-950b-eedb07c642e6;login=lejavjav;mod=0;msg-id=resub;msg-param-months=36;msg-param-sub-plan-name=Raptor\sPack;msg-param-sub-plan=1000;room-id=43830727;subscriber=1;system-msg=LeJavJav\sjust\ssubscribed\swith\sa\s$4.99\ssub.\sLeJavJav\ssubscribed\sfor\s36\smonths\sin\sa\srow!;tmi-sent-ts=1511027952452;turbo=0;user-id=77439549;user-type= :tmi.twitch.tv USERNOTICE #kinggothalion
+
         '''
         print "USERNOTICE!!!"
         if msg['tags']['msg-id'] == 'ritual':
@@ -252,7 +254,6 @@ class ConnectionManager():
                 em_cnt = len(tmp[1].split(','))
                 emotes[em_id] = em_cnt
 
-            print emotes
         return emotes
 
 # ------------------------------------------------------------------------------
@@ -313,10 +314,11 @@ class ConnectionManager():
                                 print "USERNOTICE: " + " ".join(line)
 
                             elif line[1] == 'JOIN':
-                                self._handle_join(self._get_sender(line[0]))
+                                pass
+                                #self._handle_join(self._get_sender(line[0]))
 
                             elif line[1] == 'PART':
-                                self._handle_part(self._get_sender(line[0]))
+                                pass #self._handle_part(self._get_sender(line[0]))
 
                             elif line[1] == 'MODE':
                                 self._handle_mode(line[4])
