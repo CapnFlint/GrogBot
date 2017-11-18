@@ -63,6 +63,7 @@ def update_ids():
     while len(names) > 0:
         block = names[:50]
         names = names[50:]
+        print block
 
         ids = twitch.get_ids(block)
 

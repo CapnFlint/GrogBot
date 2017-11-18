@@ -7,6 +7,7 @@ from config.config import config
 
 def get_ids(names):
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
+    print url
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -20,7 +21,7 @@ def get_ids(names):
             results[user['name']] = user['_id']
         return results
     except urllib2.URLError:
-        logging.error("urllib2 error - check_streamer")
+        logging.error("urllib2 error - get_ids")
         return None
 
 def get_viewers(include_mods = True):
