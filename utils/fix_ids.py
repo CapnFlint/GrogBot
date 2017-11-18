@@ -62,19 +62,20 @@ def update_ids():
     total = len(names)
     skipped = []
     for name in names:
+        cname = name.lower().strip()
 
-        print "Processing: " + name
+        print "Processing: " + cname
 
-        ids = twitch.get_ids([name.lower()])
+        ids = twitch.get_ids([cname])
 
         print ids
 
         if ids:
             count += 1
-            fix_id(name, ids[name.lower()])
+            fix_id(name, ids[cname])
         else:
-            print "Skipped " + name
-            skipped.append(name)
+            print "Skipped " + cname
+            skipped.append(cname)
 
     print "Total fixed: " + str(count) + "/" + str(total)
     print "Skipped: " + str(skipped)
