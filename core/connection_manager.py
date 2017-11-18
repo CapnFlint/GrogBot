@@ -110,7 +110,7 @@ class ConnectionManager():
         self.sock.send('PART %s\r\n' % chan)
 
     def _set_color(self):
-        self._send_message('Ahoy Mateys! capnHi I heard you needed a bot! capnYarr capnHype')
+        #self._send_message('Ahoy Mateys! capnHi I heard you needed a bot! capnYarr capnHype')
         self._send_message('.color BlueViolet')
 
 #-------------------------------------------------------------------------------
@@ -265,10 +265,10 @@ class ConnectionManager():
 
         logging.info("Connected...")
 
-        logging.debug("Sub Points: " + str(twitch.get_sub_points()))
+        #logging.debug("Sub Points: " + str(twitch.get_sub_points()))
 
         # Check for offline subscribers
-        thread.start_new_thread(self.subscribers, ())
+        #thread.start_new_thread(self.subscribers, ())
 
         data = ""
 
@@ -300,18 +300,17 @@ class ConnectionManager():
 
                                     overlay.send_emotes(msg['sender'], emoteList)
 
-                                if msg['channel'] == self.CHAN:
+                                if False and msg['channel'] == self.CHAN:
                                     if msg['text'].startswith('!'):
                                         self.grog.msgProc.parse_command(msg)
                                     else:
                                         self.grog.msgProc.parse_message(msg)
                                 else:
-                                    self.grog.msgProc.parse_raid_message(message, msg['sender'])
+                                    pass
+                                    #self.grog.msgProc.parse_raid_message(message, msg['sender'])
 
                             elif line[2] == 'USERNOTICE':
-                                msg = self._parse_message(line[1])
-
-                                self._handle_usernotice(msg)
+                                print "USERNOTICE: " + " ".join(line)
 
                             elif line[1] == 'JOIN':
                                 self._handle_join(self._get_sender(line[0]))

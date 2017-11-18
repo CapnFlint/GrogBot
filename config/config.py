@@ -10,8 +10,8 @@ config = {
         'access_token': "48kgaeiibyge2b2c07aodewsnq8t32"
     },
     'twitch': {
-        'channel': 'capn_flint',
-        'channel_id': '91580306'
+        'channel': 'kinggothalion', #'capn_flint',
+        'channel_id': '43830727' #'91580306'
     },
     'db': {
         'host': 'localhost',
