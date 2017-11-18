@@ -65,13 +65,13 @@ def update_ids():
 
         print "Processing: " + name
 
-        ids = twitch.get_ids([name])
+        ids = twitch.get_ids([name.lower()])
 
         print ids
 
         if ids:
             count += 1
-            fix_id(name, ids[name])
+            fix_id(name, ids[name.lower()])
         else:
             print "Skipped " + name
             skipped.append(name)
