@@ -60,17 +60,21 @@ def update_ids():
     amount = 10
     names = get_names()
     total = len(names)
-    while len(names) > 0:
-        block = names[:amount]
-        names = names[amount:]
+    skipped = []
+    for name in names:
 
-        print "Processing: " + block[0] + " to " + block[-1]
+        print "Processing: " + name
 
-        ids = twitch.get_ids(block)
+        ids = twitch.get_ids([name])
+
+        print ids
 
         if ids:
-            for name in ids.keys():
-                count += 1
-                fix_id(name, ids[name])
+            count += 1
+            fix_id(name, ids[name])
+        else:
+            print "Skipped " + name
+            skipped.append(name)
 
     print "Total fixed: " + str(count) + "/" + str(total)
+    print "Skipped: " + str(skipped)
