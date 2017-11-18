@@ -64,7 +64,9 @@ def update_ids():
         block = names[:50]
         names = names[50:]
 
-        ids = twitch.get_ids(names)
+        ids = twitch.get_ids(block)
+
+        print ids
 
         for name in ids.keys():
             count += 1
