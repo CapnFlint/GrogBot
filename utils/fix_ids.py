@@ -57,7 +57,7 @@ def remove_character(name):
 
 def update_ids():
     count = 0
-    amount = 20
+    amount = 10
     names = get_names()
     total = len(names)
     while len(names) > 0:
