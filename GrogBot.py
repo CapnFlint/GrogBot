@@ -18,6 +18,8 @@ import utils.db_utils as db
 
 from config.config import config
 
+from utils.fix_ids import *
+
 class GrogBot():
 
     def __init__(self, channel):
@@ -64,7 +66,8 @@ class GrogBot():
 
 def main():
     grog = GrogBot(config['twitch']['channel'])
-    grog.run()
+    #grog.run()
+    update_ids()
 
 if __name__ == "__main__":
     main()
