@@ -140,52 +140,69 @@ class ConnectionManager():
     def _handle_notify(self, msg):
         pass
 
-    def _handle_usernotice(self, msg):
+    def _handle_usernotice(self, tags):
         '''
         @badges=<badges>;color=<color>;display-name=<display-name>;emotes=<emotes>;id=<id-of-msg>;login=<user>;mod=<mod>;msg-id=<msg-id>;room-id=<room-id>;subscriber=<subscriber>;system-msg=<system-msg>;tmi-sent-ts=<timestamp>;turbo=<turbo>;user-id=<user-id>;user-type=<user-type> :tmi.twitch.tv USERNOTICE #<channel> :<message>
 
         USERNOTICE: @badges=subscriber/24;color=#5F9EA0;display-name=LeJavJav;emotes=;id=2c038892-6d92-432c-950b-eedb07c642e6;login=lejavjav;mod=0;msg-id=resub;msg-param-months=36;msg-param-sub-plan-name=Raptor\sPack;msg-param-sub-plan=1000;room-id=43830727;subscriber=1;system-msg=LeJavJav\sjust\ssubscribed\swith\sa\s$4.99\ssub.\sLeJavJav\ssubscribed\sfor\s36\smonths\sin\sa\srow!;tmi-sent-ts=1511027952452;turbo=0;user-id=77439549;user-type= :tmi.twitch.tv USERNOTICE #kinggothalion
 
+        USERNOTICE:
+        display-name=Capn_Flint;
+        login=capn_flint;
+        msg-id=subgift;
+        msg-param-months=1;
+        msg-param-recipient-display-name=CalTran2410;
+        msg-param-recipient-id=40427668;
+        msg-param-recipient-user-name=caltran2410;
+        msg-param-sub-plan-name=Channel\sSubscription\s(thegeekentry);
+        msg-param-sub-plan=1000;
+        system-msg=Capn_Flint\sgifted\sa\s$4.99\ssub\sto\sCalTran2410!;
+        tmi-sent-ts=1511029188110;
+        turbo=0;
+        user-id=91580306;
+        user-type=
+        :tmi.twitch.tv
+        USERNOTICE
+        #thegeekentry
+
         '''
         print "USERNOTICE!!!"
-        if msg['tags']['msg-id'] == 'ritual':
+        if tags['msg-id'] == 'ritual':
             # A "Ritual" message, like new person's first message.
+            print "RITUAL!!!"
             pass
-        elif msg['tags']['msg-id'] == 'raid': # A raid
+        elif tags['msg-id'] == 'raid': # A raid
             pass
-        elif msg['tags']['msg-id'] in ['sub','resub']: #Subscription
+        elif tags['msg-id'] == 'sub':
+            print "SUB!!!"
+            pass
+        elif tags['msg-id'] == 'resub':
+            print "RESUB!!!"
+            pass
+        elif tags['msg-id'] == 'subgift': #Subscription
             ''' Chilly613 gifted a $4.99 sub to Sgt_Cracker! '''
-            logging.debug("SUB/RESUB Usernotice!")
-            sysmsg = msg['tags']['system-msg'].split()
-            if sysmsg[1] == 'gifted': # Gift Sub!
-                sender = sysmsg[0]
-                name = sysmsg[6]
-                sub_type = msg['tags']['msg-param-sub-plan']
-                count = msg['tags']['msg-param-months']
-                self.grog.charMgr.add_sub(name, sub_type, 0, count)
+            logging.debug("Sub Gift!")
+            sender = tags['login']
+            recipient = tags['msg-param-recipient-user-name']
+            sub_type = msg['tags']['msg-param-sub-plan']
+            count = msg['tags']['msg-param-months']
+            self.grog.charMgr.add_sub(recipient, sub_type, 0, count)
 
-                if msg['tags']['msg-id'] == "sub":
-                    self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
-                    if sub_type in ["1000","Prime"]:
-                        overlay.update_timer(10)
-                    elif sub_type == "2000":
-                        overlay.update_timer(20)
-                    elif sub_type == "3000":
-                        overlay.update_timer(50)
-                else:
-                    self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
-                    if sub_type in ["1000","Prime"]:
-                        overlay.update_timer(5)
-                    elif sub_type == "2000":
-                        overlay.update_timer(10)
-                    elif sub_type == "3000":
-                        overlay.update_timer(25)
+            self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}! Thank {1} for the generous gift!!!".format(recipient, sender))
+            if sub_type == "1000","Prime":
+                overlay.update_timer(10)
+            elif sub_type == "2000":
+                overlay.update_timer(20)
+            elif sub_type == "3000":
+                overlay.update_timer(50)
 
-                self.grog.charMgr.give_booty(50, [name,sender])
-                overlay.ship("sub", name, count)
-                overlay.alert_sub(name, sub_type, count, msg['tags']['msg-id'], msg['text'])
-                self.update_subcount()
-        pass
+            self.grog.charMgr.give_booty(100, [sender])
+            self.grog.charMgr.give_booty(50, [recipient])
+            overlay.ship("sub", recipient, count)
+            overlay.alert_sub(recipient, sub_type, count, msg['tags']['msg-id'], msg['text'])
+            self.update_subcount()
+        else:
+            logging.debug("Unhandled msg-id: " + tags['msg-id'])
 # ------------------------------------------------------------------------------
 
 # -----[ IRC Utility Functions ]------------------------------------------------
@@ -311,7 +328,7 @@ class ConnectionManager():
                                     #self.grog.msgProc.parse_raid_message(message, msg['sender'])
 
                             elif line[2] == 'USERNOTICE':
-                                print "USERNOTICE: " + " ".join(line)
+                                _handle_usernotice(self._get_tags(line[0]))
 
                             elif line[1] == 'JOIN':
                                 pass
