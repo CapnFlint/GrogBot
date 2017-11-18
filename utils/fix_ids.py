@@ -57,7 +57,9 @@ def remove_character(name):
             con.close()
 
 def update_ids():
+    count = 0
     names = get_names()
+    total = len(names)
     while len(names) > 0:
         block = names[:50]
         names = names[50:]
@@ -65,4 +67,7 @@ def update_ids():
         ids = twitch.get_ids(names)
 
         for name in ids.keys():
+            count += 1
             fix_id(name, ids[name])
+
+    print "Total fixed: " + str(count) + "/" + str(total)
