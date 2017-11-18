@@ -19,7 +19,7 @@ class MessageProcessor():
         self.grog = grog
         self.connMgr = grog.connMgr
         self.charMgr = grog.charMgr
-        self.eventMgr = grog.eventMgr
+        #self.eventMgr = grog.eventMgr
         self.session_running = False
         self.commands = None
         self.options = command_dict
@@ -111,12 +111,12 @@ class MessageProcessor():
         self.grog.charMgr.delete_character(target)
         self.grog.connMgr.send_message(target + ' has been deleted.')
 
-    @processes('!event', PERM_MOD)
+    #@processes('!event', PERM_MOD)
     def command_event(self, data):
         evtID = 0
         if args:
             evtID = int(data['args'][0])
         if evtID > 0:
-            self.grog.eventMgr.loadAndRun(evtID)
+            pass#self.grog.eventMgr.loadAndRun(evtID)
         else:
-            self.grog.eventMgr.random_event()
+            pass#self.grog.eventMgr.random_event()
