@@ -328,7 +328,13 @@ class ConnectionManager():
                                     #self.grog.msgProc.parse_raid_message(message, msg['sender'])
 
                             elif line[2] == 'USERNOTICE':
-                                _handle_usernotice(self._get_tags(line[0]))
+                                self._handle_usernotice(self._get_tags(line[0]))
+
+                            elif line[2] == 'CLEARCHAT':
+                                '''
+                                @ban-duration=10;ban-reason=Links,\sautomated\sby\sMoobot.;room-id=22552479;target-user-id=46084149;tmi-sent-ts=1511037298789 :tmi.twitch.tv CLEARCHAT #giantwaffle :jimjerejim
+                                '''
+                                pass
 
                             elif line[1] == 'JOIN':
                                 pass
