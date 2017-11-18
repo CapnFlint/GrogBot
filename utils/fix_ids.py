@@ -10,7 +10,7 @@ def fix_id(name, uid):
 
         with con:
             cur = con.cursor()
-            cur.execute("UPDATE characters SET user_id=%s where name=%s", uid, name)
+            cur.execute("UPDATE characters SET user_id=%s where name=%s", (uid, name))
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0], e.args[1])
 
