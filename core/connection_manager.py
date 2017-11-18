@@ -145,6 +145,7 @@ class ConnectionManager():
         '''
         @badges=<badges>;color=<color>;display-name=<display-name>;emotes=<emotes>;id=<id-of-msg>;login=<user>;mod=<mod>;msg-id=<msg-id>;room-id=<room-id>;subscriber=<subscriber>;system-msg=<system-msg>;tmi-sent-ts=<timestamp>;turbo=<turbo>;user-id=<user-id>;user-type=<user-type> :tmi.twitch.tv USERNOTICE #<channel> :<message>
         '''
+        print "USERNOTICE!!!"
         if msg['tags']['msg-id'] == 'ritual':
             # A "Ritual" message, like new person's first message.
             pass
@@ -152,6 +153,7 @@ class ConnectionManager():
             pass
         elif msg['tags']['msg-id'] in ['sub','resub']: #Subscription
             ''' Chilly613 gifted a $4.99 sub to Sgt_Cracker! '''
+            logging.debug("SUB/RESUB Usernotice!")
             sysmsg = msg['tags']['system-msg'].split()
             if sysmsg[1] == 'gifted': # Gift Sub!
                 sender = sysmsg[0]
