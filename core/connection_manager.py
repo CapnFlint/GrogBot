@@ -189,7 +189,7 @@ class ConnectionManager():
             self.grog.charMgr.add_sub(recipient, sub_type, 0, count)
 
             self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}! Thank {1} for the generous gift!!!".format(recipient, sender))
-            if sub_type == "1000","Prime":
+            if sub_type == "1000":
                 overlay.update_timer(10)
             elif sub_type == "2000":
                 overlay.update_timer(20)
