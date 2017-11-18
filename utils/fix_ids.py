@@ -64,6 +64,8 @@ def update_ids():
         block = names[:amount]
         names = names[amount:]
 
+        print "Processing: " + block[0] + " to " + block[-1]
+
         ids = twitch.get_ids(block)
 
         if ids:
