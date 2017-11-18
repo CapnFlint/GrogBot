@@ -5,13 +5,12 @@ import utils.twitch_utils as twitch
 from config.config import config
 
 def fix_id(name, uid):
-    print name + " : " + uid
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor()
-            #cur.execute("UPDATE characters SET user_id=%s where name=%s", uid, name)
+            cur.execute("UPDATE characters SET user_id=%s where name=%s", uid, name)
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0], e.args[1])
 
@@ -58,7 +57,7 @@ def remove_character(name):
 
 def update_ids():
     count = 0
-    amount = 50
+    amount = 100
     names = get_names()
     total = len(names)
     while len(names) > 0:
