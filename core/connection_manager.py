@@ -318,13 +318,14 @@ class ConnectionManager():
 
                                     overlay.send_emotes(msg['sender'], emoteList)
 
-                                if False and msg['channel'] == self.CHAN:
+                                if msg['channel'] == self.CHAN:
                                     if msg['text'].startswith('!'):
                                         self.grog.msgProc.parse_command(msg)
                                     else:
                                         self.grog.msgProc.parse_message(msg)
                                 else:
-                                    self.grog.msgProc.parse_raid_message(message, msg['sender'])
+                                    logging.error("This shouldn't happen! (Raid?)")
+                                    #self.grog.msgProc.parse_raid_message(message, msg['sender'])
 
                             elif line[2] == 'USERNOTICE':
                                 self._handle_usernotice(self._get_tags(line[0]))
