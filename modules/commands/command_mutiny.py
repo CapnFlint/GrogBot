@@ -89,6 +89,7 @@ def mutiny_start(self):
         # Mutiny fail
         # Else it fails, all mutineers get planked/timed out for 5 minutes. Lose EXP and Booty.
         # Everyone who defends the ship gains exp and booty
+        self.run_command("!plank", {'args':[sender, 15]})
 
     # Timer ends, Grog regains control of the ship, returns it to the captain, mutineers
     # get planked/timed out for X minutes, lose EXP and Booty.

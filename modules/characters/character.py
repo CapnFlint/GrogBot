@@ -11,6 +11,9 @@ class Character():
         self.alive = True
         self._load_character(name)
 
+    def __str__(self):
+        return "%s is a %s" % (self.charData['name'], self.charData['rank']) #TODO: Actually make this value (rank) a thing
+
     def _load_character(name):
         user = None
         if name:
