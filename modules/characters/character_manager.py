@@ -236,10 +236,9 @@ class CharacterManager():
         new_level = self.compute_level(char['exp'])
         if new_level > char['level']:
             char['level'] = new_level
-            if char['access'] == 0:
-                if (new_level - 1) % self.ranks_per_level == 0:
-                    print "level up " + char['name']
-                    levelups[new_level].append(char['name'])
+            if (new_level - 1) % self.ranks_per_level == 0:
+                print "level up " + char['name']
+                levelups[new_level].append(char['name'])
 
 
     def get_rank(self, char, include_rank = True, include_exp = True):
