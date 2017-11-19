@@ -126,7 +126,7 @@ class CharacterManager():
                 if con:
                     con.close()
             if not user:
-                uid = utils.get_ids([name])
+                uid = utils.get_ids([name])[name]
                 return self.create_character(name, uid)
             else:
                 return user
