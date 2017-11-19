@@ -199,7 +199,7 @@ class ConnectionManager():
             self.grog.charMgr.give_booty(100, [sender])
             self.grog.charMgr.give_booty(50, [recipient])
             overlay.ship("sub", recipient, count)
-            overlay.alert_sub(recipient, sub_type, count, msg['tags']['msg-id'], msg['text'])
+            overlay.alert_sub(recipient, sub_type, count, tags['msg-id'], "")
             self.update_subcount()
         else:
             logging.debug("Unhandled msg-id: " + tags['msg-id'])
