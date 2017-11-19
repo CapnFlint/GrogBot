@@ -10,7 +10,7 @@ def fix_id(name, uid):
 
         with con:
             cur = con.cursor()
-            cur.execute("UPDATE characters SET user_id=%s where name=%s", (uid, name))
+            cur.execute("UPDATE chars SET user_id=%s where name=%s", (uid, name))
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0], e.args[1])
 
@@ -26,7 +26,7 @@ def get_names():
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT name FROM characters where user_id=''")
+            cur.execute("SELECT name FROM chars where user_id=''")
             rows = cur.fetchall()
 
             for row in rows:
@@ -47,7 +47,7 @@ def remove_character(name):
 
         with con:
             cur = con.cursor()
-            cur.execute("DELETE FROM characters where name=%s", name)
+            cur.execute("DELETE FROM chars where name=%s", name)
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0], e.args[1])
 

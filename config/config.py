@@ -10,8 +10,8 @@ config = {
         'access_token': "48kgaeiibyge2b2c07aodewsnq8t32"
     },
     'twitch': {
-        'channel': 'giantwaffle', #'capn_flint',
-        'channel_id': '22552479' #'91580306'
+        'channel': 'capn_flint',
+        'channel_id': '91580306'
     },
     'db': {
         'host': 'localhost',

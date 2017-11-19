@@ -18,8 +18,6 @@ import utils.db_utils as db
 
 from config.config import config
 
-from utils.fix_ids import *
-
 class GrogBot():
 
     def __init__(self, channel):
@@ -33,14 +31,14 @@ class GrogBot():
         # Set up all the managers, order is important!
         self.connMgr = ConnectionManager(self, channel)
         self.charMgr = CharacterManager(self)
-        #self.eventMgr = EventManager(self)
+        self.eventMgr = EventManager(self)
         self.msgProc = MessageProcessor(self)
 
         # Initialize all the worker threads
-        #self.add_worker(random_messages(self))
-        #self.add_worker(follows(self))
-        #self.add_worker(pubsub(self))
-        #self.add_worker(bits(self))
+        self.add_worker(random_messages(self))
+        self.add_worker(follows(self))
+        self.add_worker(pubsub(self))
+        self.add_worker(bits(self))
         #self.add_worker(teespring(self, "spud citizen Capn_Flint", True))
         #self.add_worker(workers.twitter(self))
 
@@ -66,8 +64,7 @@ class GrogBot():
 
 def main():
     grog = GrogBot(config['twitch']['channel'])
-    #grog.run()
-    update_ids()
+    grog.run()
 
 if __name__ == "__main__":
     main()

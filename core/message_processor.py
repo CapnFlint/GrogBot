@@ -19,7 +19,7 @@ class MessageProcessor():
         self.grog = grog
         self.connMgr = grog.connMgr
         self.charMgr = grog.charMgr
-        #self.eventMgr = grog.eventMgr
+        self.eventMgr = grog.eventMgr
         self.session_running = False
         self.commands = None
         self.options = command_dict
@@ -45,7 +45,7 @@ class MessageProcessor():
         else:
             self.connMgr.send_message("Command " + command + " not found!")
 
-    def parse_command(self, msg):#, sender, perms):
+    def parse_command(self, msg):
         logging.debug('[CMD] ' + msg['sender'] + ": " + msg['text'])
         logging.debug('Sub: ' + str(msg['perms']['sub']))
         logging.debug('Mod: ' + str(msg['perms']['mod']))
@@ -111,12 +111,12 @@ class MessageProcessor():
         self.grog.charMgr.delete_character(target)
         self.grog.connMgr.send_message(target + ' has been deleted.')
 
-    #@processes('!event', PERM_MOD)
+    @processes('!event', PERM_MOD)
     def command_event(self, data):
         evtID = 0
         if args:
             evtID = int(data['args'][0])
         if evtID > 0:
-            pass#self.grog.eventMgr.loadAndRun(evtID)
+            self.grog.eventMgr.loadAndRun(evtID)
         else:
-            pass#self.grog.eventMgr.random_event()
+            self.grog.eventMgr.random_event()

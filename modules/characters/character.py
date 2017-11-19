@@ -18,7 +18,7 @@ class Character():
                 con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
-                    cur.execute("SELECT * from characters where name = %s", (name,))
+                    cur.execute("SELECT * from chars where name = %s", (name,))
                     user = cur.fetchone()
             except mdb.Error, e:
 
@@ -40,7 +40,7 @@ class Character():
 
             with con:
                 cur = con.cursor()
-                cur.execute("REPLACE INTO characters ({}) VALUES ({})".format(",".join(self.charData.keys())),\
+                cur.execute("REPLACE INTO chars ({}) VALUES ({})".format(",".join(self.charData.keys())),\
                       (char['user_id'], char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['sub_date'], char['sub_max'], char['sub_count'], char['sub_type'], char['ship']))
                 con.commit()
             return 1
@@ -90,7 +90,7 @@ class Character():
         else:
             return None
 
-    
+
 
     def get_data(self, data):
         if data in self.charData.keys():

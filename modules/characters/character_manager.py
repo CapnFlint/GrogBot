@@ -94,7 +94,7 @@ class CharacterManager():
             con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
-                cur.execute("SELECT * from characters where name = %s", (name,))
+                cur.execute("SELECT * from chars where name = %s", (name,))
                 user = cur.fetchone()
         except mdb.Error, e:
 
@@ -116,7 +116,7 @@ class CharacterManager():
                 con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
-                    cur.execute("SELECT * from characters where name = %s", (name,))
+                    cur.execute("SELECT * from chars where name = %s", (name,))
                     user = cur.fetchone()
             except mdb.Error, e:
 
@@ -140,7 +140,7 @@ class CharacterManager():
             with con:
                 cols = sorted(char.keys())
                 cur = con.cursor()
-                sql = "REPLACE INTO characters (" + ", ".join(cols) + ") VALUES (%(" + ")s, %(".join(cols) + ")s)"
+                sql = "REPLACE INTO chars (" + ", ".join(cols) + ") VALUES (%(" + ")s, %(".join(cols) + ")s)"
                 cur.execute(sql, char)
                 con.commit()
             return 1
@@ -163,7 +163,7 @@ class CharacterManager():
 
             with con:
                 cur = con.cursor()
-                cur.execute("DELETE FROM characters WHERE name = %s", (name,))
+                cur.execute("DELETE FROM chars WHERE name = %s", (name,))
                 con.commit()
             return 1
         except mdb.Error, e:

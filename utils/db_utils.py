@@ -5,7 +5,7 @@ import time
 
 from config.config import config
 
-def get_access(name):
+def is_admin(name):
     access = 0
     char = None
     con = None
@@ -14,7 +14,7 @@ def get_access(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT access from characters where name = %s", (name,))
+            cur.execute("SELECT admin from chars where name = %s", (name,))
             char = cur.fetchone()
 
     except mdb.Error, e:
@@ -197,38 +197,6 @@ def add_custom_command(command, message):
         if con:
             con.close()
 
-def make_mod(name):
-    try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE characters SET access = 1 where name = %s", (name,))
-
-    except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
-        return 0
-
-    finally:
-        if con:
-            con.close()
-
-def make_sub(name):
-    try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE characters SET subscriber = 1 where name = %s", (name,))
-
-    except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
-        return 0
-
-    finally:
-        add_stat('sessionSubs', 1)
-        if con:
-            con.close()
 
 def random_sub():
     commands = {}
@@ -237,7 +205,7 @@ def random_sub():
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT name FROM characters WHERE subscriber = 1 ORDER BY rand() limit 1")
+            cur.execute("SELECT name FROM chars WHERE subscriber = 1 ORDER BY rand() limit 1")
             char = cur.fetchone()
 
     except mdb.Error, e:

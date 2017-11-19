@@ -15,7 +15,7 @@ def command_plank(self, data):
         duration = 0
 
     if self.charMgr.char_exists(target):
-        if db.get_access(target) == 0:
+        if not data['perms']['mod']:
             if self.charMgr.is_alive(target):
                 self.connMgr.send_message(target + ', you have been sentenced to walk the PLANK!!!')
                 sound = [{"file": "sounds/davey.mp3", "volume": 50}, {"file": "sounds/splash.mp3", "volume": 60}]
