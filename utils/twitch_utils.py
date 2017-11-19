@@ -20,7 +20,7 @@ def get_ids(names):
             results[user['name']] = user['_id']
         return results
     except urllib2.URLError:
-        logging.error("urllib2 error - check_streamer")
+        logging.error("urllib2 error - get_ids")
         return None
 
 def get_viewers(include_mods = True):
@@ -50,9 +50,7 @@ def get_mods():
         logging.error("get_mods: urllib2 error")
         return {}
 
-def get_display_name(name):
-    name = name.lower()
-    channel_id = get_ids([name])[name]
+def get_display_name(uid):
     url = "https://api.twitch.tv/kraken/users/" + channel_id
     try:
         req = urllib2.Request(url)

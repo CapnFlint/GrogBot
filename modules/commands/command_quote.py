@@ -20,7 +20,7 @@ def command_addquote(self, data):
         quote = " ".join(data['args'][1:])
         if self.charMgr.char_exists(name):
             game = utils.get_game("capn_flint")
-            db.qu_add_quote(quote, utils.get_display_name(name), game)
+            db.qu_add_quote(quote, utils.get_display_name(data['tags']['user-id']), game)
             self.connMgr.send_message("quote successfully added!")
             return
         else:

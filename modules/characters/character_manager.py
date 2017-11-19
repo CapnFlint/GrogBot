@@ -55,20 +55,19 @@ class CharacterManager():
 
 # -----[ Character Storage Functions ]------------------------------------------
 
-    def create_character(self, name):
+    def create_character(self, name, uid):
         # create a character sheet for a new player
-        #name = utils.get_display_name(name)
         if name and name not in self.skip_names:
             try:
                 logging.info("Creating " + name)
                 char = {
+                    "id":uid,
                     "level":1,
                     "exp":0,
                     "booty":5,
-                    "user_id":"",
                     "name":name,
-                    "access":0,
-                    "follows":0,
+                    "admin":0,
+                    "follower":0,
                     "checked_follow":0,
                     "subscriber":0,
                     "checked_sub":0,
@@ -94,7 +93,7 @@ class CharacterManager():
             con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
-                cur.execute("SELECT * from characters where name = %s", (name,))
+                cur.execute("SELECT * from chars where name = %s", (name,))
                 user = cur.fetchone()
         except mdb.Error, e:
 
@@ -116,7 +115,7 @@ class CharacterManager():
                 con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
-                    cur.execute("SELECT * from characters where name = %s", (name,))
+                    cur.execute("SELECT * from chars where name = %s", (name,))
                     user = cur.fetchone()
             except mdb.Error, e:
 
@@ -127,19 +126,22 @@ class CharacterManager():
                 if con:
                     con.close()
             if not user:
-                return self.create_character(name)
+                uid = utils.get_ids([name])[name]
+                return self.create_character(name, uid)
             else:
                 return user
         else:
-            logging.error("Unable to load character - " + name)
+            logging.error("Unable to load user: " + name)
 
     def save_character(self, char):
         try:
             con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
 
             with con:
+                cols = sorted(char.keys())
                 cur = con.cursor()
-                cur.execute("REPLACE INTO characters (user_id, name, level, exp, booty, access, follows, checked_follow, subscriber, sub_date, sub_max, sub_count, sub_type, ship) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (char['user_id'], char['name'], char['level'], char['exp'], char['booty'], char['access'], char['follows'], char['checked_follow'], char['subscriber'], char['sub_date'], char['sub_max'], char['sub_count'], char['sub_type'], char['ship']))
+                sql = "REPLACE INTO chars (" + ", ".join(cols) + ") VALUES (%(" + ")s, %(".join(cols) + ")s)"
+                cur.execute(sql, char)
                 con.commit()
             return 1
         except mdb.Error, e:
@@ -147,7 +149,7 @@ class CharacterManager():
             if con:
                 con.rollback()
 
-            logging("DB Error %d: %s" % (e.args[0],e.args[1]))
+            logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
             return 0
 
         finally:
@@ -161,7 +163,7 @@ class CharacterManager():
 
             with con:
                 cur = con.cursor()
-                cur.execute("DELETE FROM characters WHERE name = %s", (name,))
+                cur.execute("DELETE FROM chars WHERE name = %s", (name,))
                 con.commit()
             return 1
         except mdb.Error, e:
@@ -234,10 +236,9 @@ class CharacterManager():
         new_level = self.compute_level(char['exp'])
         if new_level > char['level']:
             char['level'] = new_level
-            if char['access'] == 0:
-                if (new_level - 1) % self.ranks_per_level == 0:
-                    print "level up " + char['name']
-                    levelups[new_level].append(char['name'])
+            if (new_level - 1) % self.ranks_per_level == 0:
+                print "level up " + char['name']
+                levelups[new_level].append(char['name'])
 
 
     def get_rank(self, char, include_rank = True, include_exp = True):
@@ -285,14 +286,25 @@ class CharacterManager():
         # Fill this in later to grab the list of subbed users, and force a check on each of them.
         pass
 
-    def subbed(self, name, force_check=False, skip_check=False):
+    def subbed(self, name):
         char = self.load_character(name)
         subbed = False
 
+        logging.debug(char)
+
         if char:
-            now = datetime.now()
+            now = int(time.time())
             last_check = char['checked_sub']
-            if (now - last_check) > 86400:
+
+            if char['subscriber']:
+                logging.debug(char['name'] + " is subscribed")
+                recheck = 2678400 # 31 days
+                subbed = True
+            else:
+                logging.debug(char['name'] + " is NOT subscribed")
+                recheck = 86400 # 24 hours
+            if (now - last_check) > recheck:
+                logging.debug("Rechecking...")
                 sub = utils.get_subscription(name)
                 if sub:
                     self.update_subscriber(char, sub['created'], sub['sub_plan'])
@@ -358,8 +370,8 @@ class CharacterManager():
     def update_id(self, name, user_id):
         char = self.load_character(name)
         if char:
-            if char['user_id'] == "":
-                char['user_id'] = user_id
+            if char['id'] == "":
+                char['id'] = user_id
                 self.save_character(char)
 
 

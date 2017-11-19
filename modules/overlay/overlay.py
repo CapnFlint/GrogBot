@@ -93,20 +93,20 @@ def alert_hello(sender):
     data['audio'] = [audio]
     _send_message("alert", data)
 
-def alert_sub(sender, sub_type="1", count="1", context="sub", message=""):
+def alert_sub(sender, sub_type="1000", count="1", context="sub", message=""):
     global farts
 
     if farts:
         sound = get_fart()
         volume = 80
     else:
-        if sub_type == "1":
+        if sub_type == "1000":
             sound = "sounds/pirate2.mp3"
             volume = 50
-        if sub_type == "2":
+        if sub_type == "2000":
             sound = "sounds/narwhals.mp3"
             volume = 60
-        if sub_type == "3":
+        if sub_type == "3000":
             sound = "sounds/dubpirate.mp3"
             volume = 50
     data = {}

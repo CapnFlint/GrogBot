@@ -16,7 +16,7 @@ from modules.events.event_manager import EventManager
 import modules.overlay.overlay as overlay
 import utils.db_utils as db
 
-import config.twitch_config as twitch
+from config.config import config
 
 class GrogBot():
 
@@ -25,7 +25,7 @@ class GrogBot():
 
         self.event_running = False
 
-        self.channel = twitch.twitch_channel
+        self.channel = config['twitch']['channel']
         self.worklist = []
 
         # Set up all the managers, order is important!
@@ -63,7 +63,7 @@ class GrogBot():
 
 
 def main():
-    grog = GrogBot(twitch.twitch_channel)
+    grog = GrogBot(config['twitch']['channel'])
     grog.run()
 
 if __name__ == "__main__":

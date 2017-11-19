@@ -1,6 +1,7 @@
 import logging
 import socket
 import re
+import thread
 
 from config.config import config
 from config.strings import strings
@@ -34,13 +35,12 @@ class ConnectionManager():
     def subscribers(self):
         logging.info("Checking for Subscribers!")
 
-        subs = twitch.get_latest_subscribers(50)
+        subs = twitch.get_latest_subscribers(100)
         sublist = subs['1000'] + subs['2000'] + subs['3000']
 
-        print sublist
         self.update_subcount()
 
-        new = []
+        new_subs = []
         if sublist:
             for user in sublist:
                 logging.debug("Processing: " + user)
@@ -48,13 +48,14 @@ class ConnectionManager():
                     char = self.grog.charMgr.load_character(user)
                     logging.info("[NEW SUBSCRIBER] " + char['name'])
                     overlay.alert_sub(char['name'])
-                    new.append(char['name'])
+                    new_subs.append(char['name'])
                     self.grog.charMgr.give_booty(50, [user])
                     self.grog.charMgr.subbed(user, force_check=True)
-        if new:
-            self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new)))
-            stat = db.add_stat('sessionSubs', len(new))
+        if new_subs:
+            self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
+            stat = db.add_stat('sessionSubs', len(new_subs))
             overlay.update_stat('subs', stat)
+        logging.info("Subscriber check done!")
 
     def update_subcount(self):
         count = twitch.get_sub_points()
@@ -116,9 +117,8 @@ class ConnectionManager():
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
     def _handle_join(self, user):
-        ''' We force a verification here whenever someone joins the channel '''
-        if self.grog.charMgr.subbed(user, force_check = True):
-            char = self.grog.charMgr.load_character(user)
+        char = self.grog.charMgr.load_character(user)
+        if char['subscriber']:
             if char['ship'] > 0:
                 ship = char['ship']
             else:
@@ -141,7 +141,68 @@ class ConnectionManager():
         pass
 
     def _handle_usernotice(self, tags):
-        pass
+        '''
+        @badges=<badges>;color=<color>;display-name=<display-name>;emotes=<emotes>;id=<id-of-msg>;login=<user>;mod=<mod>;msg-id=<msg-id>;room-id=<room-id>;subscriber=<subscriber>;system-msg=<system-msg>;tmi-sent-ts=<timestamp>;turbo=<turbo>;user-id=<user-id>;user-type=<user-type> :tmi.twitch.tv USERNOTICE #<channel> :<message>
+
+        USERNOTICE: @badges=subscriber/24;color=#5F9EA0;display-name=LeJavJav;emotes=;id=2c038892-6d92-432c-950b-eedb07c642e6;login=lejavjav;mod=0;msg-id=resub;msg-param-months=36;msg-param-sub-plan-name=Raptor\sPack;msg-param-sub-plan=1000;room-id=43830727;subscriber=1;system-msg=LeJavJav\sjust\ssubscribed\swith\sa\s$4.99\ssub.\sLeJavJav\ssubscribed\sfor\s36\smonths\sin\sa\srow!;tmi-sent-ts=1511027952452;turbo=0;user-id=77439549;user-type= :tmi.twitch.tv USERNOTICE #kinggothalion
+
+        USERNOTICE:
+        display-name=Capn_Flint;
+        login=capn_flint;
+        msg-id=subgift;
+        msg-param-months=1;
+        msg-param-recipient-display-name=CalTran2410;
+        msg-param-recipient-id=40427668;
+        msg-param-recipient-user-name=caltran2410;
+        msg-param-sub-plan-name=Channel\sSubscription\s(thegeekentry);
+        msg-param-sub-plan=1000;
+        system-msg=Capn_Flint\sgifted\sa\s$4.99\ssub\sto\sCalTran2410!;
+        tmi-sent-ts=1511029188110;
+        turbo=0;
+        user-id=91580306;
+        user-type=
+        :tmi.twitch.tv
+        USERNOTICE
+        #thegeekentry
+
+        '''
+        print "USERNOTICE!!!"
+        if tags['msg-id'] == 'ritual':
+            # A "Ritual" message, like new person's first message.
+            print "RITUAL!!!"
+            pass
+        elif tags['msg-id'] == 'raid': # A raid
+            pass
+        elif tags['msg-id'] == 'sub':
+            print "SUB!!!"
+            pass
+        elif tags['msg-id'] == 'resub':
+            print "RESUB!!!"
+            pass
+        elif tags['msg-id'] == 'subgift': #Subscription
+            ''' Chilly613 gifted a $4.99 sub to Sgt_Cracker! '''
+            logging.debug("Sub Gift!")
+            sender = tags['login']
+            recipient = tags['msg-param-recipient-user-name']
+            sub_type = msg['tags']['msg-param-sub-plan']
+            count = msg['tags']['msg-param-months']
+            self.grog.charMgr.add_sub(recipient, sub_type, 0, count)
+
+            self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}! Thank {1} for the generous gift!!!".format(recipient, sender))
+            if sub_type == "1000":
+                overlay.update_timer(10)
+            elif sub_type == "2000":
+                overlay.update_timer(20)
+            elif sub_type == "3000":
+                overlay.update_timer(50)
+
+            self.grog.charMgr.give_booty(100, [sender])
+            self.grog.charMgr.give_booty(50, [recipient])
+            overlay.ship("sub", recipient, count)
+            overlay.alert_sub(recipient, sub_type, count, tags['msg-id'], "")
+            self.update_subcount()
+        else:
+            logging.debug("Unhandled msg-id: " + tags['msg-id'])
 # ------------------------------------------------------------------------------
 
 # -----[ IRC Utility Functions ]------------------------------------------------
@@ -210,7 +271,6 @@ class ConnectionManager():
                 em_cnt = len(tmp[1].split(','))
                 emotes[em_id] = em_cnt
 
-            print emotes
         return emotes
 
 # ------------------------------------------------------------------------------
@@ -226,8 +286,7 @@ class ConnectionManager():
         logging.debug("Sub Points: " + str(twitch.get_sub_points()))
 
         # Check for offline subscribers
-        self.subscribers()
-        logging.info("Subscriber check done!")
+        thread.start_new_thread(self.subscribers, ())
 
         data = ""
 
@@ -265,7 +324,17 @@ class ConnectionManager():
                                     else:
                                         self.grog.msgProc.parse_message(msg)
                                 else:
-                                    self.grog.msgProc.parse_raid_message(message, msg['sender'])
+                                    logging.error("This shouldn't happen! (Raid?)")
+                                    #self.grog.msgProc.parse_raid_message(message, msg['sender'])
+
+                            elif line[2] == 'USERNOTICE':
+                                self._handle_usernotice(self._get_tags(line[0]))
+
+                            elif line[2] == 'CLEARCHAT':
+                                '''
+                                @ban-duration=10;ban-reason=Links,\sautomated\sby\sMoobot.;room-id=22552479;target-user-id=46084149;tmi-sent-ts=1511037298789 :tmi.twitch.tv CLEARCHAT #giantwaffle :jimjerejim
+                                '''
+                                pass
 
                             elif line[1] == 'JOIN':
                                 self._handle_join(self._get_sender(line[0]))

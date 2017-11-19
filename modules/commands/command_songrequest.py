@@ -40,7 +40,7 @@ def command_requestsong(self, sender, args):
             maxreq = ((char['level'] - 1) / 5) + char['subscriber']
             if maxreq == 0:
                 self.connMgr.send_message("Sorry " + sender + ", but you must be at least rank swabbie to request songs.")
-            elif queued < maxreq or char['access'] > 0:
+            elif queued < maxreq or data['perms']['mod']:
                 if args:
                     songid = parse_songrequest(args[0])
                     if songid:

@@ -45,7 +45,7 @@ class MessageProcessor():
         else:
             self.connMgr.send_message("Command " + command + " not found!")
 
-    def parse_command(self, msg):#, sender, perms):
+    def parse_command(self, msg):
         logging.debug('[CMD] ' + msg['sender'] + ": " + msg['text'])
         logging.debug('Sub: ' + str(msg['perms']['sub']))
         logging.debug('Mod: ' + str(msg['perms']['mod']))
