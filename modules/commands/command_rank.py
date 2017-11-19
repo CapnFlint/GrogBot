@@ -29,7 +29,7 @@ def command_level(self, data):
         char = self.charMgr.load_character(name)
         if char['name'] == 'Capn_Flint':
             rankstr = char['name'] + " is the Captain of course!"
-        elif char['access'] > 0:
+        elif data['perms']['mod']:
             rankstr = char['name'] + " is an officer of the good ship Narwhal!"
         elif char['level'] > 50:
             rankstr = char['name'] + " is the Scourge of the Seven Seas! R) YARRR!!! R)"

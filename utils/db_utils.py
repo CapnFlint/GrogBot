@@ -6,7 +6,7 @@ import time
 from config.config import config
 
 def is_admin(name):
-    access = 0
+    admin = 0
     char = None
     con = None
     try:
@@ -26,9 +26,9 @@ def is_admin(name):
             con.close()
 
     if char:
-        access = char['access']
+        admin = char['admin']
 
-    return access
+    return admin
 
 def add_message(message):
     now = int(time.time())

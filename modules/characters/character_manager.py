@@ -55,20 +55,19 @@ class CharacterManager():
 
 # -----[ Character Storage Functions ]------------------------------------------
 
-    def create_character(self, name):
+    def create_character(self, name, uid):
         # create a character sheet for a new player
-        #name = utils.get_display_name(name)
         if name and name not in self.skip_names:
             try:
                 logging.info("Creating " + name)
                 char = {
+                    "id":uid,
                     "level":1,
                     "exp":0,
                     "booty":5,
-                    "user_id":"",
                     "name":name,
-                    "access":0,
-                    "follows":0,
+                    "admin":0,
+                    "follower":0,
                     "checked_follow":0,
                     "subscriber":0,
                     "checked_sub":0,
@@ -127,11 +126,11 @@ class CharacterManager():
                 if con:
                     con.close()
             if not user:
-                return self.create_character(name)
+                uid = utils.get_ids([name])
+                return self.create_character(name, uid)
             else:
                 return user
         else:
-            logging.error("Unable to load character - " + name)
 
     def save_character(self, char):
         try:

@@ -59,7 +59,6 @@ class Character():
 
     def _create_character(self, name):
         # create a character sheet for a new player
-        #name = utils.get_display_name(name)
         if name and name not in self.skip_names:
             try:
                 logging.info("Creating " + name)
