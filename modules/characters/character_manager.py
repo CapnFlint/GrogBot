@@ -370,8 +370,8 @@ class CharacterManager():
     def update_id(self, name, user_id):
         char = self.load_character(name)
         if char:
-            if char['user_id'] == "":
-                char['user_id'] = user_id
+            if char['id'] == "":
+                char['id'] = user_id
                 self.save_character(char)
 
 
