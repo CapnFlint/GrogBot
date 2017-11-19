@@ -131,6 +131,7 @@ class CharacterManager():
             else:
                 return user
         else:
+            logging.error("Unable to load user: " + name)
 
     def save_character(self, char):
         try:
