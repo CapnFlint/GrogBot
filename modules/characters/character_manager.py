@@ -270,14 +270,13 @@ class CharacterManager():
             now = int(time.time())
             if not char['follower'] and force_check:
                 return utils.check_follower(name)
-        elif char['follower'] and now - char['checked_follow'] > 2592000:
+            elif char['follower'] and now - char['checked_follow'] > 2592000:
                 if not skip_check and utils.check_follower(name):
                     char['follower'] = 1
                 else:
                     char['follower'] = 0
                 char['checked_follow'] = now
                 self.save_character(char)
-
             return char['follower']
         else:
             return False
