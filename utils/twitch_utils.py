@@ -278,7 +278,7 @@ def get_subscribers(count=0, offset=0, subs={}):
 
         for item in userlist:
             subs[item['sub_plan']].append(item['user']['name'])
-        if iterate and (count + limit) < total:
+        if iterate and (offset + limit) < total:
             subs = get_subscribers(offset=offset + limit, subs=subs)
 
         if 'capn_flint' in subs['1000']:
