@@ -274,6 +274,8 @@ def get_subscribers(count=0, offset=0, subs={}):
         userlist = data['subscriptions']
         total = int(data['_total'])
 
+        print "TOTAL: " + str(total)
+
         for item in userlist:
             subs[item['sub_plan']].append(item['user']['name'])
         if iterate and (count + limit) < total:
