@@ -264,21 +264,21 @@ class CharacterManager():
         char = self.load_character(name)
 
         if skip_check:
-            return char['follows']
+            return char['follower']
         if char:
             # code to check current followers for unfollows. Done monthly.
             now = int(time.time())
-            if not char['follows'] and force_check:
+            if not char['follower'] and force_check:
                 return utils.check_follower(name)
-            elif char['follows'] and now - char['checked_follow'] > 2592000:
+        elif char['follower'] and now - char['checked_follow'] > 2592000:
                 if not skip_check and utils.check_follower(name):
-                    char['follows'] = 1
+                    char['follower'] = 1
                 else:
-                    char['follows'] = 0
+                    char['follower'] = 0
                 char['checked_follow'] = now
                 self.save_character(char)
 
-            return char['follows']
+            return char['follower']
         else:
             return False
 
@@ -355,7 +355,7 @@ class CharacterManager():
         char = self.load_character(name)
         if char:
             now = int(time.time())
-            char['follows'] = 1
+            char['follower'] = 1
             char['checked_follow'] = now
             self.save_character(char)
 
