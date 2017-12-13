@@ -129,7 +129,7 @@ class pubsub():
                     overlay.update_timer(20)
                 elif sub_type == "3000":
                     overlay.update_timer(50)
-            else:
+            elif context == "resub":
                 self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
                 if sub_type in ["1000","Prime"]:
                     overlay.update_timer(5)
@@ -137,6 +137,9 @@ class pubsub():
                     overlay.update_timer(10)
                 elif sub_type == "3000":
                     overlay.update_timer(25)
+            else:
+                print "NEW CONTEXT: " + context
+                print msg
 
             self.grog.charMgr.give_booty(50, [name])
             overlay.ship("sub", name, count)
