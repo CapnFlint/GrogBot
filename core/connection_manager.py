@@ -180,27 +180,7 @@ class ConnectionManager():
             print "RESUB!!!"
             pass
         elif tags['msg-id'] == 'subgift': #Subscription
-            ''' Chilly613 gifted a $4.99 sub to Sgt_Cracker! '''
-            logging.debug("Sub Gift!")
-            sender = tags['login']
-            recipient = tags['msg-param-recipient-user-name']
-            sub_type = tags['msg-param-sub-plan']
-            count = tags['msg-param-months']
-            self.grog.charMgr.add_sub(recipient, sub_type, 0, count)
-
-            self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}! Thank {1} for the generous gift!!!".format(recipient, sender))
-            if sub_type == "1000":
-                overlay.update_timer(10)
-            elif sub_type == "2000":
-                overlay.update_timer(20)
-            elif sub_type == "3000":
-                overlay.update_timer(50)
-
-            self.grog.charMgr.give_booty(100, [sender])
-            self.grog.charMgr.give_booty(50, [recipient])
-            overlay.ship("sub", recipient, count)
-            overlay.alert_sub(recipient, sub_type, count, tags['msg-id'], "")
-            self.update_subcount()
+            print "SUBGIFT!!!"
         else:
             logging.debug("Unhandled msg-id: " + tags['msg-id'])
 # ------------------------------------------------------------------------------

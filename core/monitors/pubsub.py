@@ -122,13 +122,16 @@ class pubsub():
             # Send alert
             #TODO: update so higher sub tiers add more to the subathon timer
             if context == "sub":
-                self.grog.connMgr.send_message("Welcome to the inner circle, Pirate {0}!!!".format(name))
+                self.grog.connMgr.send_message("Welcome new crewmate {0}!!!".format(name))
                 if sub_type in ["1000","Prime"]:
                     overlay.update_timer(10)
                 elif sub_type == "2000":
                     overlay.update_timer(20)
                 elif sub_type == "3000":
                     overlay.update_timer(50)
+                self.grog.charMgr.give_booty(50, [name])
+                overlay.ship("sub", name, count)
+                overlay.alert_sub(name, sub_type, count, context, sub_message)
             elif context == "resub":
                 self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
                 if sub_type in ["1000","Prime"]:
@@ -137,6 +140,22 @@ class pubsub():
                     overlay.update_timer(10)
                 elif sub_type == "3000":
                     overlay.update_timer(25)
+                self.grog.charMgr.give_booty(50, [name])
+                overlay.ship("sub", name, count)
+                overlay.alert_sub(name, sub_type, count, context, sub_message)
+            elif context == "subgift":
+                recipient = msg['recipient_display_name']
+                sender = msg['display_name']
+                self.grog.connMgr.send_message("{1} slipped the kings shilling into {0}'s grog, welcome to the crew!!!".format(recipient, sender))
+                if sub_type in ["1000","Prime"]:
+                    overlay.update_timer(10)
+                elif sub_type == "2000":
+                    overlay.update_timer(20)
+                elif sub_type == "3000":
+                    overlay.update_timer(50)
+                self.grog.charMgr.give_booty(50, [sender, recipient])
+                overlay.ship("sub", recipient, count)
+                overlay.alert_sub(recipient, sub_type, count, context, sub_message['message'])
             else:
                 print "NEW CONTEXT: " + context
                 print msg
