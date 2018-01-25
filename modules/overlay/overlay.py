@@ -42,6 +42,7 @@ def alert_follow(name, audio=False):
     data = {}
     data['priority'] = 3
     data['text'] = "[HL]{0}[/HL] has boarded the ship! Welcome!".format(name)
+    audio = False
     if audio:
         if farts:
             data['audio'] = [{"file": get_fart(), "volume":80}]
@@ -96,26 +97,31 @@ def alert_hello(sender):
 def alert_sub(sender, sub_type="1000", count="1", context="sub", message=""):
     global farts
 
+    data = {}
+    data['priority'] = 1
+
     if farts:
         sound = get_fart()
         volume = 80
+        data['audio'] = [{"file": sound, "volume": volume}]
     else:
         if sub_type == "1000":
+            laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
+            data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
+        if sub_type == "2000":
             sound = "sounds/pirate2.mp3"
             volume = 50
-        if sub_type == "2000":
-            sound = "sounds/narwhals.mp3"
-            volume = 60
+            data['audio'] = [{"file": sound, "volume": volume}]
         if sub_type == "3000":
             sound = "sounds/dubpirate.mp3"
             volume = 50
-    data = {}
-    data['priority'] = 1
+            data['audio'] = [{"file": sound, "volume": volume}]
+
     if context == "sub":
         data['text'] = "[HL]{0}[/HL] has just subscribed!!! Welcome to the inner circle!".format(sender)
     else:
         data['text'] = "[HL]{0}[/HL] subbed for another month, [HL]{1}[/HL] months at sea!!!".format(sender, count)
-    data['audio'] = [{"file": sound, "volume": volume}]
+
     data['message'] = message
     _send_message("alert", data)
 
