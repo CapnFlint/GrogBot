@@ -106,8 +106,11 @@ def alert_sub(sender, sub_type="1000", count="1", context="sub", message=""):
         data['audio'] = [{"file": sound, "volume": volume}]
     else:
         if sub_type == "1000":
-            laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
-            data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
+            #laughs = ["laugh1.mp3","laugh2.mp3","laugh3.mp3","laugh4.mp3","laugh5.mp3"]
+            #data['audio'] = [{"file": "sounds/welcome.mp3", "volume": 40},{"file": "sounds/{0}".format(random.choice(laughs)), "volume": 40}]
+            sound = "sounds/pirate2.mp3"
+            volume = 50
+            data['audio'] = [{"file": sound, "volume": volume}]
         if sub_type == "2000":
             sound = "sounds/pirate2.mp3"
             volume = 50
