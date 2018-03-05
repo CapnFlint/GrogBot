@@ -51,7 +51,7 @@ def get_mods():
         return {}
 
 def get_display_name(uid):
-    url = "https://api.twitch.tv/kraken/users/" + channel_id
+    url = "https://api.twitch.tv/kraken/users/" + config['twitch']['channel_id']
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -67,7 +67,10 @@ def get_display_name(uid):
 
 def get_game(name):
     name = name.lower()
-    channel_id = get_ids([name])[name]
+    if name == "capn_flint":
+        channel_id = config['twitch']['channel_id']
+    else:
+        channel_id = get_ids([name])[name]
     url = "https://api.twitch.tv/kraken/channels/" + channel_id
     try:
         req = urllib2.Request(url)
