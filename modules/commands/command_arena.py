@@ -72,7 +72,7 @@ def command_startarena(self, data):
 def arena_register_entry(self, data):
     name = data['sender']
     char = self.charMgr.load_character(name)
-    if char['follows']:
+    if char['follower']:
         if char['booty'] >= self.arena_max_bet:
             self.arena_entries[name] = self.arena_max_bet
             self.connMgr.send_message(name + " has entered the arena!")
