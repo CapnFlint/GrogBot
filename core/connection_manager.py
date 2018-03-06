@@ -16,7 +16,7 @@ class ConnectionManager():
         self.grog = grog
         self.HOST = "irc.chat.twitch.tv"
         self.PORT = 6667
-        self.CHAN = "#" + channel
+        self.CHAN = "#" + channel.lower()
         self.sock = None
         self.running = False
 

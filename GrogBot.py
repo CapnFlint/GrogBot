@@ -25,7 +25,7 @@ class GrogBot():
 
         self.event_running = False
 
-        self.channel = config['twitch']['channel']
+        self.channel = channel
         self.worklist = []
 
         # Set up all the managers, order is important!

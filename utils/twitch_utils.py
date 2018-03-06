@@ -18,14 +18,17 @@ def get_ids(names):
             return {}
         results = {}
         for user in data["users"]:
-            results[user['display_name'].encode('ascii')] = user['_id'].encode('ascii')
+            results[user['name'].encode('ascii')] = user['_id'].encode('ascii')
+        logging.debug("Results: " + str(results))
         return results
     except urllib2.URLError:
         logging.error("urllib2 error - get_ids")
         return None
+    except Exception as e:
+        logging.error("Something else went wrong :( - " + e)
 
 def get_viewers(include_mods = True):
-    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['api']['client_id'])
+    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'].lower(), config['api']['client_id'])
     try:
         response = urllib2.urlopen(url)
         userlist = json.load(response)['chatters']
@@ -41,7 +44,7 @@ def get_viewers(include_mods = True):
         return {}
 
 def get_mods():
-    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'], config['api']['client_id'])
+    url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'].lower(), config['api']['client_id'])
     try:
         response = urllib2.urlopen(url)
         userlist = json.load(response)['chatters']
@@ -71,7 +74,7 @@ def get_game(name):
     if name == "capn_flint":
         channel_id = config['twitch']['channel_id']
     else:
-        channel_id = get_ids([name])[name]
+        channel_id = get_ids([name])[name.lower()]
     url = "https://api.twitch.tv/kraken/channels/" + channel_id
     try:
         req = urllib2.Request(url)
@@ -119,8 +122,7 @@ def get_starttime():
         return 0
 
 def check_streamer(name):
-    name = name.lower()
-    channel_id = get_ids([name])[name]
+    channel_id = get_ids([name])[name.lower()]
     url = "https://api.twitch.tv/kraken/channels/" + channel_id
     try:
         req = urllib2.Request(url)
@@ -136,8 +138,7 @@ def check_streamer(name):
         return None
 
 def check_follower(name):
-    name = name.lower()
-    user_id = get_ids([name])[name]
+    user_id = get_ids([name])[name.lower()]
     url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(user_id, config['twitch']['channel_id'])
     if name == config['twitch']['channel']:
         return True
@@ -155,8 +156,7 @@ def check_follower(name):
         return False
 
 def check_subscriber(name, channel):
-    name = name.lower()
-    user_id = get_ids([name])[name]
+    user_id = get_ids([name])[name.lower()]
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
 
     try:
@@ -178,8 +178,7 @@ def check_subscriber(name, channel):
         return ""
 
 def get_subscription(name):
-    name = name.lower()
-    user_id = get_ids([name])[name]
+    user_id = get_ids([name])[name.lower()]
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
 
     sub = {}

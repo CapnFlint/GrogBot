@@ -127,7 +127,7 @@ class CharacterManager():
                     con.close()
             if not user:
                 logging.debug("Couldn't load " + name)
-                uid = utils.get_ids([name])[name]
+                uid = utils.get_ids([name])[name.lower()]
                 logging.debug("Got ID: " + str(uid))
                 return self.create_character(name, uid)
             else:

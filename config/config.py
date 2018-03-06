@@ -10,7 +10,7 @@ config = {
         'access_token': "48kgaeiibyge2b2c07aodewsnq8t32"
     },
     'twitch': {
-        'channel': 'capn_flint',
+        'channel': 'Capn_Flint',
         'channel_id': '91580306'
     },
     'db': {
