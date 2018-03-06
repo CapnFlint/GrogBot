@@ -112,7 +112,7 @@ class CharacterManager():
         user = None
         if name:
             try:
-                con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
+                con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8")
                 with con:
                     cur = con.cursor(mdb.cursors.DictCursor)
                     cur.execute("SELECT * from chars where name = %s", (name,))
@@ -126,12 +126,9 @@ class CharacterManager():
                 if con:
                     con.close()
             if not user:
-                try:
-                    uid = utils.get_ids([name])[name]
-                    return self.create_character(name, uid)
-                except:
-                    logging.error("Unable to get ID for user: " + name)
-                    return None
+                logging.debug("Couldn't load " + name)
+                uid = utils.get_ids([name])[name]
+                return self.create_character(name, uid)
             else:
                 return user
         else:
@@ -139,7 +136,7 @@ class CharacterManager():
 
     def save_character(self, char):
         try:
-            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8");
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8")
 
             with con:
                 cols = sorted(char.keys())

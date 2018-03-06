@@ -4,19 +4,6 @@ import json
 import logging
 
 from config.config import config
-'''
-{
-u'_total': 1,
-u'users': [
-    {u'bio': u'Lorewalker | US Army Veteran | Collecting mounts, titles, and achievements | Streaming Sat & Sun at 7am EST; Sat 12p EST for StackUpDotOrg',
-    u'display_name': u'MalForTheWin',
-    u'name': u'malforthewin',
-    u'created_at': u'2015-11-17T22:49:10.393389Z',
-    u'updated_at': u'2018-03-04T18:34:44.408002Z',
-    u'logo': u'https://static-cdn.jtvnw.net/jtv_user_pictures/5f8775af-a541-4e64-8885-39f6fdd8da2d-profile_image-300x300.png',
-    u'_id': u'107378211',
-    u'type': u'user'}
-    ]}'''
 
 def get_ids(names):
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
