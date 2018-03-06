@@ -51,7 +51,7 @@ class ConnectionManager():
                         overlay.alert_sub(char['name'])
                         new_subs.append(char['name'])
                         self.grog.charMgr.give_booty(50, [user])
-                        self.grog.charMgr.subbed(user, force_check=True)
+                        self.grog.charMgr.subbed(user)
                     else:
                         logging.error("OHNOES!!!! Unable to sub user: " + user)
         if new_subs:
