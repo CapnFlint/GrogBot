@@ -30,8 +30,7 @@ def get_ids(names):
             return {}
         results = {}
         for user in data["users"]:
-            results[user['name'].encode('ascii')] = user['_id'].encode('ascii')
-        print results
+            results[user['display_name'].encode('ascii')] = user['_id'].encode('ascii')
         return results
     except urllib2.URLError:
         logging.error("urllib2 error - get_ids")
