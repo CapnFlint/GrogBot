@@ -46,11 +46,14 @@ class ConnectionManager():
                 logging.debug("Processing: " + user)
                 if not self.grog.charMgr.subbed(user):
                     char = self.grog.charMgr.load_character(user)
-                    logging.info("[NEW SUBSCRIBER] " + char['name'])
-                    overlay.alert_sub(char['name'])
-                    new_subs.append(char['name'])
-                    self.grog.charMgr.give_booty(50, [user])
-                    self.grog.charMgr.subbed(user, force_check=True)
+                    if char:
+                        logging.info("[NEW SUBSCRIBER] " + char['name'])
+                        overlay.alert_sub(char['name'])
+                        new_subs.append(char['name'])
+                        self.grog.charMgr.give_booty(50, [user])
+                        self.grog.charMgr.subbed(user, force_check=True)
+                    else:
+                        logging.error("OHNOES!!!! Unable to sub user: " + user)
         if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
             stat = db.add_stat('sessionSubs', len(new_subs))
@@ -118,21 +121,27 @@ class ConnectionManager():
 
     def _handle_join(self, user):
         char = self.grog.charMgr.load_character(user)
-        if char['subscriber']:
-            if char['ship'] > 0:
-                ship = char['ship']
-            else:
-                ship = char['sub_count']
-            overlay.ship("join", user, ship)
+        if char:
+            if char['subscriber']:
+                if char['ship'] > 0:
+                    ship = char['ship']
+                else:
+                    ship = char['sub_count']
+                overlay.ship("join", user, ship)
+        else:
+            logging.error("OH NOES!!! can't load character.")
 
     def _handle_part(self, user):
         char = self.grog.charMgr.load_character(user)
-        if char['subscriber']:
-            if char['ship'] > 0:
-                ship = char['ship']
-            else:
-                ship = char['sub_count']
-            overlay.ship("leave", user, ship)
+        if char:
+            if char['subscriber']:
+                if char['ship'] > 0:
+                    ship = char['ship']
+                else:
+                    ship = char['sub_count']
+                overlay.ship("leave", user, ship)
+        else:
+            logging.error("OH NOES!!! can't load character.")
 
     def _handle_mode(self, user):
         logging.debug(user + " is a mod!")

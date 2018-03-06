@@ -126,8 +126,12 @@ class CharacterManager():
                 if con:
                     con.close()
             if not user:
-                uid = utils.get_ids([name])[name]
-                return self.create_character(name, uid)
+                try:
+                    uid = utils.get_ids([name])[name]
+                    return self.create_character(name, uid)
+                except:
+                    logging.error("Unable to get ID for user: " + name)
+                    return None
             else:
                 return user
         else:
