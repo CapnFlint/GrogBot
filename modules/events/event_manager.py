@@ -127,7 +127,9 @@ class Event():
             elif command['exp'] < 0:
                 self.connMgr.send_message(data['sender'] + " has lost experience! capnRIP")
             self.remove_command(command['command'])
+            logging.debug("KRaken - " + command['next'])
             if command['next']:
+                logging.debug("Running next event...")
                 self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
             self.eventMgr.end_event()
         anonfunc.__name__ = name
