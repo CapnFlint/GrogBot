@@ -128,6 +128,7 @@ class CharacterManager():
             if not user:
                 logging.debug("Couldn't load " + name)
                 uid = utils.get_ids([name])[name]
+                logging.debug("Got ID: " + str(uid))
                 return self.create_character(name, uid)
             else:
                 return user
@@ -319,19 +320,13 @@ class CharacterManager():
             self.save_character(char)
         return subbed
 
-    def update_subscriber(self, char, date, sub_type=None, count=0):
+    def update_subscriber(self, char, date, sub_type=None):
         print "UPDATING SUBSCRIBER: " + char['name']
         char['subscriber'] = 1
         if char['name'] == "Capn_Flint":
             return
         char['sub_date'] = date
-        if count:
-            char['sub_count'] = count
-        else:
-            count = self.guess_sub_count(date)
-            if count == 0:
-                count = 1
-            char['sub_count'] = self.guess_sub_count(date)
+        char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
         if sub_type:
