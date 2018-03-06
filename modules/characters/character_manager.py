@@ -328,6 +328,9 @@ class CharacterManager():
         if count:
             char['sub_count'] = count
         else:
+            count = self.guess_sub_count(date)
+            if count == 0:
+                count = 1
             char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
