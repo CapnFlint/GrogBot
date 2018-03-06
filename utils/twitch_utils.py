@@ -13,6 +13,7 @@ def get_ids(names):
         req.add_header('Client-ID', config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
+        print data
         if 'error' in data.keys():
             return {}
         results = {}
