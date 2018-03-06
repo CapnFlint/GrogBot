@@ -114,7 +114,7 @@ class MessageProcessor():
     @processes('!event', PERM_MOD)
     def command_event(self, data):
         evtID = 0
-        if args:
+        if data['args']:
             evtID = int(data['args'][0])
         if evtID > 0:
             self.grog.eventMgr.loadAndRun(evtID)

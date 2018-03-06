@@ -30,10 +30,10 @@ def command_giveaway(self, data):
                 register_entry(self, data)
         self.add_command("!enter", command_enter)
 
-        self.connMgr.send_message("Type !enter [x] now, with x being the number of tickets (max " + str(self.max_entry) + "), for a chance to win! You must be a follower to enter!")
+        self.connMgr.send_message("Type !enter [x] now, with x being the number of entries (max entries: " + str(self.max_entry) + "), for a chance to win! You must be a follower to enter!")
         if countdown > 60:
             time.sleep(countdown - 60)
-            self.connMgr.send_message("The giveaway is still running! Type !enter [x] now to have a chance of winning!")
+            self.connMgr.send_message("The giveaway is still running! Type !enter [x] now to have a chance of winning! (max entries: " + str(self.max_entry) + ")")
             time.sleep(60)
         else:
             time.sleep(countdown)
