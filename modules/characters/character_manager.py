@@ -320,13 +320,16 @@ class CharacterManager():
             self.save_character(char)
         return subbed
 
-    def update_subscriber(self, char, date, sub_type=None):
+    def update_subscriber(self, char, date, sub_type=None, count=0):
         print "UPDATING SUBSCRIBER: " + char['name']
         char['subscriber'] = 1
         if char['name'] == "Capn_Flint":
             return
         char['sub_date'] = date
-        char['sub_count'] = self.guess_sub_count(date)
+        if count:
+            char['sub_count'] = count
+        else:
+            char['sub_count'] = self.guess_sub_count(date)
         if char['sub_max'] < char['sub_count']:
             char['sub_max'] = char['sub_count']
         if sub_type:
