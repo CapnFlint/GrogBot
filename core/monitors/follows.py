@@ -1,7 +1,7 @@
 import logging
 import random
 import time
-import thread
+import threading
 
 import utils.twitch_utils as twitch
 import utils.db_utils as db
@@ -10,13 +10,16 @@ import modules.overlay.overlay as overlay
 
 from config.strings import strings
 
-class follows():
+class follows(threading.Thread):
     def __init__(self, grog):
+        threading.Thread.__init__(self)
         self.connMgr = grog.connMgr
         self.charMgr = grog.charMgr
+        self.name = "Follow-Monitor"
         logging.info("Follow monitor initialized")
 
-    def follow_thread(self):
+    def run(self):
+        logging.info("Follow monitor started")
         cooldown = 5
         while 1:
             first = True
@@ -40,7 +43,3 @@ class follows():
                 stat = db.add_stat('sessionFollowers', len(new))
                 overlay.update_stat('follows', stat)
                 #overlay.update_timer(2 * len(new))
-
-    def start(self):
-        thread.start_new_thread(self.follow_thread, ())
-        logging.info("Follow monitor started")

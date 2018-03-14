@@ -1,6 +1,7 @@
 import urllib2
 import urllib
 import json
+import logging
 import random
 
 import utils.db_utils as db
@@ -224,10 +225,13 @@ def fix_timer(minutes):
 ''' handler '''
 
 def _send_message(handler, data):
-    message = {}
-    message['handler'] = handler
-    message['data'] = data
-    ws = create_connection("ws://capnflint.com:9001")
-    ws.send(json.dumps(message))
-    ws.recv()
-    ws.close()
+    try:
+        message = {}
+        message['handler'] = handler
+        message['data'] = data
+        ws = create_connection("ws://capnflint.com:9001")
+        ws.send(json.dumps(message))
+        ws.recv()
+        ws.close()
+    except:
+        logging.error("Websocket not available...")
