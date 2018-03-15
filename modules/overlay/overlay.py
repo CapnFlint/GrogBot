@@ -9,6 +9,8 @@ import utils.twitch_utils as utils
 
 from websocket import create_connection
 
+from config.config import config
+
 farts = False
 
 def get_fart():
@@ -230,6 +232,8 @@ def _send_message(handler, data):
         message['handler'] = handler
         message['data'] = data
         ws = create_connection("ws://capnflint.com:9001")
+        ws.send("AUTH:" + config['websocket']['secret'])
+        ws.recv()
         ws.send(json.dumps(message))
         ws.recv()
         ws.close()

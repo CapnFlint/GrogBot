@@ -29,5 +29,8 @@ config = {
     'streamtip': {
         'token': 'YjQ0NGIzY2RjYjZlMTA5ZjFkZDNhN2Q1',
         'clientid': '556f196afe9720cb0e54aa75'
+    },
+    'websocket': {
+        'secret': '5CDB8261-1A65-9D7C-5D65-82D876BEEC9A'
     }
 }
