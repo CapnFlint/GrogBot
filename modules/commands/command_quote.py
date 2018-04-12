@@ -1,5 +1,5 @@
 from helper import *
-import utils.twitch_utils as utils
+import utils.twitch_utils as twitch
 
 """
 quoteid int not null primary key auto_increment
@@ -16,11 +16,12 @@ Quote #123: "I like to make quotes!" - Capn_Flint 02-01-2015 (Creative)
 @processes("!addquote", PERM_MOD)
 def command_addquote(self, data):
     if data['args'] and len(data['args']) > 1:
-        name = data['args'][0]
+        name = data['args'][0].lower()
         quote = " ".join(data['args'][1:])
         if self.charMgr.char_exists(name):
-            game = utils.get_game("capn_flint")
-            db.qu_add_quote(quote, utils.get_display_name(data['tags']['user-id']), game)
+            game = twitch.get_game("capn_flint")
+            dname = twitch.get_user(twitch.get_ids([name])[name])['display_name']
+            db.qu_add_quote(quote, dname, game)
             self.connMgr.send_message("quote successfully added!")
             return
         else:

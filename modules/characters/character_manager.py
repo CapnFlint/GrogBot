@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 import MySQLdb as mdb
 
-import utils.twitch_utils as utils
+import utils.twitch_utils as twitch
 import modules.overlay.overlay as overlay
 from config.config import config
 from config.strings import strings
@@ -108,32 +108,32 @@ class CharacterManager():
         else:
             return False
 
-    def load_character(self, name):
+    def load_character(self, uid):
         user = None
-        if name:
-            try:
-                con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8")
-                with con:
-                    cur = con.cursor(mdb.cursors.DictCursor)
-                    cur.execute("SELECT * from chars where name = %s", (name,))
-                    user = cur.fetchone()
-            except mdb.Error, e:
+        try:
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8")
+            with con:
+                cur = con.cursor(mdb.cursors.DictCursor)
+                cur.execute("SELECT * from chars where id = %s", (uid,))
+                user = cur.fetchone()
+        except mdb.Error, e:
 
-                logging.error("DB Error %d: %s" % (e.args[0], e.args[1]))
+            logging.error("DB Error %d: %s" % (e.args[0], e.args[1]))
 
-            finally:
+        finally:
 
-                if con:
-                    con.close()
-            if not user:
-                logging.debug("Couldn't load " + name)
-                uid = utils.get_ids([name])[name.lower()]
-                logging.debug("Got ID: " + str(uid))
-                return self.create_character(name, uid)
-            else:
-                return user
+            if con:
+                con.close()
+        if not user:
+            logging.debug("Couldn't load ID: " + uid)
+            name = twitch.get_user(uid)['display_name']
+            return self.create_character(name, uid)
         else:
-            logging.error("Unable to load user: " + name)
+            return user
+
+    def load_char_name(self, name):
+        uid = twitch.get_ids([name])[name.lower()]
+        return self.load_character(uid)
 
     def save_character(self, char):
         try:
@@ -271,9 +271,9 @@ class CharacterManager():
             # code to check current followers for unfollows. Done monthly.
             now = int(time.time())
             if not char['follower'] and force_check:
-                return utils.check_follower(name)
+                return twitch.check_follower(name)
             elif char['follower'] and now - char['checked_follow'] > 2592000:
-                if not skip_check and utils.check_follower(name):
+                if not skip_check and twitch.check_follower(name):
                     char['follower'] = 1
                 else:
                     char['follower'] = 0
@@ -306,7 +306,7 @@ class CharacterManager():
                 recheck = 86400 # 24 hours
             if (now - last_check) > recheck:
                 logging.debug("Rechecking...")
-                sub = utils.get_subscription(name)
+                sub = twitch.get_subscription(name)
                 if sub:
                     self.update_subscriber(char, sub['created'], sub['sub_plan'])
                     subbed = True
@@ -346,9 +346,9 @@ class CharacterManager():
         self.remove_subscriber(char)
         self.save_character(char)
 
-    def sub_user(self, name):
+    def sub_user(self, name, count=0):
         char = self.load_character(name)
-        sub = utils.get_subscription(char['name'])
+        sub = twitch.get_subscription(char['name'])
         self.update_subscriber(char, sub['created'], sub['sub_plan'])
         self.save_character(char)
 
@@ -371,25 +371,10 @@ class CharacterManager():
             char['checked_follow'] = now
             self.save_character(char)
 
-    def add_sub(self, name, sub_type, time, count=0):
-        #TODO Use the recieved time value (update DB for new format)
-        char = self.load_character(name)
-        if char:
-            date = utils.check_subscriber(name, 'capn_flint')
-            self.update_subscriber(char, date, sub_type, count)
-            self.save_character(char)
-
-    def update_id(self, name, user_id):
-        char = self.load_character(name)
-        if char:
-            if char['id'] == "":
-                char['id'] = user_id
-                self.save_character(char)
-
 
     def give_booty(self, amount, users = []):
         if not users:
-            users = utils.get_viewers()
+            users = twitch.get_viewers()
         count = 0
         for user in users:
             count += 1
@@ -404,7 +389,7 @@ class CharacterManager():
 
     def give_exp(self, exp, users = []):
         if not users:
-            users = utils.get_viewers()
+            users = twitch.get_viewers()
         count = 0
         amount = 0
         levelups = defaultdict(list)

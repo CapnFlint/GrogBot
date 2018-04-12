@@ -114,10 +114,7 @@ class pubsub():
             sub_message = msg['sub_message']
             user_id = msg['user_id']
 
-            #TODO REMOVE ME when all of the database is updated, and code migrated to use ID
-            self.grog.charMgr.update_id(name, user_id)
-
-            self.grog.charMgr.add_sub(name, sub_type, time, count)
+            self.grog.charMgr.update_subscriber(name, time, sub_type, count)
 
             # Send alert
             #TODO: update so higher sub tiers add more to the subathon timer

@@ -54,8 +54,8 @@ def get_mods():
         logging.error("get_mods: urllib2 error")
         return {}
 
-def get_display_name(uid):
-    url = "https://api.twitch.tv/kraken/users/" + config['twitch']['channel_id']
+def get_user(uid):
+    url = "https://api.twitch.tv/kraken/users/{0}".format(uid)
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -63,11 +63,11 @@ def get_display_name(uid):
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
-            return name
-        return data['display_name']
+            return {}
+        return data
     except urllib2.URLError:
-        logging.error("get_display_name: urllib2 error")
-        return name
+        logging.error("get_user: urllib2 error")
+        return {}
 
 def get_game(name):
     name = name.lower()
@@ -221,9 +221,6 @@ def get_latest_follows(count):
         logging.error("urllib2 error - get_latest_follows")
         return {}
 
-def get_latest_subscribers(count, offset=0):
-    return get_subscribers(count, offset)
-
 def get_sub_count():
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(config['twitch']['channel_id'], 1, 0)
     try:
@@ -281,10 +278,11 @@ def get_subscribers(count=0, offset=0, subs={}):
         print "TOTAL: " + str(total)
 
         for item in userlist:
-            subs[item['sub_plan']].append(item['user']['name'])
+            subs[item['sub_plan']].append(item['user']['_id'])
         if iterate and (offset + limit) < total:
             subs = get_subscribers(offset=offset + limit, subs=subs)
 
+        #TODO: fix this to use ID's, this won't work right now.
         if 'capn_flint' in subs['1000']:
             subs['1000'].remove('capn_flint')
         if 'grogbot' in subs['1000']:

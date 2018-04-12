@@ -42,17 +42,17 @@ class ConnectionManager():
         print sublist
         print old_subs
 
-        self.update_subcount()
+        self.update_subcount(subs)
 
         new_subs = []
 
         if sublist:
-            for user in sublist:
-                logging.debug("Processing: " + user)
-                if user in old_subs:
-                    old_subs.remove(user)
+            for uid in sublist:
+                logging.debug("Processing: " + uid)
+                if uid in old_subs:
+                    old_subs.remove(uid)
                 else:
-                    char = self.grog.charMgr.load_character(user)
+                    char = self.grog.charMgr.load_character(uid)
                     if char:
                         logging.info("[NEW SUBSCRIBER] " + char['name'])
                         overlay.alert_sub(char['name'])
@@ -60,10 +60,11 @@ class ConnectionManager():
                         #self.grog.charMgr.give_booty(50, [user])
                         #self.grog.charMgr.sub_user(user)
                     else:
-                        logging.error("OHNOES!!!! Unable to sub user: " + user)
+                        logging.error("OHNOES!!!! Unable to sub user: " + uid)
         if old_subs:
-            for user in old_subs:
-                logging.info("[REMOVING SUB] " + user)
+            for uid in old_subs:
+                char = self.grog.charMgr.load_character(uid)
+                logging.info("[REMOVING SUB] " + char['name'])
                 #self.grog.charMgr.unsub_user(user)
 
         if new_subs:
@@ -72,8 +73,8 @@ class ConnectionManager():
             overlay.update_stat('subs', stat)
         logging.info("Subscriber check done!")
 
-    def update_subcount(self):
-        count = twitch.get_sub_points()
+    def update_subcount(self, subs=[]):
+        count = twitch.get_sub_points(subs)
         db.clear_stat('subCount')
         stat = db.add_stat('subCount', int(count))
         logging.debug("New SubCount: " + str(stat))

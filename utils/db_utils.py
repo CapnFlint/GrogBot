@@ -225,11 +225,11 @@ def get_subscribers():
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT name FROM chars WHERE subscriber = 1")
+            cur.execute("SELECT id FROM chars WHERE subscriber = 1")
             result = cur.fetchall()
 
             for row in result:
-                subs.append(row['name'])
+                subs.append(row['id'])
 
     except mdb.Error, e:
         print "Error %d: %s" % (e.args[0],e.args[1])
