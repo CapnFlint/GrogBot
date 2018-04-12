@@ -55,14 +55,14 @@ class ConnectionManager():
                         logging.info("[NEW SUBSCRIBER] " + char['name'])
                         overlay.alert_sub(char['name'])
                         new_subs.append(char['name'])
-                        self.grog.charMgr.give_booty(50, [user])
-                        self.grog.charMgr.subbed(user)
+                        #self.grog.charMgr.give_booty(50, [user])
+                        #self.grog.charMgr.sub_user(user)
                     else:
                         logging.error("OHNOES!!!! Unable to sub user: " + user)
         if old_subs:
             for user in old_subs:
-                logging.info("[REMOVING SUB] " + char['name'])
-                self.grog.charMgr.unsub_user(user)
+                logging.info("[REMOVING SUB] " + user)
+                #self.grog.charMgr.unsub_user(user)
 
         if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))

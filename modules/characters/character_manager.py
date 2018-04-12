@@ -346,9 +346,11 @@ class CharacterManager():
         self.remove_subscriber(char)
         self.save_character(char)
 
-    def sub_user(self, char):
+    def sub_user(self, name):
+        char = self.load_character(name)
         sub = utils.get_subscription(char['name'])
         self.update_subscriber(char, sub['created'], sub['sub_plan'])
+        self.save_character(char)
 
 
     def guess_sub_count(self, date):
