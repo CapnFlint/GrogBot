@@ -33,18 +33,23 @@ class ConnectionManager():
 # -----[ Utility Functions ]----------------------------------------------------
 
     def subscribers(self):
-        logging.info("Checking for Subscribers!")
+        logging.info("Updating Subscribers!")
 
-        subs = twitch.get_latest_subscribers(100)
+        subs = twitch.get_subscribers()
         sublist = subs['1000'] + subs['2000'] + subs['3000']
 
-        self.update_subcount()
+        old_subs = db.get_subscribers()
+
+        self.update_subcount(subs)
 
         new_subs = []
+
         if sublist:
             for user in sublist:
                 logging.debug("Processing: " + user)
-                if not self.grog.charMgr.subbed(user):
+                if user in old_subs:
+                    old_subs.remove(user)
+                else:
                     char = self.grog.charMgr.load_character(user)
                     if char:
                         logging.info("[NEW SUBSCRIBER] " + char['name'])
@@ -54,6 +59,11 @@ class ConnectionManager():
                         self.grog.charMgr.subbed(user)
                     else:
                         logging.error("OHNOES!!!! Unable to sub user: " + user)
+        if old_subs:
+            for user in old_subs:
+                logging.info("[REMOVING SUB] " + char['name'])
+                self.charMgr.unsub_user(user)
+
         if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
             stat = db.add_stat('sessionSubs', len(new_subs))

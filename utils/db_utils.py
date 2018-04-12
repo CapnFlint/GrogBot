@@ -218,6 +218,29 @@ def random_sub():
 
     return char['name']
 
+def get_subscribers():
+    subs = []
+    try:
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+
+        with con:
+            cur = con.cursor(mdb.cursors.DictCursor)
+            cur.execute("SELECT name FROM chars WHERE subscriber = 1")
+            result = cur.fetchall()
+
+            for row in result:
+                subs.append(row['name'])
+
+    except mdb.Error, e:
+        print "Error %d: %s" % (e.args[0],e.args[1])
+        subs = []
+
+    finally:
+        if con:
+            con.close()
+
+    return subs
+
 def sc_register(name, twitch):
     rows = 0
     try:

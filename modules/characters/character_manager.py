@@ -321,10 +321,10 @@ class CharacterManager():
         return subbed
 
     def update_subscriber(self, char, date, sub_type=None, count=0):
-        print "UPDATING SUBSCRIBER: " + char['name']
-        char['subscriber'] = 1
         if char['name'] == "Capn_Flint":
             return
+        print "UPDATING SUBSCRIBER: " + char['name']
+        char['subscriber'] = 1
         char['sub_date'] = date
         if count:
             char['sub_count'] = count
@@ -340,6 +340,15 @@ class CharacterManager():
         char['sub_date'] = ""
         char['sub_count'] = 0
         char['sub_type'] = 0
+
+    def unsub_user(self, name):
+        char = self.load_character(name)
+        self.remove_subscriber(char)
+        self.save_character(char)
+
+    def sub_user(self, char):
+        sub = utils.get_subscription(char['name'])
+        self.update_subscriber(char, sub['created'], sub['sub_plan'])
 
 
     def guess_sub_count(self, date):

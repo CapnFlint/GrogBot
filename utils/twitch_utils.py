@@ -240,9 +240,10 @@ def get_sub_count():
         logging.error("urllib2 error - get_sub_count")
         return 0
 
-def get_sub_points():
+def get_sub_points(subs={}):
     points = 0
-    subs = get_subscribers()
+    if not subs:
+        subs = get_subscribers()
     points += len(subs['1000'])
     points += len(subs['2000']) * 2
     points += len(subs['3000']) * 6
