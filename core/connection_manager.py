@@ -39,6 +39,8 @@ class ConnectionManager():
         sublist = subs['1000'] + subs['2000'] + subs['3000']
 
         old_subs = db.get_subscribers()
+        print sublist
+        print old_subs
 
         self.update_subcount()
 
