@@ -62,7 +62,7 @@ class ConnectionManager():
         if old_subs:
             for user in old_subs:
                 logging.info("[REMOVING SUB] " + char['name'])
-                self.charMgr.unsub_user(user)
+                self.grog.charMgr.unsub_user(user)
 
         if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
