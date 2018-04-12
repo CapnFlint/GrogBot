@@ -40,7 +40,7 @@ class ConnectionManager():
 
         old_subs = db.get_subscribers()
 
-        self.update_subcount(subs)
+        self.update_subcount()
 
         new_subs = []
 
