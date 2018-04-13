@@ -25,19 +25,18 @@ class follows(threading.Thread):
             first = True
             time.sleep(cooldown)
             follows = twitch.get_latest_follows(100)
+            ids = twitch.get_ids(follows)
             new = []
             if follows:
                 first = True
-                for user in follows:
-                    user = user.encode('utf-8')
-                    if user:
-                        if not self.charMgr.follows_me(user):
-                            logging.info("[NEW FOLLOWER] " + user)
-                            overlay.alert_follow(user, first)
-                            new.append(user)
-                            self.charMgr.give_booty(25, [user])
-                            self.charMgr.add_follower(user)
-                            first = False
+                for user in ids.keys():
+                    if not self.charMgr.follows_me(ids[user]):
+                        logging.info("[NEW FOLLOWER] " + user)
+                        overlay.alert_follow(user, first)
+                        new.append(user)
+                        self.charMgr.give_booty(25, [user])
+                        self.charMgr.add_follower(user)
+                        first = False
             if new:
                 self.connMgr.send_message(strings["FOLLOW_WELCOME"].format(names=", ".join(new)))
                 stat = db.add_stat('sessionFollowers', len(new))

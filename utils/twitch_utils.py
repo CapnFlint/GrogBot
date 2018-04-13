@@ -6,7 +6,6 @@ import logging
 from config.config import config
 
 def get_ids(names):
-    logging.debug("Getting ID's for names: " + ','.join(names))
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
     try:
         req = urllib2.Request(url)
@@ -19,7 +18,6 @@ def get_ids(names):
         results = {}
         for user in data["users"]:
             results[user['name'].encode('ascii')] = user['_id'].encode('ascii')
-        logging.debug("Results: " + str(results))
         return results
     except urllib2.URLError:
         logging.error("urllib2 error - get_ids")

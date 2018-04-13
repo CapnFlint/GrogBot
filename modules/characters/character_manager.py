@@ -258,8 +258,8 @@ class CharacterManager():
         logging.debug("RANK: " + rankstr)
         return rankstr
 
-    def follows_me(self, name, force_check=False, skip_check=False):
-        char = self.load_char_name(name)
+    def follows_me(self, uid, force_check=False, skip_check=False):
+        char = self.load_character(uid)
 
         if skip_check:
             return char['follower']

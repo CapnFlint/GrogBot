@@ -146,7 +146,7 @@ def register_entry(self, data):
     tickets = 0
     args = data['args']
 
-    if self.charMgr.follows_me(data['sender'], True):
+    if self.charMgr.follows_me(data['sender_id'], True):
         if len(args) > 0:
             try:
                 tickets = int(args[0])
