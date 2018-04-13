@@ -59,7 +59,7 @@ class ConnectionManager():
                         logging.info("[NEW SUBSCRIBER] " + char['name'])
                         overlay.alert_sub(char['name'])
                         new_subs.append(char['name'])
-                        self.grog.charMgr.give_booty(50, [user])
+                        self.grog.charMgr.give_booty(50, [char['name']])
                         self.grog.charMgr.sub_user(uid)
                     else:
                         logging.error("OHNOES!!!! Unable to sub user: " + uid)
