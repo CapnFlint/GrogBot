@@ -39,6 +39,8 @@ class ConnectionManager():
         sublist = subs['1000'] + subs['2000'] + subs['3000']
 
         old_subs = db.get_subscribers()
+        old_subs.remove('91580306') # capn_flint
+        old_subs.remove('91953864') # grogbot
         print sublist
         print old_subs
 
@@ -57,15 +59,15 @@ class ConnectionManager():
                         logging.info("[NEW SUBSCRIBER] " + char['name'])
                         overlay.alert_sub(char['name'])
                         new_subs.append(char['name'])
-                        #self.grog.charMgr.give_booty(50, [user])
-                        #self.grog.charMgr.sub_user(uid)
+                        self.grog.charMgr.give_booty(50, [user])
+                        self.grog.charMgr.sub_user(uid)
                     else:
                         logging.error("OHNOES!!!! Unable to sub user: " + uid)
         if old_subs:
             for uid in old_subs:
                 char = self.grog.charMgr.load_character(uid)
                 logging.info("[REMOVING SUB] " + char['name'])
-                #self.grog.charMgr.unsub_user(uid)
+                self.grog.charMgr.unsub_user(uid)
 
         if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
