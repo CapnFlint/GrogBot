@@ -12,7 +12,7 @@ PERM_FOLLOWS = 3
 PERM_SUBSCRIBER = 4
 
 def check_permission(data, level):
-    admin = db.is_admin(data['sender'])
+    admin = db.is_admin(data['sender_id'])
 
     if level == PERM_MOD:
         if data['perms']['mod']:

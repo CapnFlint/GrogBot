@@ -5,7 +5,7 @@ from config.strings import strings
 
 @processes('!booty')
 def command_booty(self, data):
-    char = self.charMgr.load_character(data['sender'])
+    char = self.charMgr.load_character(data['sender_id'])
     booty = char['booty']
 
     try:

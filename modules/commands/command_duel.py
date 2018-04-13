@@ -36,25 +36,26 @@ def command_duel(self, data):
             self.connMgr.send_message("Sorry " + data['sender'] + ", duels cannot be fought during events!")
             return
 
-        attacker = data['sender']
+        attacker = self.charMgr.load_character(data['sender_id'])
         now = time.time()
-        if attacker in self.duel_cooldowns.keys():
-            if now - self.duel_cooldowns[attacker] < 3600:
-                self.connMgr.send_message("Sorry " + attacker + ", you're still recovering from your last duel! Please wait " + str(int((3600 - (now - self.duel_cooldowns[attacker])) / 60)) + " minutes before trying again.")
+        if attacker['id'] in self.duel_cooldowns.keys():
+            if now - self.duel_cooldowns[attacker['id']] < 3600:
+                self.connMgr.send_message("Sorry " + attacker['name'] + ", you're still recovering from your last duel! Please wait " + str(int((3600 - (now - self.duel_cooldowns[attacker['id']])) / 60)) + " minutes before trying again.")
                 return
             else:
-                del self.duel_cooldowns[attacker]
+                del self.duel_cooldowns[attacker['id']]
         if not duel_active:
             if data['args']:
                 # do the duel thing
-                target = data['args'][0].lstrip('@').lower()
-                if self.charMgr.char_exists(target) and target != attacker and self.charMgr.is_alive(target):
+                name = ['args'][0].lstrip('@').lower()
+                target = self.charMgr.load_char_name(name)
+                if target != attacker and target['level'] > 0:
                     duel_active = True
-                    self.duel_cooldowns[attacker] = now
+                    self.duel_cooldowns[attacker['id']] = now
 
                     challenge_player(self, attacker, target)
                 else:
-                    self.connMgr.send_message("Sorry, " + target + " is not a valid target.")
+                    self.connMgr.send_message("Sorry, " + name + " is not a valid target.")
             else:
                 self.connMgr.send_message("You must specify who you would like to duel!")
         else:
@@ -65,22 +66,25 @@ def command_duel(self, data):
 def challenge_player(self, attacker, target):
     # add accept or decline commands
     def command_accept(self, data):
-        if data['sender'] == target:
-            self.connMgr.send_message(target + " has accepted the duel! Let battle commence!")
+        if data['sender_id'] == target['id']:
+            self.connMgr.send_message(target['name'] + " has accepted the duel! Let battle commence!")
             self.responded = True
+            self.remove_command("!accept")
+            self.remove_command("decline")
             thread.start_new_thread(fight_duel, (self, attacker, target))
     self.add_command("!accept", command_accept)
 
     def command_decline(self, data):
-        if data['sender'] == target:
-            self.connMgr.send_message(target + " has declined the duel. Honour will not be reclaimed today!")
+        if data['sender_id'] == target['id']:
+            self.connMgr.send_message(target['name'] + " has declined the duel. Honour will not be reclaimed today!")
             self.responded = True
-            duel_active = False
+            self.remove_command("!accept")
+            self.remove_command("!decline")
             end_duel(self)
     self.add_command("!decline", command_decline)
 
     # wait for accept or decline
-    self.connMgr.send_message(target + " you have been challenged by " + attacker + " to a duel to the DEATH! Will you [accept] or [decline]?")
+    self.connMgr.send_message(target['name'] + " you have been challenged by " + attacker['name'] + " to a duel to the DEATH! Will you [accept] or [decline]?")
 
     self.responded = False
 
@@ -90,7 +94,7 @@ def challenge_player(self, attacker, target):
             time.sleep(2)
             countdown -= 2
             if countdown <= 0:
-                self.connMgr.send_message(target + " is dozing in the corner after drinking too much rum! They are in no fit state to duel.")
+                self.connMgr.send_message(target['name'] + " is dozing in the corner after drinking too much rum! They are in no fit state to duel.")
                 self.responded = True
                 end_duel(self)
 
@@ -100,33 +104,31 @@ def challenge_player(self, attacker, target):
 
 def end_duel(self):
     global duel_active
-    self.remove_command("!accept")
-    self.remove_command("!decline")
     duel_active = False
 
 
 def fight_duel(self, attacker, target):
-    self.connMgr.send_message(attacker + " has challenged " + target + " to a duel to the DEATH! Who will win?")
+    self.connMgr.send_message(attacker['name'] + " has challenged " + target['name'] + " to a duel to the DEATH! Who will win?")
     # start betting
-    self.run_command("!runbet", {'args':[attacker, target]})
+    self.run_command("!runbet", {'args':[attacker['name'], target['name']]})
     time.sleep(125)
 
     fight_array = []
-    red_count = 5 + (self.charMgr.load_character(attacker)['level'] / 5)
-    blue_count = 5 + (self.charMgr.load_character(target)['level'] / 5)
+    red_count = 5 + (attacker['level'] / 5)
+    blue_count = 5 + (target['level'] / 5)
     for _ in range(red_count):
-        fight_array.append(attacker)
+        fight_array.append(attacker['name'])
     for _ in range(blue_count):
-        fight_array.append(target)
+        fight_array.append(target['name'])
     print fight_array
     winner = random.choice(fight_array)
     # add logic for second and third place
-    if winner == attacker:
-        exp = self.charMgr.load_character(target)['level']
-        loser = target
+    if winner == attacker['name']:
+        exp = target['level'] * 10
+        loser = target['name']
     else:
-        exp = self.charMgr.load_character(attacker)['level']
-        loser = attacker
+        exp = attacker['name'] * 10
+        loser = attacker['name']
 
     self.charMgr.give_exp(exp, [winner])
     self.charMgr.give_exp(-exp, [loser])

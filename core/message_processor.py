@@ -72,8 +72,8 @@ class MessageProcessor():
         #hi_reg = '(^|\s)capnHi(\s)+'
         if msg['perms']['sub'] == '1':
             if '81912' in msg['emotes'].keys():
-                if msg['sender'] not in self.seen_senders:
-                    self.seen_senders.append(msg['sender'])
+                if msg['sender_id'] not in self.seen_senders:
+                    self.seen_senders.append(msg['sender_id'])
                     overlay.alert_hello(msg['sender'])
         logging.debug('[MSG] ' + msg['sender'] + ": " + msg['text'])
 
@@ -92,7 +92,8 @@ class MessageProcessor():
     def run_command(self, cmd, data = {}):
         logging.info("Running command: " + cmd)
         if not 'sender' in data.keys():
-            data['sender'] = 'grogbot'
+            data['sender'] = 'Capn_Flint'
+            data['sender_id'] = '91580306'
             data['perms'] = {'mod':True,'sub':True}
         if cmd in self.options.keys():
             self.options[cmd](self, data)

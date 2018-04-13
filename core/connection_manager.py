@@ -58,14 +58,14 @@ class ConnectionManager():
                         overlay.alert_sub(char['name'])
                         new_subs.append(char['name'])
                         #self.grog.charMgr.give_booty(50, [user])
-                        #self.grog.charMgr.sub_user(user)
+                        #self.grog.charMgr.sub_user(uid)
                     else:
                         logging.error("OHNOES!!!! Unable to sub user: " + uid)
         if old_subs:
             for uid in old_subs:
                 char = self.grog.charMgr.load_character(uid)
                 logging.info("[REMOVING SUB] " + char['name'])
-                #self.grog.charMgr.unsub_user(user)
+                #self.grog.charMgr.unsub_user(uid)
 
         if new_subs:
             self.grog.connMgr.send_message(strings['SUB_WELCOME'].format(names=", ".join(new_subs)))
@@ -133,7 +133,7 @@ class ConnectionManager():
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
     def _handle_join(self, user):
-        char = self.grog.charMgr.load_character(user)
+        char = self.grog.charMgr.load_char_name(user)
         if char:
             if char['subscriber']:
                 if char['ship'] > 0:
@@ -145,7 +145,7 @@ class ConnectionManager():
             logging.error("OH NOES!!! can't load character.")
 
     def _handle_part(self, user):
-        char = self.grog.charMgr.load_character(user)
+        char = self.grog.charMgr.load_char_name(user)
         if char:
             if char['subscriber']:
                 if char['ship'] > 0:
@@ -216,6 +216,7 @@ class ConnectionManager():
         msg["text"] = " ".join(message[4:]).lstrip(":")
         msg['channel'] = message[3]
         msg['tags'] = self._get_tags(message[0])
+        msg["sender_id"] = msg['tags']['user-id']
         msg['emotes'] = self._get_emotes(msg['tags'])
         msg['perms'] = self._get_perms(msg['tags'])
 
@@ -318,7 +319,7 @@ class ConnectionManager():
                                         for i in range(msg['emotes'][emote]):
                                             emoteList.append(emote)
 
-                                    overlay.send_emotes(msg['sender'], emoteList)
+                                    overlay.send_emotes(msg['sender'], emoteList[:5])
 
                                 if msg['channel'] == self.CHAN:
                                     if msg['text'].startswith('!'):
@@ -327,7 +328,6 @@ class ConnectionManager():
                                         self.grog.msgProc.parse_message(msg)
                                 else:
                                     logging.error("This shouldn't happen! (Raid?)")
-                                    #self.grog.msgProc.parse_raid_message(message, msg['sender'])
 
                             elif line[2] == 'USERNOTICE':
                                 self._handle_usernotice(self._get_tags(line[0]))

@@ -145,8 +145,8 @@ def command_giveaway(self, data):
 def register_entry(self, data):
     tickets = 0
     args = data['args']
-    sender = data['sender']
-    if self.charMgr.follows_me(sender, True):
+
+    if self.charMgr.follows_me(data['sender'], True):
         if len(args) > 0:
             try:
                 tickets = int(args[0])
@@ -162,7 +162,7 @@ def register_entry(self, data):
         if tickets > self.max_entry and self.max_entry > 0:
             tickets = self.max_entry
 
-        char = self.charMgr.load_character(sender)
+        char = self.charMgr.load_character(data['sender_id'])
 
         if char['booty'] >= tickets:
             self.giveaway_entries[char['name']] = tickets
@@ -178,7 +178,7 @@ def register_entry(self, data):
             self.connMgr.send_message("Sorry " + char['name'] + ", you don't have that much booty!")
 
     else:
-        self.connMgr.send_message("Sorry " + sender + "! You must follow to enter giveaways.")
+        self.connMgr.send_message("Sorry " + data['sender'] + "! You must follow to enter giveaways.")
 
 def buffered_entries(self, userlist):
     output = "New Entries: "
@@ -191,7 +191,7 @@ def charge_entry_fees(self):
         pass
     else:
         for name in self.giveaway_entries.keys():
-            char = self.charMgr.load_character(name)
+            char = self.charMgr.load_char_name(name)
             char['booty'] -= self.giveaway_entries[name]
             self.charMgr.save_character(char)
 

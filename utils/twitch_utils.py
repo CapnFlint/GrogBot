@@ -282,13 +282,13 @@ def get_subscribers(count=0, offset=0, subs={}):
         if iterate and (offset + limit) < total:
             subs = get_subscribers(offset=offset + limit, subs=subs)
 
-        #TODO: fix this to use ID's, this won't work right now.
-        if 'capn_flint' in subs['1000']:
-            subs['1000'].remove('capn_flint')
-        if 'grogbot' in subs['1000']:
-            subs['1000'].remove('grogbot')
-        if 'capn_flint' in subs['3000']:
-            subs['3000'].remove('capn_flint')
+        # grogbot = 91953864, Capn_Flint = 91580306
+        if '91580306' in subs['1000']:
+            subs['1000'].remove('91580306')
+        if '91953864' in subs['1000']:
+            subs['1000'].remove('91953864')
+        if '91580306' in subs['3000']:
+            subs['3000'].remove('91580306')
 
         return subs
     except urllib2.URLError as e:

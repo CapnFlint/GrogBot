@@ -61,7 +61,7 @@ def register_bet(self, data):
             self.connMgr.send_message("Sorry " + data['sender'] + ", but that isn't a valid amount")
             return
 
-        char = self.charMgr.load_character(data['sender'])
+        char = self.charMgr.load_character(data['sender_id'])
 
         if char['booty'] >= amount:
             if choice in self.bet_options:

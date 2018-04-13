@@ -5,7 +5,7 @@ import time
 
 from config.config import config
 
-def is_admin(name):
+def is_admin(uid):
     admin = 0
     char = None
     con = None
@@ -14,7 +14,7 @@ def is_admin(name):
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT admin from chars where name = %s", (name,))
+            cur.execute("SELECT admin from chars where id = %s", (uid,))
             char = cur.fetchone()
 
     except mdb.Error, e:

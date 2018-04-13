@@ -192,19 +192,15 @@ class CharacterManager():
 
     def kill_character(self, name, duration=0):
         logging.info("Killing " + name)
-        if self.char_exists(name):
-            char = self.load_character(name)
-            if char:
-                char['level'] = 0
-                self.save_character(char)
-                if duration:
-                    thread.start_new_thread(self.death_thread, (name, duration))
-        else:
-            self.grog.connMgr(name + " doesn't exist!")
+        char = self.load_char_name(name)
+        if char:
+            char['level'] = 0
+            self.save_character(char)
+            thread.start_new_thread(self.death_thread, (name, duration))
 
     def revive_character(self, name):
         logging.info("Reviving " + name)
-        char = self.load_character(name)
+        char = self.load_char_name(name)
         if char:
             if char['level'] > 0:
                 return False
@@ -215,7 +211,7 @@ class CharacterManager():
             return False
 
     def is_alive(self, name):
-        char = self.load_character(name)
+        char = self.load_char_name(name)
         if char and char['level'] > 0:
             return True
         return False
@@ -263,7 +259,7 @@ class CharacterManager():
         return rankstr
 
     def follows_me(self, name, force_check=False, skip_check=False):
-        char = self.load_character(name)
+        char = self.load_char_name(name)
 
         if skip_check:
             return char['follower']
@@ -271,9 +267,9 @@ class CharacterManager():
             # code to check current followers for unfollows. Done monthly.
             now = int(time.time())
             if not char['follower'] and force_check:
-                return twitch.check_follower(name)
+                return twitch.check_follower(char['id'])
             elif char['follower'] and now - char['checked_follow'] > 2592000:
-                if not skip_check and twitch.check_follower(name):
+                if not skip_check and twitch.check_follower(char['id']):
                     char['follower'] = 1
                 else:
                     char['follower'] = 0
@@ -283,42 +279,6 @@ class CharacterManager():
         else:
             return False
 
-    def sub_check(self):
-        # Fill this in later to grab the list of subbed users, and force a check on each of them.
-        pass
-
-    def subbed(self, name):
-        char = self.load_character(name)
-        subbed = False
-
-        logging.debug(char)
-
-        if char:
-            now = int(time.time())
-            last_check = char['checked_sub']
-
-            if char['subscriber']:
-                logging.debug(char['name'] + " is subscribed")
-                recheck = 2678400 # 31 days
-                subbed = True
-            else:
-                logging.debug(char['name'] + " is NOT subscribed")
-                recheck = 86400 # 24 hours
-            if (now - last_check) > recheck:
-                logging.debug("Rechecking...")
-                sub = twitch.get_subscription(name)
-                if sub:
-                    self.update_subscriber(char, sub['created'], sub['sub_plan'])
-                    subbed = True
-                elif char['subscriber']:
-                    self.remove_subscriber(char)
-                char['checked_sub'] = now
-
-            if char['name'] == "Capn_Flint":
-                subbed = True
-
-            self.save_character(char)
-        return subbed
 
     def update_subscriber(self, char, date, sub_type=None, count=0):
         if char['name'] == "Capn_Flint":
@@ -341,13 +301,13 @@ class CharacterManager():
         char['sub_count'] = 0
         char['sub_type'] = 0
 
-    def unsub_user(self, name):
-        char = self.load_character(name)
+    def unsub_user(self, uid):
+        char = self.load_character(uid)
         self.remove_subscriber(char)
         self.save_character(char)
 
-    def sub_user(self, name, count=0):
-        char = self.load_character(name)
+    def sub_user(self, uid, count=0):
+        char = self.load_character(uid)
         sub = twitch.get_subscription(char['name'])
         self.update_subscriber(char, sub['created'], sub['sub_plan'])
         self.save_character(char)
@@ -364,7 +324,7 @@ class CharacterManager():
         return count
 
     def add_follower(self, name):
-        char = self.load_character(name)
+        char = self.load_char_name(name)
         if char:
             now = int(time.time())
             char['follower'] = 1
@@ -378,7 +338,7 @@ class CharacterManager():
         count = 0
         for user in users:
             count += 1
-            char = self.load_character(user)
+            char = self.load_char_name(user)
             if char:
                 if char['level'] > 0:
                     char['booty'] += amount
@@ -395,7 +355,7 @@ class CharacterManager():
         levelups = defaultdict(list)
         for user in users:
             count += 1
-            char = self.load_character(user)
+            char = self.load_char_name(user)
             if char:
                 # 20% more exp for all subs!
                 if char['subscriber']:

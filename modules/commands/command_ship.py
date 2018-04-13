@@ -9,17 +9,17 @@ def command_ask(self, data):
         self.ship_cooldowns
     except:
         self.ship_cooldowns = {}
-    char = self.charMgr.load_character(data['sender'])
+    char = self.charMgr.load_character(data['sender_id'])
     if char['subscriber']:
         now = time.time()
-        if data['sender'] in self.ship_cooldowns.keys():
-            if now - self.ship_cooldowns[data['sender']] < 300:
+        if data['sender_id'] in self.ship_cooldowns.keys():
+            if now - self.ship_cooldowns[data['sender_id']] < 300:
                 return
             else:
-                del self.ship_cooldowns[data['sender']]
+                del self.ship_cooldowns[data['sender_id']]
         if char['ship'] > 0:
             ship = char['ship']
         else:
             ship = char['sub_count']
         overlay.ship("join", data['sender'], ship)
-        self.ship_cooldowns[data['sender']] = now
+        self.ship_cooldowns[data['sender_id']] = now

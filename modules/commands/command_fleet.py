@@ -10,11 +10,8 @@ def command_fleet(self, data):
     if len(viewers) == 0:
         print "No viewers :("
     for viewer in viewers:
-        print viewer
-        sub = twitch.get_subscription(viewer)
-        char = self.charMgr.load_character(viewer)
-        if self.charMgr.subbed(viewer):
-            print "SUBSCRIBER"
+        char = self.charMgr.load_char_name(viewer)
+        if char['subscriber']:
             if char['ship'] > 0:
                 ship = char['ship']
             else:

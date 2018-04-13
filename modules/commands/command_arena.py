@@ -44,25 +44,22 @@ def command_startarena(self, data):
         self.connMgr.send_message("Arena already running! Use !joinarena [x] to join!")
         return
 
-    #if not utils.check_follows_me(sender):
-    #    self.connMgr.send_message("Sorry " + sender + " but you need to be a follower to start arena battles!")
-    #    return
     elif self.grog.event_running:
         self.connMgr.send_message("An event is running, please try again once it's done!")
         return
     else:
-        self.arena_max_bet = 0
+        self.arena_entry_fee = 0
 
         try:
-            self.arena_max_bet = int(data['args'][0])
+            self.arena_entry_fee = int(data['args'][0])
         except:
             self.connMgr.send_message("Invalid value specified for !startarena. Specify an number between 1 and 100")
             return
 
-        if self.arena_max_bet < 1:
-            self.arena_max_bet = 1
-        elif self.arena_max_bet > 100:
-            self.arena_max_bet = 100
+        if self.arena_entry_fee < 1:
+            self.arena_entry_fee = 1
+        elif self.arena_entry_fee > 100:
+            self.arena_entry_fee = 100
 
         self.arena_running = True
         self.grog.event_running = True
@@ -70,16 +67,15 @@ def command_startarena(self, data):
         thread.start_new_thread(arena_thread, (self,))
 
 def arena_register_entry(self, data):
-    name = data['sender']
-    char = self.charMgr.load_character(name)
+    char = self.charMgr.load_character(data['sender_id'])
     if char['follower']:
-        if char['booty'] >= self.arena_max_bet:
-            self.arena_entries[name] = self.arena_max_bet
-            self.connMgr.send_message(name + " has entered the arena!")
+        if char['booty'] >= self.arena_entry_fee:
+            self.arena_entries[char['id']] = char['name']
+            self.connMgr.send_message(char['name'] + " has entered the arena!")
         else:
-            self.connMgr.send_message("Sorry " + name + ", you don't have enough booty to enter :(")
+            self.connMgr.send_message("Sorry " + char['name'] + ", you don't have enough booty to enter :(")
     else:
-        self.connMgr.send_message("Sorry " + name + ", you need to be a follower to do battle in the arena!")
+        self.connMgr.send_message("Sorry " + char['name'] + ", you need to be a follower to do battle in the arena!")
 
 def arena_prize_fund(self):
     total = 0
@@ -88,7 +84,7 @@ def arena_prize_fund(self):
     return total
 
 def arena_collect_fees(self):
-    for entry in self.arena_entries:
+    for entry in self.arena_entries.keys():
         char = self.charMgr.load_character(entry)
         char['booty'] -= self.arena_max_bet
         self.charMgr.save_character(char)
@@ -103,7 +99,11 @@ def arena_fight_battles(self):
 
     competitors = copy.copy(self.arena_entries)
     if len(competitors) == 1:
-        competitors['grogbot'] = self.arena_max_bet
+        self.connMgr.send_message("Not enough fighters have entered the arena. Battle cancelled!")
+        self.arena_running = False
+        self.grog.event_running = False
+        return
+
     winners = []
 
     rnd = 1
@@ -119,9 +119,9 @@ def arena_fight_battles(self):
         while len(temp) > 1:
             red = temp.pop(0)
             blue = temp.pop(0)
-            self.connMgr.send_message(red + " is facing " + blue + " in a fight to the DEATH! Who will win?")
+            self.connMgr.send_message(competitors[red] + " is facing " + competitors[blue] + " in a fight to the DEATH! Who will win?")
             # start betting
-            self.run_command("!runbet", {'args':[red,blue]})
+            self.run_command("!runbet", {'args':[competitors[red],competitors[blue]]})
             time.sleep(125)
 
             fight_array = []
@@ -135,25 +135,24 @@ def arena_fight_battles(self):
             winner = random.choice(fight_array)
             # add logic for second and third place
             if winner == red:
-                exp = self.charMgr.load_character(blue)['level']
-
+                exp = self.charMgr.load_char_name(blue)['level']
                 del competitors[blue]
+                self.run_command("!winner", {'args':[competitors[red]]})
             else:
-                exp = self.charMgr.load_character(red)['level']
+                exp = self.charMgr.load_char_name(red)['level']
                 del competitors[red]
-            self.charMgr.give_exp(exp, [winner])
-            self.connMgr.send_message(winner + " wins! (+" + str(exp) + "exp)")
-            time.sleep(5)
-            self.run_command("!winner", {'args':[winner]})
+                self.run_command("!winner", {'args':[competitors[blue]]})
+            self.charMgr.give_exp(exp, [competitors[winner]])
+            self.connMgr.send_message(competitors[winner] + " wins! (+" + str(exp) + "exp)")
             time.sleep(30)
             # bet winner
         rnd += 1
 
     winnings = arena_prize_fund(self)
     winner = competitors.keys()[0]
-    self.connMgr.send_message("The Grand Champion is " + winner + " winning " + str(winnings) + " Doubloons!")
+    self.connMgr.send_message("The Grand Champion is " + competitors[winner] + " winning " + str(winnings) + " Doubloons!")
     arena_collect_fees(self)
-    self.charMgr.give_booty(winnings, [winner])
+    self.charMgr.give_booty(winnings, [competitors[winner]])
 
     self.arena_running = False
     self.grog.event_running = False

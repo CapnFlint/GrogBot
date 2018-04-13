@@ -143,7 +143,7 @@ class Event():
         def anonfunc(self, data):
             self.eventMgr.record_entry(data['sender'], command['command'])
             amount = int(args[0])
-            char = self.charMgr.load_character(data['sender'])
+            char = self.charMgr.load_character(data['sender_id'])
             if char['booty'] >= amount:
                 char['booty'] -= amount
                 #self.charMgr.save_character(char)
