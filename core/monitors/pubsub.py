@@ -114,7 +114,11 @@ class pubsub():
             sub_message = msg['sub_message']
             user_id = msg['user_id']
 
+            char = self.grog.charMgr.load_character(user_id)
+
             self.grog.charMgr.update_subscriber(name, time, sub_type, count)
+
+            self.grog.charMgr.save_character(char)
 
             # Send alert
             #TODO: update so higher sub tiers add more to the subathon timer
