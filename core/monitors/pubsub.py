@@ -116,7 +116,7 @@ class pubsub():
 
             char = self.grog.charMgr.load_character(user_id)
 
-            self.grog.charMgr.update_subscriber(name, time, sub_type, count)
+            self.grog.charMgr.update_subscriber(char, time, sub_type, count)
 
             self.grog.charMgr.save_character(char)
 
