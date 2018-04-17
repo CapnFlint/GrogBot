@@ -27,7 +27,7 @@ def command_startarena(self, data):
         self.connMgr.send_message("A winner takes all Arena Battle has been started by "
                                     + data['sender']
                                     + "! To enter type !joinarena now! The entry fee is "
-                                    + str(self.arena_max_bet) + " Doubloon(s)")
+                                    + str(self.arena_entry_fee) + " Doubloon(s)")
 
         if countdown > 60:
             time.sleep(countdown - 60)
