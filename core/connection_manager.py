@@ -36,7 +36,7 @@ class ConnectionManager():
         logging.info("Updating Subscribers!")
 
         subs = twitch.get_subscribers()
-        sublist = subs['1000'] + subs['2000'] + subs['3000']
+        sublist = list(set(subs['1000'] + subs['2000'] + subs['3000']))
 
         old_subs = db.get_subscribers()
         old_subs.remove('91580306') # capn_flint
