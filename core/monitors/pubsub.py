@@ -108,7 +108,8 @@ class pubsub():
 
             sub_type = msg['sub_plan']
             count = msg['months']
-            time = msg['time'].split('.')[0]
+            #TODO: Remove Z once we clean up the DB
+            time = msg['time'].split('.')[0] + "Z"
             context = msg['context']
             sub_message = msg['sub_message']
 
