@@ -137,7 +137,7 @@ def check_streamer(name):
 
 def check_follower(user_id):
     url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(user_id, config['twitch']['channel_id'])
-    if name == config['twitch']['channel']:
+    if user_id == config['twitch']['channel_id']:
         return True
     try:
         req = urllib2.Request(url)
