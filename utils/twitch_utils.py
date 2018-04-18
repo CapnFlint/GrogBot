@@ -21,7 +21,7 @@ def get_ids(names):
             results[user['name'].encode('ascii')] = user['_id'].encode('ascii')
         return results
     except urllib2.URLError as e:
-        logging.error("urllib2 error - get_ids: " + e)
+        logging.error("urllib2 error - get_ids: " + str(e))
         return None
     except Exception as e:
         logging.error("Something else went wrong :( - " + e)
