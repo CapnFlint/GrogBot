@@ -94,25 +94,60 @@ class pubsub():
         if(data["topic"] == "channel-subscribe-events-v1." + config['twitch']['channel_id']):
             logging.info("Sub message recieved!")
 
-            sub_types = {
-                "Prime":"1",
-                "1000":"1",
-                "2000":"2",
-                "3000":"3"
-            }
+#            sub_types = {
+#                "Prime":"1",
+#                "1000":"1",
+#                "2000":"2",
+#                "3000":"3"
+#            }
 
             msg = json.loads(data['message'])
 
             if msg['sub_plan'] == 'Prime':
                 msg['sub_plan'] = '1000'
 
-            name = msg['user_name']
             sub_type = msg['sub_plan']
             count = msg['months']
             time = msg['time']
             context = msg['context']
             sub_message = msg['sub_message']
-            user_id = msg['user_id']
+
+            # Send alert
+            #TODO: update so higher sub tiers add more to the subathon timer
+            if context == "sub" or context == "resub":
+                name = msg['display_name']
+                user_id = msg['user_id']
+                if context == "sub":
+                    timer = 10
+                    self.grog.connMgr.send_message("Welcome new crewmate {0}!!!".format(name))
+                else:
+                    timer = 5
+                    self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
+                if sub_type in ["1000","Prime"]:
+                    overlay.update_timer(timer)
+                elif sub_type == "2000":
+                    overlay.update_timer(timer * 2)
+                elif sub_type == "3000":
+                    overlay.update_timer(timer * 5)
+                self.grog.charMgr.give_booty(50, [name])
+
+            elif context == "subgift":
+                user_id = msg['recipient_id']
+                name = msg['recipient_display_name']
+                sender = msg['display_name']
+                self.grog.connMgr.send_message("{1} slipped the kings shilling into {0}'s grog, welcome to the crew!!!".format(name, sender))
+                if sub_type in ["1000","Prime"]:
+                    overlay.update_timer(10)
+                elif sub_type == "2000":
+                    overlay.update_timer(20)
+                elif sub_type == "3000":
+                    overlay.update_timer(50)
+                self.grog.charMgr.give_booty(50, [sender, name])
+
+            else:
+                print "NEW CONTEXT: " + context
+                print msg
+                return
 
             char = self.grog.charMgr.load_character(user_id)
 
@@ -120,46 +155,8 @@ class pubsub():
 
             self.grog.charMgr.save_character(char)
 
-            # Send alert
-            #TODO: update so higher sub tiers add more to the subathon timer
-            if context == "sub":
-                self.grog.connMgr.send_message("Welcome new crewmate {0}!!!".format(name))
-                if sub_type in ["1000","Prime"]:
-                    overlay.update_timer(10)
-                elif sub_type == "2000":
-                    overlay.update_timer(20)
-                elif sub_type == "3000":
-                    overlay.update_timer(50)
-                self.grog.charMgr.give_booty(50, [name])
-                overlay.ship("sub", name, count)
-                overlay.alert_sub(name, sub_type, count, context, sub_message)
-            elif context == "resub":
-                self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
-                if sub_type in ["1000","Prime"]:
-                    overlay.update_timer(5)
-                elif sub_type == "2000":
-                    overlay.update_timer(10)
-                elif sub_type == "3000":
-                    overlay.update_timer(25)
-                self.grog.charMgr.give_booty(50, [name])
-                overlay.ship("sub", name, count)
-                overlay.alert_sub(name, sub_type, count, context, sub_message)
-            elif context == "subgift":
-                recipient = msg['recipient_display_name']
-                sender = msg['display_name']
-                self.grog.connMgr.send_message("{1} slipped the kings shilling into {0}'s grog, welcome to the crew!!!".format(recipient, sender))
-                if sub_type in ["1000","Prime"]:
-                    overlay.update_timer(10)
-                elif sub_type == "2000":
-                    overlay.update_timer(20)
-                elif sub_type == "3000":
-                    overlay.update_timer(50)
-                self.grog.charMgr.give_booty(50, [sender, recipient])
-                overlay.ship("sub", recipient, count)
-                overlay.alert_sub(recipient, sub_type, count, context, sub_message['message'])
-            else:
-                print "NEW CONTEXT: " + context
-                print msg
+            overlay.ship("sub", name, count)
+            overlay.alert_sub(name, sub_type, count, context, sub_message['message'])
 
             #self.grog.charMgr.give_booty(50, [name])
             #overlay.ship("sub", name, count)

@@ -41,8 +41,6 @@ class ConnectionManager():
         old_subs = db.get_subscribers()
         old_subs.remove('91580306') # capn_flint
         old_subs.remove('91953864') # grogbot
-        print sublist
-        print old_subs
 
         self.update_subcount(subs)
 
