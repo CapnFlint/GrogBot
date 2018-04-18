@@ -15,6 +15,6 @@ def command_test1(self, data):
 def command_test2(self, data):
     overlay.alert_sub("GrogBot", "2000", "1", "sub", "This is a $9.99 sub!")
 
-#@processes("!test3", PERM_ADMIN)
+@processes("!test3", PERM_ADMIN)
 def command_test2(self, data):
     overlay.alert_sub("GrogBot", "3000", "1", "sub", "This is a $24.99 sub!")
