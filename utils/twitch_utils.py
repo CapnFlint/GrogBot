@@ -136,8 +136,7 @@ def check_streamer(name):
         logging.error("urllib2 error - check_streamer")
         return None
 
-def check_follower(name):
-    user_id = get_ids([name])[name.lower()]
+def check_follower(user_id):
     url = "https://api.twitch.tv/kraken/users/{0}/follows/channels/{1}".format(user_id, config['twitch']['channel_id'])
     if name == config['twitch']['channel']:
         return True
