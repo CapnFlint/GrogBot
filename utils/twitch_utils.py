@@ -7,6 +7,7 @@ from config.config import config
 
 def get_ids(names):
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
+    print url
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -19,8 +20,8 @@ def get_ids(names):
         for user in data["users"]:
             results[user['name'].encode('ascii')] = user['_id'].encode('ascii')
         return results
-    except urllib2.URLError:
-        logging.error("urllib2 error - get_ids")
+    except urllib2.URLError as e:
+        logging.error("urllib2 error - get_ids: " + e)
         return None
     except Exception as e:
         logging.error("Something else went wrong :( - " + e)
