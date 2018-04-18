@@ -25,7 +25,7 @@ class follows(threading.Thread):
             first = True
             time.sleep(cooldown)
             follows = twitch.get_latest_follows(100)
-            print "FOLLOWERS!!! - " + ", ".join(follows)
+
             ids = twitch.get_ids(follows)
             new = []
             if follows:
