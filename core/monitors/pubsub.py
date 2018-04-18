@@ -108,7 +108,7 @@ class pubsub():
 
             sub_type = msg['sub_plan']
             count = msg['months']
-            time = msg['time']
+            time = msg['time'].split('.')[0]
             context = msg['context']
             sub_message = msg['sub_message']
 

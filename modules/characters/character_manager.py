@@ -316,7 +316,7 @@ class CharacterManager():
     def guess_sub_count(self, date):
         print "computing count"
         now = datetime.now()
-        sub_date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%SZ")
+        sub_date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%S")
         count = 1
         while (now - sub_date) > (timedelta(days=30) * count):
             count += 1
