@@ -253,7 +253,7 @@ def get_subscribers(count=0, offset=0, subs={}):
         limit = count
 
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(config['twitch']['channel_id'], limit, offset)
-    print "Retrieving subs " + str(offset) + " to " + str(offset + limit)
+    logging.debug("Retrieving subs " + str(offset) + " to " + str(offset + limit))
 
     if offset==0:
         subs = {
@@ -291,3 +291,16 @@ def get_subscribers(count=0, offset=0, subs={}):
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_subscribers: " + e.reason)
         return {}
+
+def get_emotes():
+    # Get a list of my current emotes for the raid game!
+    url = "https://twitchemotes.com/api_cache/v3/subscriber.json"
+    id = config['twitch']['channel_id']
+
+    logging.info("Getting list of current Emotes...")
+    try:
+        req = urllib2.Request(url)
+        response = urllib2.urlopen(req)
+        data = json.load(response)
+        data = data[id]
+        print data

@@ -15,6 +15,7 @@ from modules.events.event_manager import EventManager
 
 import modules.overlay.overlay as overlay
 import utils.db_utils as db
+import utils.twitch_utils as twitch
 
 from config.config import config
 
@@ -54,6 +55,9 @@ class GrogBot():
             job.start()
 
     def run(self):
+        twitch.get_emotes()
+        return
+
         # Start all the worker threads
         self.start_workers()
 
