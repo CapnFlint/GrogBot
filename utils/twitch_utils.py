@@ -52,6 +52,27 @@ def get_mods():
         logging.error("get_mods: urllib2 error")
         return {}
 
+def is_mod(uid):
+    url = "https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}?api_version=5".format(uid, config['twitch']['channel_id'])
+    mod = False
+    try:
+        req = urllib2.Request(url)
+        req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
+        req.add_header('Client-ID', config['api']['client_id'])
+        response = urllib2.urlopen(req)
+        data = json.load(response)
+        if 'error' in data.keys():
+            return mod
+        if data['badges']:
+            for badge in data['badges']:
+                if badge['id'] == "moderator":
+                    mod = True
+        return mod
+    except urllib2.URLError as e:
+        logging.error("urllib2 error - is_mod: " + e.reason)
+    finally:
+        return mod
+
 def get_user(uid):
     url = "https://api.twitch.tv/kraken/users/{0}".format(uid)
     try:
