@@ -193,11 +193,12 @@ def send_emotes(sender, emotes):
 
 ''' raiders! '''
 
-def start_raid(raider, logo):
+def start_raid(raider, logo, emotes):
     data = {}
     data['action'] = "start"
     data['raider'] = raider
     data['logo'] = logo
+    data['crew_emotes'] = emotes
     data['audio'] = [{"file": "sounds/raid_defence.mp3", "volume": "70"}]
     _send_message("raid", data)
 

@@ -29,6 +29,8 @@ class GrogBot():
         self.channel = channel
         self.worklist = []
 
+        self.emotes = twitch.get_emotes()
+
         # Set up all the managers, order is important!
         self.connMgr = ConnectionManager(self, channel)
         self.charMgr = CharacterManager(self)
@@ -55,9 +57,6 @@ class GrogBot():
             job.start()
 
     def run(self):
-        print twitch.get_emotes()
-        return
-
         # Start all the worker threads
         self.start_workers()
 
