@@ -304,3 +304,6 @@ def get_emotes():
         data = json.load(response)
         data = data[id]
         print data
+    except urllib2.URLError as e:
+        logging.error("urllib2 error - get_emotes: " + e.reason)
+        return []
