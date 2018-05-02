@@ -30,18 +30,21 @@ class EventManager():
         if not self.grog.event_running:
             if not evtConfig:
                 evtConfig = db.getEventById(evtID)
-            event = Event(self, self.grog.charMgr, self.grog.connMgr, self.grog.msgProc, evtConfig)
+            event = Event(self, self.grog, evtConfig)
             self.grog.event_running = True
             event.run()
 
     def is_running(self):
         return self.grog.event_running
 
-    def end_event(self):
-        self.grog.event_running = False
+    def start_event(self, event):
+        self.grog.event_running = True
+        event.run()
 
-    def set_running(self, running):
-        self.grog.event_running = running
+    def end_event(self, next):
+        self.grog.event_running = False
+        if next:
+            self.eventMgr.loadAndRun(int(random.choice(next.split(','))))
 
 # -----[ Event Entry Management ]-----------------------------------------------
 
@@ -97,14 +100,22 @@ class EventManager():
 
 class Event():
 
-    def __init__(self, eventMgr, charMgr, connMgr, msgProc, evtConfig):
+    def __init__(self, eventMgr, grog, evtConfig):
         self.eventMgr = eventMgr
-        self.charMgr = charMgr
-        self.connMgr = connMgr
-        self.msgProc = msgProc
+        self.charMgr = grog.charMgr
+        self.connMgr = grog.connMgr
+        self.msgProc = grog.msgProc
         self.config = evtConfig
         self.prizeFund = 0
         self.exp = 0
+        self.running = False
+
+    def end_event(self, next):
+        self.running = False
+        self.eventMgr.end_event(next)
+
+    def is_running(self):
+        return self.running
 
     def event_message(self, text):
         '''
@@ -127,9 +138,7 @@ class Event():
             elif command['exp'] < 0:
                 self.connMgr.send_message(data['sender'] + " has lost experience! capnRIP")
             self.remove_command(command['command'])
-            self.eventMgr.end_event()
-            if command['next']:
-                self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
+            self.end_event(command['next'])
         anonfunc.__name__ = name
         return anonfunc
 
@@ -156,9 +165,7 @@ class Event():
     def fail_event(self):
         self.charMgr.give_exp(self.config['exp'])
         self.event_message(self.config['timeout'])
-        self.eventMgr.end_event()
-        if self.config['next']:
-            self.eventMgr.loadAndRun(int(random.choice(self.config['next'].split(','))))
+        self.end_event(self.config['next'])
 
     def exp_booty_message(self, exp, booty, users):
         if users:
@@ -171,9 +178,10 @@ class Event():
                 if booty > 0:
                     self.connMgr.send_message("The following pirates gained booty: " + ', '.join(users) + " R)")
                 elif booty < 0:
-                    self.connMgr.send_message("The following pirates lost booty: " + ', '.join(users) + " capnRIP")
+                    self.connMgr.send_message("The following pirates lost booty: " + ', '.join(users))
 
     def run(self):
+        self.running = True
         self.commands = db.getEventCommands(self.config['eventID'])
         logging.debug(self.commands)
         for command in self.commands:
@@ -231,7 +239,7 @@ class Event():
 
             # Granting exp
             if self.config['type'] == 1: # do nothing, handled in the command
-                if self.eventMgr.is_running():
+                if self.is_running():
                     self.fail_event()
 
             elif self.config['type'] == 2:
@@ -241,9 +249,7 @@ class Event():
                     if command['text']:
                         self.event_message(command['text'])
                     self.exp_booty_message(command['exp'], command['booty'], entries)
-                    self.eventMgr.end_event()
-                    if command['next']:
-                        self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
+                    self.end_event(command['next'])
                 else:
                     self.fail_event()
 
@@ -254,9 +260,7 @@ class Event():
                     if command['text']:
                         self.event_message(command['text'].format(winner))
                     self.exp_booty_message(command['exp'], command['booty'], [winner])
-                    self.eventMgr.end_event()
-                    if command['next']:
-                        self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
+                    self.end_event(command['next'])
                 else:
                     self.fail_event()
 
@@ -267,10 +271,7 @@ class Event():
                     if command['text']:
                         self.event_message(command['text'])
                     self.exp_booty_message(command['exp'], command['booty'], entries)
-                    self.eventMgr.end_event()
-                    logging.info("Event Ended.")
-                    if command['next']:
-                        self.eventMgr.loadAndRun(int(random.choice(command['next'].split(','))))
+                    self.end_event(command['next'])
                 else:
                     self.fail_event()
 
@@ -300,10 +301,7 @@ class Event():
 
                     self.exp_booty_message(exp, booty, win_entries)
                     self.exp_booty_message(-exp, -booty, lose_entries)
-                    self.eventMgr.end_event()
-                    logging.info("Event Ended.")
-                    if winner['next']:
-                        self.eventMgr.loadAndRun(int(random.choice(winner['next'].split(','))))
+                    self.end_event(winner['next'])
                 else:
                     self.fail_event()
             elif self.config['type'] == 6:
@@ -331,7 +329,7 @@ class Event():
 
                     self.exp_booty_message(exp, booty, win_entries)
                     self.exp_booty_message(-exp, -booty, lose_entries)
-                    self.eventMgr.end_event()
+                    self.end_event(winner['next'])
                     logging.info("Event Ended.")
                     if winner['next']:
                         self.eventMgr.loadAndRun(int(random.choice(winner['next'].split(','))))
