@@ -55,7 +55,7 @@ class GrogBot():
             job.start()
 
     def run(self):
-        twitch.get_emotes()
+        print twitch.get_emotes()
         return
 
         # Start all the worker threads

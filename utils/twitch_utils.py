@@ -303,7 +303,11 @@ def get_emotes():
         response = urllib2.urlopen(req)
         data = json.load(response)
         data = data[id]
-        print data
+        emotes = []
+        for emote in data['emotes']:
+            emotes.append(emote['id'])
+        return emotes
+        logging.debug("Emotes retrieved: " + ", ".join(emotes))
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_emotes: " + e.reason)
         return []
