@@ -8,8 +8,8 @@ import urlparse
 
 songrequests_on = False
 
-#@processes("!togglesong", PERM_MOD)
-def command_togglesong(self, sender, args):
+@processes("!togglesong", PERM_MOD)
+def command_togglesong(self, data):
     global songrequests_on
     songrequests_on = not songrequests_on
     if songrequests_on:
@@ -17,40 +17,40 @@ def command_togglesong(self, sender, args):
     else:
         self.connMgr.send_message("Song requests turned off!")
 
-#@processes("!removesong", PERM_MOD)
-def command_removesong(self, sender, args):
-    if args:
+@processes("!removesong", PERM_MOD)
+def command_removesong(self, data):
+    if data['args']:
         try:
-            songid = int(args[0])
+            songid = int(data['args'][0])
         except:
             songid = 0
         db.sr_remove_song(songid)
     else:
         self.connMgr.send_message("To remove a song use: !removesong <id>")
 
-#@processes("!songrequest")
-#@processes("!requestsong")
-def command_requestsong(self, sender, args):
+@processes("!songrequest")
+@processes("!requestsong")
+def command_requestsong(self, data):
     global songrequests_on
 
     if songrequests_on:
-        if  sender != "disco_lando":
-            char = self.charMgr.load_character(sender)
-            queued = db.sr_song_count(sender)
+        if  data['sender'] != "disco_lando":
+            char = self.charMgr.load_character(data['sender'])
+            queued = db.sr_song_count(data['sender'])
             maxreq = ((char['level'] - 1) / 5) + char['subscriber']
             if maxreq == 0:
-                self.connMgr.send_message("Sorry " + sender + ", but you must be at least rank swabbie to request songs.")
+                self.connMgr.send_message("Sorry " + data['sender'] + ", but you must be at least rank swabbie to request songs.")
             elif queued < maxreq or data['perms']['mod']:
-                if args:
-                    songid = parse_songrequest(args[0])
+                if data['args']:
+                    songid = parse_songrequest(data['args'][0])
                     if songid:
-                        add_song(self, songid, sender)
+                        add_song(self, songid, data['sender'])
                     else:
-                        self.connMgr.send_message("Sorry " + sender + " that isn't a valid song request.")
+                        self.connMgr.send_message("Sorry " + data['sender'] + " that isn't a valid song request.")
                 else:
                     self.connMgr.send_message("To send a song request, type !requestsong <youtube id>.")
             else:
-                self.connMgr.send_message("Sorry " + sender + ", you have requested your maximum number of songs ("+str(maxreq)+"). Please wait for current requests to be played, then request again.")
+                self.connMgr.send_message("Sorry " + data['sender'] + ", you have requested your maximum number of songs ("+str(maxreq)+"). Please wait for current requests to be played, then request again.")
         else:
             self.connMgr.send_message("Sorry Disco_Lando, your keys aren't here, and neither is your crappy music!")
     else:
