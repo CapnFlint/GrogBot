@@ -1,11 +1,11 @@
 from helper import *
 import modules.overlay.overlay as overlay
 
-#@processes("!timeradd", PERM_MOD)
-def command_timeradd(self, sender, args):
-    if args:
+@processes("!timeradd", PERM_MOD)
+def command_timeradd(self, data):
+    if data['args']:
         try:
-            time = int(args[0])
+            time = int(data['args'][0])
         except:
             time = 0
 

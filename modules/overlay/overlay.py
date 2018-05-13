@@ -225,6 +225,12 @@ def fix_timer(minutes):
     data['minutes'] = minutes
     _send_message("timer", data)
 
+def set_timer(minutes):
+    data = {}
+    data['action'] = "set"
+    data['minutes'] = minutes
+    _send_message("timer", data)
+
 ''' handler '''
 
 def _send_message(handler, data):

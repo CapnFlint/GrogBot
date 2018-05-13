@@ -125,11 +125,14 @@ class pubsub():
                     timer = 5
                     self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
                 if sub_type in ["1000","Prime"]:
-                    overlay.update_timer(timer)
+                    #overlay.update_timer(timer)
+                    pass
                 elif sub_type == "2000":
-                    overlay.update_timer(timer * 2)
+                    #overlay.update_timer(timer * 2)
+                    pass
                 elif sub_type == "3000":
-                    overlay.update_timer(timer * 5)
+                    #overlay.update_timer(timer * 5)
+                    pass
                 self.grog.charMgr.give_booty(50, [name])
 
             elif context == "subgift":
@@ -138,11 +141,14 @@ class pubsub():
                 sender = msg['display_name']
                 self.grog.connMgr.send_message("{1} slipped the kings shilling into {0}'s grog, welcome to the crew!!!".format(name, sender))
                 if sub_type in ["1000","Prime"]:
-                    overlay.update_timer(10)
+                    #overlay.update_timer(10)
+                    pass
                 elif sub_type == "2000":
-                    overlay.update_timer(20)
+                    #overlay.update_timer(20)
+                    pass
                 elif sub_type == "3000":
-                    overlay.update_timer(50)
+                    #overlay.update_timer(50)
+                    pass
                 self.grog.charMgr.give_booty(50, [sender, name])
 
             else:
