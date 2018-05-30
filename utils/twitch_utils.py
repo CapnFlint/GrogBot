@@ -23,7 +23,7 @@ def get_ids(names):
         logging.error("urllib2 error - get_ids: " + str(e))
         return None
     except Exception as e:
-        logging.error("Something else went wrong :( - " + e)
+        logging.error("Something else went wrong :( - " + str(e))
 
 def get_viewers(include_mods = True):
     url = "http://tmi.twitch.tv/group/user/{0}/chatters?client_id={1}".format(config['twitch']['channel'].lower(), config['api']['client_id'])
