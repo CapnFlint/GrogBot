@@ -326,7 +326,7 @@ def get_emotes():
         data = data[id]
         emotes = []
         for emote in data['emotes']:
-            emotes.append(emote['id'])
+            emotes.append(str(emote['id']))
         return emotes
         logging.debug("Emotes retrieved: " + ", ".join(emotes))
     except urllib2.URLError as e:
