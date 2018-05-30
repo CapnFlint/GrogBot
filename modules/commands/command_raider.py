@@ -11,7 +11,6 @@ def command_quote(self, data):
     if streamer and streamer['game']:
         self.connMgr.send_message("We are being raided by " + raider + "! DEFEND THE SHIP!!!")
         overlay.start_raid(raider, streamer['logo'], self.grog.emotes)
-        print "Emotes: " + ", ".join(self.grog.emotes)
         self.connMgr._send_message(".slow 2")
     else:
         self.connMgr.send_message(raider + " isn't a valid streamer!")

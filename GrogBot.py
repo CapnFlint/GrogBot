@@ -30,7 +30,6 @@ class GrogBot():
         self.worklist = []
 
         self.emotes = twitch.get_emotes()
-        print "Emotes: " + ", ".join(self.emotes)
 
         # Set up all the managers, order is important!
         self.connMgr = ConnectionManager(self, channel)
