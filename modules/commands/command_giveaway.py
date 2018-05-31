@@ -45,7 +45,6 @@ def command_giveaway(self, data):
                 giveaway_picked = random.choice(get_tickets(self))
                 self.passed = False
                 sub = twitch.check_subscriber(giveaway_picked, "capn_flint")
-                name = self.charMgr.load_character(giveaway_picked)['name']
                 overlay.giveaway_winner(giveaway_picked, [x.lower() for x in get_entries(self)])
                 self.connMgr.send_message("Drawing a winner!")
                 time.sleep(80)
@@ -207,5 +206,6 @@ def get_tickets(self):
     if self.max_entry > 0:
         subs = twitch.get_subscribers()
         sublist = subs['1000'] + subs['2000'] + subs['3000']
-        entries = entries + sublist
+        for sub in sublist:
+            entries.append(self.charMgr.load_character(sub)['name'])
     return entries

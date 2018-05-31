@@ -173,7 +173,8 @@ def check_follower(user_id):
         logging.error("urllib2 error - check_follower")
         return False
 
-def check_subscriber(user_id, channel):
+def check_subscriber(name, channel):
+    user_id = get_ids([name])[name.lower()]
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
 
     try:
