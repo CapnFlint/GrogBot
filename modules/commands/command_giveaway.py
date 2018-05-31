@@ -45,6 +45,7 @@ def command_giveaway(self, data):
                 giveaway_picked = random.choice(get_tickets(self))
                 self.passed = False
                 sub = twitch.check_subscriber(giveaway_picked, "capn_flint")
+                name = self.charMgr.load_character(giveaway_picked)['name']
                 overlay.giveaway_winner(giveaway_picked, [x.lower() for x in get_entries(self)])
                 self.connMgr.send_message("Drawing a winner!")
                 time.sleep(80)
