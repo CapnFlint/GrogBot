@@ -11,6 +11,8 @@ raffle_picked = ""
 #winner = ""
 #claimed = False
 
+#TODO: Make sure we use ID not NAME
+
 #@processes('!raffle')
 def command_raffle(self, sender, args):
     global raffle_running, raffle_picked

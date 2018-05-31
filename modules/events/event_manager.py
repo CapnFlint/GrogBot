@@ -44,7 +44,7 @@ class EventManager():
     def end_event(self, next):
         self.grog.event_running = False
         if next:
-            self.eventMgr.loadAndRun(int(random.choice(next.split(','))))
+            self.loadAndRun(int(random.choice(next.split(','))))
 
 # -----[ Event Entry Management ]-----------------------------------------------
 

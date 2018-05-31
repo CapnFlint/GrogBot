@@ -173,8 +173,7 @@ def check_follower(user_id):
         logging.error("urllib2 error - check_follower")
         return False
 
-def check_subscriber(name, channel):
-    user_id = get_ids([name])[name.lower()]
+def check_subscriber(user_id, channel):
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
 
     try:
@@ -195,8 +194,7 @@ def check_subscriber(name, channel):
         logging.error("urllib2 error - check_subscriber")
         return ""
 
-def get_subscription(name):
-    user_id = get_ids([name])[name.lower()]
+def get_subscription(user_id):
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions/{1}".format(config['twitch']['channel_id'], user_id)
 
     sub = {}
@@ -219,7 +217,7 @@ def get_subscription(name):
     except urllib2.HTTPError, e:
         logging.info(name + " is not subscribed!")
     except urllib2.URLError, e:
-        logging.error("urllib2 error - check_subscriber")
+        logging.error("urllib2 error - get_subscription")
     finally:
         return sub
 

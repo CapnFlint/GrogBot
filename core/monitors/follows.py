@@ -28,7 +28,7 @@ class follows(threading.Thread):
 
             ids = twitch.get_ids(follows)
             new = []
-            if follows:
+            if ids:
                 first = True
                 for user in ids.keys():
                     if not self.charMgr.follows_me(ids[user]):
