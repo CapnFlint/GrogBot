@@ -38,7 +38,7 @@ class EventManager():
 
     def start_event(self, event):
         self.grog.event_running = True
-        event.start()
+        event.run()
 
     def end_event(self, next):
         self.grog.event_running = False
