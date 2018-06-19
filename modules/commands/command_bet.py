@@ -11,6 +11,7 @@ bet_rollover = 0
 @processes('!runbet', PERM_MOD)
 def command_runbet(self, data):
     global bet_rollover
+    #TODO: We need to lower() these so it works right
     self.bet_options = data['args'][:6]
     self.bet_entries = defaultdict(list)
     #self.bet_rollover = bet_rollover

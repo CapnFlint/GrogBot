@@ -70,7 +70,7 @@ def challenge_player(self, attacker, target):
             self.connMgr.send_message(target['name'] + " has accepted the duel! Let battle commence!")
             self.responded = True
             self.remove_command("!accept")
-            self.remove_command("decline")
+            self.remove_command("!decline")
             thread.start_new_thread(fight_duel, (self, attacker, target))
     self.add_command("!accept", command_accept)
 
@@ -110,7 +110,7 @@ def end_duel(self):
 def fight_duel(self, attacker, target):
     self.connMgr.send_message(attacker['name'] + " has challenged " + target['name'] + " to a duel to the DEATH! Who will win?")
     # start betting
-    self.run_command("!runbet", {'args':[attacker['name'], target['name']]})
+    self.run_command("!runbet", {'args':[attacker['name'].lower(), target['name'].lower()]})
     time.sleep(125)
 
     fight_array = []
