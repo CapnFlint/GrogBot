@@ -112,7 +112,6 @@ class Event():
         self.running = False
 
     def end_event(self, next):
-        logging.debug("Ending event!")
         self.running = False
         self.eventMgr.end_event(next)
 
@@ -222,9 +221,7 @@ class Event():
 
             # Granting exp
             if self.config['type'] == 1: # do nothing, handled in the command
-                logging.debug("Type 1 event ending...")
                 if self.is_running():
-                    logging.debug("failed.")
                     self.fail_event()
 
             elif self.config['type'] == 2:
