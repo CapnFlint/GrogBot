@@ -1,20 +1,19 @@
 import logging
 import random
 import time
-import thread
+import threading
 
 
-class events():
-    def __init__(self, mgr):
+class EventThread(threading.Thread):
+    def __init__(self, threadID, mgr):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
         self.eventMgr = mgr
         logging.info("Event thread initialized")
 
-    def events_thread(self):
+    def run(self):
+        logging.info("Event thread started")
         while 1:
             cooldown = random.choice(range(10*60, 30*60))
             time.sleep(cooldown)
             self.eventMgr.random_event()
-
-    def start(self):
-        thread.start_new_thread(self.events_thread, ())
-        logging.info("Event thread started")

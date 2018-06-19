@@ -27,19 +27,18 @@ class EventManager():
         self.loadAndRun(event['eventID'])
 
     def loadAndRun(self, evtID=0, evtConfig=None):
-        if not self.grog.event_running:
+        if not self.is_running():
             if not evtConfig:
                 evtConfig = db.getEventById(evtID)
             event = Event(self, self.grog, evtConfig)
-            self.grog.event_running = True
-            event.run()
+            self.start_event(event)
 
     def is_running(self):
         return self.grog.event_running
 
     def start_event(self, event):
         self.grog.event_running = True
-        event.run()
+        event.start()
 
     def end_event(self, next):
         self.grog.event_running = False
@@ -68,6 +67,7 @@ class EventManager():
         return all
 
     def get_top_entry(self):
+        #TODO: Figure out a better way of doing this.
         top = ''
         topCount = 0
         if self.entries:
@@ -105,21 +105,25 @@ class Event():
         self.charMgr = grog.charMgr
         self.connMgr = grog.connMgr
         self.msgProc = grog.msgProc
+
         self.config = evtConfig
+
         self.prizeFund = 0
-        self.exp = 0
         self.running = False
 
     def end_event(self, next):
+        logging.debug("Ending event!")
         self.running = False
         self.eventMgr.end_event(next)
 
     def is_running(self):
+        logging.debug("Is it running? - " str(self.running))
         return self.running
 
     def event_message(self, text):
         '''
         Use this to substitute in fancy things, like random viewer names etc
+        TODO: Add rand_entry???
         '''
         if "#rand_user#" in text:
             viewers = twitch.get_viewers(False)
@@ -134,9 +138,9 @@ class Event():
             self.connMgr.send_message(command['text'].format(data['sender']))
             self.charMgr.give_exp(command['exp'], [data['sender']])
             if command['exp'] > 0:
-                self.connMgr.send_message(data['sender'] + " has gained experience! R)")
+                self.connMgr.send_message(data['sender'] + " has gained experience! capnYarr")
             elif command['exp'] < 0:
-                self.connMgr.send_message(data['sender'] + " has lost experience! capnRIP")
+                self.connMgr.send_message(data['sender'] + " has lost experience! capnFeels")
             self.remove_command(command['command'])
             self.end_event(command['next'])
         anonfunc.__name__ = name
@@ -145,20 +149,6 @@ class Event():
     def anon_register_entry(self, command, name):
         def anonfunc(self, data):
             self.eventMgr.record_entry(data['sender'], command['command'])
-        anonfunc.__name__ = name
-        return anonfunc
-
-    def anon_register_bet(self, command, name):
-        def anonfunc(self, data):
-            self.eventMgr.record_entry(data['sender'], command['command'])
-            amount = int(args[0])
-            char = self.charMgr.load_character(data['sender_id'])
-            if char['booty'] >= amount:
-                char['booty'] -= amount
-                #self.charMgr.save_character(char)
-                self.prizeFund += int(args[0])
-            else:
-                self.connMgr.send_message("Sorry " + data['sender'] + ", you don't have that much booty!")
         anonfunc.__name__ = name
         return anonfunc
 
@@ -171,12 +161,12 @@ class Event():
         if users:
             if exp != 0:
                 if exp > 0:
-                    self.connMgr.send_message("The following pirates gained experience: " + ', '.join(users) + " R)")
+                    self.connMgr.send_message("The following pirates gained experience: " + ', '.join(users) + " capnYarr")
                 elif exp < 0:
-                    self.connMgr.send_message("The following pirates lost experience: " + ', '.join(users) + " capnRIP")
+                    self.connMgr.send_message("The following pirates lost experience: " + ', '.join(users) + " capnFeels")
             if booty != 0:
                 if booty > 0:
-                    self.connMgr.send_message("The following pirates gained booty: " + ', '.join(users) + " R)")
+                    self.connMgr.send_message("The following pirates gained booty: " + ', '.join(users) + " capnBooty")
                 elif booty < 0:
                     self.connMgr.send_message("The following pirates lost booty: " + ', '.join(users))
 
@@ -190,9 +180,6 @@ class Event():
 
             elif self.config['type'] in [2,3,4,5]:
                 self.msgProc.add_command(command['command'], self.anon_register_entry(command, command['command'].lstrip('!')))
-
-            elif self.config['type'] in [6]:
-                self.msgProc.add_command(command['command'], self.anon_register_bet(command, command['command'].lstrip('!')))
 
         if self.config['text']:
             self.event_message(self.config['text'])
@@ -227,11 +214,6 @@ class Event():
                 for cmd in self.commands:
                     entryDict[cmd['command']] = self.eventMgr.get_all_entries(cmd['command'])
 
-            elif self.config['type'] == 6:
-                entryDict = {}
-                for cmd in self.commands:
-                    entryDict[cmd['command']] = self.eventMgr.get_all_entries(cmd['command'])
-
             # clean up
             self.eventMgr.reset_entries()
             for cmd in self.commands:
@@ -239,7 +221,9 @@ class Event():
 
             # Granting exp
             if self.config['type'] == 1: # do nothing, handled in the command
+                logging.debug("Type 1 event ending...")
                 if self.is_running():
+                    logging.debug("failed.")
                     self.fail_event()
 
             elif self.config['type'] == 2:
@@ -302,37 +286,6 @@ class Event():
                     self.exp_booty_message(exp, booty, win_entries)
                     self.exp_booty_message(-exp, -booty, lose_entries)
                     self.end_event(winner['next'])
-                else:
-                    self.fail_event()
-            elif self.config['type'] == 6:
-                if entryDict:
-                    logging.debug(entryDict)
-                    winner = random.choice(self.commands)
-                    exp = commands[0]['exp']
-                    booty = commands[0]['booty']
-                    win_entries = []
-                    lose_entries = []
-                    for cmd in commands:
-                        entries = entryDict[cmd['command']]
-                        logging.debug(cmd['command'] + " = " + str(entries))
-                        if entries:
-                            if cmd['command'] == winner['command']:
-                                win_entries += entries
-                                self.charMgr.give_exp(exp, entries)
-                                self.charMgr.give_booty(booty, entries)
-                                if cmd['text']:
-                                    self.event_message(cmd['text'].format(winner))
-                            else:
-                                lose_entries += entries
-                                self.charMgr.give_exp(-exp, entries)
-                                self.charMgr.give_booty(-booty, entries)
-
-                    self.exp_booty_message(exp, booty, win_entries)
-                    self.exp_booty_message(-exp, -booty, lose_entries)
-                    self.end_event(winner['next'])
-                    logging.info("Event Ended.")
-                    if winner['next']:
-                        self.eventMgr.loadAndRun(int(random.choice(winner['next'].split(','))))
                 else:
                     self.fail_event()
 
