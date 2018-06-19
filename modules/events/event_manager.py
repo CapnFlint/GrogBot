@@ -134,14 +134,15 @@ class Event():
         self.connMgr.send_message(text)
 
     def anon_instant_result(self, command, name):
-        def anonfunc(self, data):
+        # I'm using c_self as the anonfunc's self is the callers self
+        def anonfunc(c_self, data):
             self.connMgr.send_message(command['text'].format(data['sender']))
             self.charMgr.give_exp(command['exp'], [data['sender']])
             if command['exp'] > 0:
                 self.connMgr.send_message(data['sender'] + " has gained experience! capnYarr")
             elif command['exp'] < 0:
                 self.connMgr.send_message(data['sender'] + " has lost experience! capnFeels")
-            self.remove_command(command['command'])
+            c_self.remove_command(command['command'])
             self.end_event(command['next'])
         anonfunc.__name__ = name
         return anonfunc
