@@ -7,7 +7,6 @@ from config.config import config
 
 def get_ids(names):
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
-    logging.debug(url)
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -75,7 +74,6 @@ def is_mod(uid):
         return mod
 
 def get_user(uid):
-    logging.debug("Getting user for ID: " + uid)
     url = "https://api.twitch.tv/kraken/users/{0}".format(uid)
     try:
         req = urllib2.Request(url)
@@ -85,7 +83,6 @@ def get_user(uid):
         data = json.load(response)
         if 'error' in data.keys():
             return {}
-        logging.debug(data)
         return data
     except urllib2.URLError:
         logging.error("get_user: urllib2 error")

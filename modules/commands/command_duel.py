@@ -47,7 +47,7 @@ def command_duel(self, data):
         if not duel_active:
             if data['args']:
                 # do the duel thing
-                name = ['args'][0].lstrip('@').lower()
+                name = data['args'][0].lstrip('@').lower()
                 target = self.charMgr.load_char_name(name)
                 if target != attacker and target['level'] > 0:
                     duel_active = True
