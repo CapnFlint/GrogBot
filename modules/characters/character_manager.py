@@ -109,7 +109,6 @@ class CharacterManager():
             return False
 
     def load_character(self, uid):
-        logging.debug("Loading Character: " + uid)
         user = None
         try:
             con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'], use_unicode=True, charset="utf8")
@@ -130,7 +129,6 @@ class CharacterManager():
             name = twitch.get_user(uid)['display_name']
             return self.create_character(name, uid)
         else:
-            logging.debug(user)
             return user
 
     def load_char_name(self, name):
