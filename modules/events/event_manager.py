@@ -8,7 +8,7 @@ import re
 import utils.twitch_utils as twitch
 import utils.db_utils as db
 
-from events import events
+from events import EventThread
 
 class EventManager():
 
@@ -17,7 +17,7 @@ class EventManager():
         self.grog = grog
         self.entries = defaultdict(list)
 
-        self.grog.add_worker(events(self))
+        self.grog.add_worker(EventThread("Event-Thread", self))
 
 # -----[ Event Management ]-----------------------------------------------------
 
