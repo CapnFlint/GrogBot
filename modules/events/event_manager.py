@@ -117,7 +117,7 @@ class Event():
         self.eventMgr.end_event(next)
 
     def is_running(self):
-        logging.debug("Is it running? - " str(self.running))
+        logging.debug("Is it running? - " + str(self.running))
         return self.running
 
     def event_message(self, text):
