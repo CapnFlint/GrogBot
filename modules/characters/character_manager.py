@@ -132,8 +132,12 @@ class CharacterManager():
             return user
 
     def load_char_name(self, name):
-        uid = twitch.get_ids([name])[name.lower()]
-        return self.load_character(uid)
+        try:
+            uid = twitch.get_ids([name])[name.lower()]
+            return self.load_character(uid)
+        except:
+            # Catch for weird situations where a name doesn't actually exist
+            return None
 
     def save_character(self, char):
         try:
