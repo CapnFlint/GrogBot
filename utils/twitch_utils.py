@@ -331,3 +331,6 @@ def get_emotes():
     except urllib2.URLError as e:
         logging.error("urllib2 error - get_emotes: " + e.reason)
         return []
+    except:
+        logging.error("Cannot retrieve emotes...")
+        return []
