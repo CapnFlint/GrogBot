@@ -127,7 +127,7 @@ def fight_duel(self, attacker, target):
         exp = target['level'] * 10
         loser = target['name']
     else:
-        exp = attacker['name'] * 10
+        exp = attacker['level'] * 10
         loser = attacker['name']
 
     self.charMgr.give_exp(exp, [winner])

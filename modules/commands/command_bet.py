@@ -32,7 +32,7 @@ def command_runbet(self, data):
 
         def bet_thread(self, countdown):
             def bet_winner(self, data):
-                winner = data['args'][0]
+                winner = data['args'][0].lower()
                 if winner in self.bet_options:
                     pay_winners(self,winner)
                     self.remove_command('!winner')
