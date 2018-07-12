@@ -531,40 +531,6 @@ def mq_add_message(mtype, priority, message, sound):
 
     return ret
 
-def eco_set_total(total):
-    try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
-
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE ecorp SET value=%s WHERE name='total'", (total,))
-
-    except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
-
-    finally:
-        if con:
-            con.close()
-
-def eco_get_total():
-    total = 0
-    try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
-
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT value from ecorp where name = 'total'")
-            total = cur.fetchone()['value']
-
-    except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
-
-    finally:
-        if con:
-            con.close()
-
-    return total
-
 def getEvent():
     event = None
     try:
