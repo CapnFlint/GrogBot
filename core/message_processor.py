@@ -1,6 +1,5 @@
 import logging
 
-import utils.twitch_utils as twitch
 import utils.db_utils as db
 
 import modules.overlay.overlay as overlay
@@ -9,7 +8,6 @@ from modules.commands.helper import *
 from modules.commands import *
 
 import core.command_buffer as cmd_buffer
-import config.twitch_config as twitch
 
 from config.strings import strings
 
