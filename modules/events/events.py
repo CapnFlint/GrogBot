@@ -7,6 +7,7 @@ import threading
 class EventThread(threading.Thread):
     def __init__(self, threadID, mgr):
         threading.Thread.__init__(self)
+        self.setDaemon(True)
         self.threadID = threadID
         self.eventMgr = mgr
         logging.info("Event thread initialized")
