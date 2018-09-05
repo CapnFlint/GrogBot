@@ -24,7 +24,10 @@ class GrogBot():
     def __init__(self, channel):
         logging.basicConfig(
             format='%(levelname)s::%(filename)s::%(message)s',
-            filename='grog.log',
+            handlers=[
+                logging.FileHandler("grog.log"),
+                logging.StreamHandler()
+            ],
             level=logging.DEBUG)
 
         self.event_running = False
