@@ -27,6 +27,8 @@ class GrogBot():
             filename='grog.log',
             level=logging.DEBUG)
 
+        logging.getLogger().addHandler(logging.StreamHandler())
+
         self.event_running = False
 
         self.channel = channel
