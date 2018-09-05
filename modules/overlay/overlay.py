@@ -239,11 +239,10 @@ def _send_message(handler, data):
         message['handler'] = handler
         message['data'] = data
         ws = create_connection("ws://capnflint.com:9001")
-        print "Sending Auth: " + config['websocket']['secret']
+        logging.debug("Sending Auth: " + config['websocket']['secret'])
         ws.send("AUTH:" + config['websocket']['secret'])
-        print "Sending Message: " + json.dumps(message)
+        logging.debug("Sending Message: " + json.dumps(message))
         ws.send(json.dumps(message))
-        print "sent"
         ws.recv()
         ws.close()
     except:

@@ -42,7 +42,7 @@ class pubsub():
             "type": "LISTEN",
             "nonce": "foobar",
             "data": {
-                "topics": ["channel-bits-events-v1." + config['twitch']['channel_id'],"channel-subscribe-events-v1." + config['twitch']['channel_id']],
+                "topics": ["channel-bits-events-v1." + config['twitch']['channel_id'],"channel-subscribe-events-v1." + config['twitch']['channel_id'],"channel-commerce-events-v1." + config['twitch']['channel_id']],
                 "auth_token": config['api']['access_token']
             }
         }
@@ -92,7 +92,7 @@ class pubsub():
         '''
 
         if(data["topic"] == "channel-subscribe-events-v1." + config['twitch']['channel_id']):
-            logging.info("Sub message recieved!")
+            logging.info("PUBSUB: Sub event recieved")
 
 #            sub_types = {
 #                "Prime":"1",
@@ -172,6 +172,12 @@ class pubsub():
 
             stat = db.add_stat('sessionSubs', 1)
             overlay.update_stat('subs', stat)
+
+        elif (data["topic"] == "channel-bits-events-v1." + config['twitch']['channel_id']):
+            logging.info("PUBSUB: Bits event received")
+
+        elif (data["topic"] == "channel-commerce-events-v1." + config['twitch']['channel_id']):
+            logging.info("PUBSUB: Commerce event received")
 
 
     def update_subcount(self):

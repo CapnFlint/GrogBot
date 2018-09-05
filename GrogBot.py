@@ -22,7 +22,7 @@ from config.config import config
 class GrogBot():
 
     def __init__(self, channel):
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(filename='grog.log',level=logging.DEBUG)
 
         self.event_running = False
 

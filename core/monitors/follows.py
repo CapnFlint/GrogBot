@@ -13,6 +13,7 @@ from config.strings import strings
 class follows(threading.Thread):
     def __init__(self, grog):
         threading.Thread.__init__(self)
+        self.setDaemon(True)
         self.connMgr = grog.connMgr
         self.charMgr = grog.charMgr
         self.name = "Follow-Monitor"
