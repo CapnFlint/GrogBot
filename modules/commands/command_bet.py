@@ -71,7 +71,7 @@ def register_bet(self, data):
                     char['booty'] -= amount
                     logging.debug("bet - " + str(amount))
                     bet_rollover += 2
-                    logging.debug()"rollover - " + str(bet_rollover))
+                    logging.debug("rollover - " + str(bet_rollover))
                     self.charMgr.save_character(char)
                     self.connMgr.send_message(str(amount) + " placed on " + choice + " by " + data['sender'])
                 else:
