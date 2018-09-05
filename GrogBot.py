@@ -1,5 +1,12 @@
 #!/usr/bin/env python27
 import logging
+logging.basicConfig(
+    format='%(levelname)s::%(filename)s::%(message)s',
+    handlers=[
+        logging.FileHandler("grog.log"),
+        logging.StreamHandler()
+    ],
+    level=logging.DEBUG)
 
 from core.message_processor import MessageProcessor
 from core.connection_manager import ConnectionManager
@@ -22,10 +29,6 @@ from config.config import config
 class GrogBot():
 
     def __init__(self, channel):
-        logging.basicConfig(
-            format='%(levelname)s::%(filename)s::%(message)s',
-            filename='grog.log',
-            level=logging.DEBUG)
 
         self.event_running = False
 
