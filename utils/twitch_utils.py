@@ -184,7 +184,6 @@ def check_subscriber(name, channel):
         req.add_header('Authorization', 'OAuth '+config['api']['access_token'])
         response = urllib2.urlopen(req)
         data = json.load(response)
-        #print data['created_at']
         if 'error' in data.keys():
             return ""
         return data['created_at']
@@ -248,7 +247,7 @@ def get_sub_count():
         response = urllib2.urlopen(req)
         data = json.load(response)
         count = int(data['_total']) - 2
-        print "Total Subscribers: " + str(count)
+        logging.info("Total Subscribers: " + str(count))
         return count
     except urllib2.URLError:
         logging.error("urllib2 error - get_sub_count")
@@ -292,7 +291,7 @@ def get_subscribers(count=0, offset=0, subs={}):
         userlist = data['subscriptions']
         total = int(data['_total'])
 
-        print "TOTAL: " + str(total)
+        logging.info("TOTAL: " + str(total))
 
         for item in userlist:
             subs[item['sub_plan']].append(item['user']['_id'])

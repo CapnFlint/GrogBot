@@ -19,7 +19,7 @@ class random_messages():
             if not message:
                 self.current = 0
                 message = db.get_message(self.current)
-            print message
+            logging.debug(message)
             self.current += 1
 
             if message['command']:

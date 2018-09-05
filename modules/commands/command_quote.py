@@ -39,7 +39,7 @@ def command_quote(self, data):
             quid = int(data['args'][0])
         except:
             quid = 0
-        print quid
+        logging.debug(quid)
         if quid:
             quote = db.qu_get_quote_id(quid)
         else:

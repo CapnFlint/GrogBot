@@ -91,7 +91,7 @@ def arena_collect_fees(self):
 
 def arena_fight_battles(self):
     self.connMgr.send_message("Let battle commence! May the odds be ever in your favour!")
-    print self.arena_entries
+    logging.debug(self.arena_entries)
 
     win_messages = [
         "Shaking the blood off their blade, and wiping the sweat from their brow {0} walks away victorious!"
@@ -131,7 +131,7 @@ def arena_fight_battles(self):
                 fight_array.append(red)
             for _ in range(blue_count):
                 fight_array.append(blue)
-            print fight_array
+            logging.debug(fight_array)
             winner = random.choice(fight_array)
             # add logic for second and third place
             if winner == red:

@@ -51,9 +51,9 @@ def command_giveaway(self, data):
                 self.connMgr.send_message("The winner is: " + giveaway_picked + "! You have two minutes to !claim or !pass the booty!")
 
                 def claim_prize(self, data):
-                    logging.debug("INFO: " + data['sender'] + " is trying to claim! (" + giveaway_picked + ")")
+                    logging.info(data['sender'] + " is trying to claim! (" + giveaway_picked + ")")
                     if data['sender'] == giveaway_picked.lower():
-                        print "INFO: Claimed!!!"
+                        logging.info("Giveaway Claimed!!!")
                         self.claimed = True
                         self.winner = giveaway_picked
                     else:
@@ -62,7 +62,7 @@ def command_giveaway(self, data):
                 self.add_command("!claim", claim_prize)
 
                 def pass_prize(self, data):
-                    print "PASS: " + data['sender'] + " :: " + giveaway_picked
+                    logging.info("PASS: " + data['sender'] + " :: " + giveaway_picked)
                     if data['sender'] == giveaway_picked.lower():
                         if giveaway_picked in self.giveaway_entries.keys():
                             del self.giveaway_entries[giveaway_picked]
@@ -76,7 +76,7 @@ def command_giveaway(self, data):
                     countdown = 120
 
                 while not self.claimed:
-                    print "Countdown: " + str(countdown)
+                    logging.info("Countdown: " + str(countdown))
                     time.sleep(2)
                     if self.passed:
                         self.remove_command("!claim")
@@ -127,7 +127,7 @@ def command_giveaway(self, data):
                 max_entry = 9001
                 item = "Something AWESOME!"
 
-            print "MAX ENTRY: " + str(max_entry)
+            logging.info("MAX ENTRY: " + str(max_entry))
             overlay.giveaway_start(item)
             self.connMgr.send_message("There be BOOTY to be plundered!!!")
             self.connMgr.send_message("A giveaway has started! Type [HL]!enter [x][/HL] now!", screen=True, chat=False)

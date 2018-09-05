@@ -23,7 +23,7 @@ class pubsub():
     # send PING
     def _ping(self, ws):
         # Send a ping Message
-        print "PubSub:: PING!!!"
+        logging.debug("PING!!!")
         self.ping_ok = False
         msg = {
             "type":"PING"
@@ -32,13 +32,13 @@ class pubsub():
 
     def _pong(self):
         # Handle pong response
-        print "PubSub:: PONG!!!"
+        logging.debug("PONG!!!")
         self.ping_ok = True
 
 
     # send LISTEN
     def _listen(self, ws):
-        print "Sending LISTEN"
+        logging.debug("Sending LISTEN")
         msg = {
             "type": "LISTEN",
             "nonce": "foobar",
@@ -52,9 +52,9 @@ class pubsub():
 
     # handle RESPONSE
     def _response(self, msg):
-        print "Handling RESPONSE"
+        logging.debug("Handling RESPONSE")
         if(msg["error"] != ""):
-            print "Error found: '%s'" % msg["error"]
+            logging.error("Error found: '%s'" % msg["error"])
 
     # handle RECONNECT
     def _reconnect(self, ws):
@@ -65,7 +65,7 @@ class pubsub():
     # handle Message
     def on_message(self, ws, message):
         msg = json.loads(message)
-        print msg['type']
+        logging.debug(msg['type'])
         mtype = msg['type']
 
         if mtype == "PONG":
@@ -77,7 +77,7 @@ class pubsub():
         elif mtype == "RECONNECT":
             self._reconnect(ws)
         else:
-            print "Unhandled type: " + mtype
+            logging.error("Unhandled type: " + mtype)
 
 
     def _message(self, data):
@@ -93,7 +93,7 @@ class pubsub():
         '''
 
         if(data["topic"] == "channel-subscribe-events-v1." + config['twitch']['channel_id']):
-            logging.info("PUBSUB: Sub event recieved")
+            logging.info("Sub event recieved")
 
 #            sub_types = {
 #                "Prime":"1",
@@ -153,8 +153,8 @@ class pubsub():
                 self.grog.charMgr.give_booty(50, [sender, name])
 
             else:
-                print "NEW CONTEXT: " + context
-                print msg
+                logging.error("NEW CONTEXT: " + context)
+                logging.debug(msg)
                 return
 
             char = self.grog.charMgr.load_character(user_id)
@@ -175,10 +175,10 @@ class pubsub():
             overlay.update_stat('subs', stat)
 
         elif (data["topic"] == "channel-bits-events-v1." + config['twitch']['channel_id']):
-            logging.info("PUBSUB: Bits event received")
+            logging.info("Bits event received")
 
         elif (data["topic"] == "channel-commerce-events-v1." + config['twitch']['channel_id']):
-            logging.info("PUBSUB: Commerce event received")
+            logging.info("Commerce event received")
 
 
     def update_subcount(self):
@@ -190,11 +190,11 @@ class pubsub():
         overlay.update_stat('subcount', stat)
 
     def on_error(self, ws, error):
-        print error
+        logging.error(error)
         self._reconnect(ws)
 
     def on_close(self, ws):
-        print "### closed ###"
+        logging.debug("### closed ###")
         self._reconnect(ws)
 
     def on_open(self, ws):
@@ -210,7 +210,7 @@ class pubsub():
         thread.start_new_thread(run, ())
 
     def _connect(self):
-        print "Connecting..."
+        logging.info("Connecting...")
         #websocket.enableTrace(True)
         self.ws = websocket.WebSocketApp("wss://pubsub-edge.twitch.tv",
                                     on_message = self.on_message,

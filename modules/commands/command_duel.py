@@ -120,7 +120,7 @@ def fight_duel(self, attacker, target):
         fight_array.append(attacker['name'])
     for _ in range(blue_count):
         fight_array.append(target['name'])
-    print fight_array
+    logging.debug(fight_array)
     winner = random.choice(fight_array)
     # add logic for second and third place
     if winner == attacker['name']:

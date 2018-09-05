@@ -14,10 +14,10 @@ def command_level(self, data):
     now = time.time()
 
     if (now - self.lastRank) < 5:
-        print "buffering command!!!"
+        logging.debug("buffering command!!!")
         self.cmdBuffer.buffer_command(buffered_rank, data['sender_id'])
     else:
-        print "not buffered :("
+        logging.debug("not buffered :(")
         char = self.charMgr.load_character(data['sender_id'])
         if char['name'] == 'Capn_Flint':
             rankstr = char['name'] + " is the Captain of course!"

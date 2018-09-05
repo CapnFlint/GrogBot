@@ -208,7 +208,7 @@ def update_stat(stat, value):
     data = {}
     data['stat'] = stat
     data['value'] = value
-    print data
+    logging.debug(data)
     _send_message("stats", data)
 
 ''' timer '''

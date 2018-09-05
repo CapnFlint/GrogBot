@@ -41,10 +41,10 @@ class twitchsocket():
 
     def on_error(self, ws, error):
         self.running = False
-        print error
+        logging.error(error)
 
     def on_close(self, ws):
-        print "### closed ###"
+        logging.debug("### closed ###")
         #self.connect()
 
     def on_open(self, ws):
@@ -59,7 +59,7 @@ class twitchsocket():
                 time.sleep(180)
                 self.send_ping(ws)
             ws.close()
-            print "thread terminating..."
+            logging.debug("thread terminating...")
         thread.start_new_thread(run, ())
 
     def generate_nonce(self, length=8):

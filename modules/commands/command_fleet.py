@@ -8,7 +8,7 @@ def command_fleet(self, data):
     self.connMgr.send_message(data['sender'] + " calls forth the fleet!")
     viewers = twitch.get_viewers()
     if len(viewers) == 0:
-        print "No viewers :("
+        logging.debug("No viewers :(")
     for viewer in viewers:
         char = self.charMgr.load_char_name(viewer)
         if char['subscriber']:

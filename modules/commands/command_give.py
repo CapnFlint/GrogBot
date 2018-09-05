@@ -8,7 +8,6 @@ def command_give(self, data):
     args = data['args']
     try:
         if len(args) > 1:
-            print args
             recipient = args[0].lower()
             if recipient == data['sender']:
                 self.connMgr.send_message(strings['CMD_GIVE_SELF'])

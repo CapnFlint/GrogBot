@@ -33,7 +33,7 @@ def command_mutiny(self, sender, args):
         self.remove_command("!join")
         self.remove_command("!defend")
 
-        print self.mutineers
+        logging.info("Mutineers: " + ", ".join(self.mutineers))
 
         if self.mutineers:
             self.connMgr.send_message("The Mutiny has begun!")
@@ -67,9 +67,9 @@ def sum_array(values):
 def mutiny_start(self):
     # See if mutiny succeeds (determine what this means)
     result = 50 + sum_array(self.defenders.values()) - sum_array(self.mutineers.values())
-    print self.defenders
-    print self.mutineers
-    print result
+    logging.debug(self.defenders)
+    logging.debug(self.mutineers)
+    logging.debug(result)
     if result <= 0:
         self.connMgr.send_message("The Mutiny succeeds! Mutineers: " + ", ".join(self.mutineers))
         # Success!

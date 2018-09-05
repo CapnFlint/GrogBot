@@ -69,9 +69,9 @@ def register_bet(self, data):
                 if not data['sender'] in list(chain.from_iterable([[b[0] for b in self.bet_entries[a]] for a in self.bet_entries])):
                     self.bet_entries[choice].append((data['sender'],amount))
                     char['booty'] -= amount
-                    print "bet - " + str(amount)
+                    logging.debug("bet - " + str(amount))
                     bet_rollover += 2
-                    print "rollover - " + str(bet_rollover)
+                    logging.debug()"rollover - " + str(bet_rollover))
                     self.charMgr.save_character(char)
                     self.connMgr.send_message(str(amount) + " placed on " + choice + " by " + data['sender'])
                 else:
@@ -89,7 +89,7 @@ def total_bets(self):
     for choice in self.bet_entries:
         for entry in self.bet_entries[choice]:
             total += entry[1]
-    print self.bet_entries
+    logging.debug(self.bet_entries)
     return total
 
 def pay_winners(self, option):

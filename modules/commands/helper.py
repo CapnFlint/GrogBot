@@ -1,5 +1,6 @@
 from collections import defaultdict
 import utils.db_utils as db
+import logging
 
 command_dict = dict()
 command_perm = defaultdict(list)
@@ -35,7 +36,7 @@ def processes(command, perm=PERM_NONE):
     global command_dict
     def wrap(func):
         # do pre-wrap
-        print "Registering command: " + command
+        logging.info("Registering command: " + command)
         def wrapped(self, data):
             if check_permission(data, perm):
                 func(self, data)

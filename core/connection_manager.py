@@ -188,23 +188,24 @@ class ConnectionManager():
         #thegeekentry
 
         '''
-        print "USERNOTICE!!!"
+        logging.debug("USERNOTICE")
         if tags['msg-id'] == 'ritual':
             # A "Ritual" message, like new person's first message.
-            print "RITUAL!!!"
+            logging.debug("RITUAL")
             pass
         elif tags['msg-id'] == 'raid': # A raid
+            logging.debug("RAID")
             pass
         elif tags['msg-id'] == 'sub':
-            print "SUB!!!"
+            logging.debug("SUB")
             pass
         elif tags['msg-id'] == 'resub':
-            print "RESUB!!!"
+            logging.debug("RESUB")
             pass
         elif tags['msg-id'] == 'subgift': #Subscription
-            print "SUBGIFT!!!"
+            logging.debug("SUBGIFT")
         else:
-            logging.debug("Unhandled msg-id: " + tags['msg-id'])
+            logging.error("Unhandled msg-id: " + tags['msg-id'])
 # ------------------------------------------------------------------------------
 
 # -----[ IRC Utility Functions ]------------------------------------------------

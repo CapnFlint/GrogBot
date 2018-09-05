@@ -46,7 +46,6 @@ class CharacterManager():
         try:
             r_file = open('modules/characters/ranks.dat', 'r')
             lines = r_file.readlines()
-            print lines
 
             for line in lines:
                 self.ranks.append(line.strip())
@@ -239,7 +238,7 @@ class CharacterManager():
         if new_level > char['level']:
             char['level'] = new_level
             if (new_level - 1) % self.ranks_per_level == 0:
-                print "level up " + char['name']
+                logging.debug("level up " + char['name'])
                 levelups[new_level].append(char['name'])
 
 
@@ -252,7 +251,7 @@ class CharacterManager():
             rank = (level - 1) / self.ranks_per_level
             if rank >= len(self.ranks):
                 rank = len(self.ranks) - 1
-            print self.ranks[rank]
+            logging.debug("get_rank: " + self.ranks[rank])
             rankstr = self.ranks[rank]
             if include_rank:
                 rankstr += " level " + str(((level - 1) % self.ranks_per_level) + 1)
@@ -287,7 +286,7 @@ class CharacterManager():
     def update_subscriber(self, char, date, sub_type=None, count=0):
         if char['name'] == "Capn_Flint":
             return
-        print "UPDATING SUBSCRIBER: " + char['name']
+        logging.debug("UPDATING SUBSCRIBER: " + char['name'])
         char['subscriber'] = 1
         char['sub_date'] = date
         if count:
@@ -318,14 +317,14 @@ class CharacterManager():
 
 
     def guess_sub_count(self, date):
-        print "computing count"
+        logging.debug("computing count...")
         now = datetime.now()
         #TODO: Remove Z once we clean up the DB
         sub_date = datetime.strptime(date,"%Y-%m-%dT%H:%M:%SZ")
         count = 1
         while (now - sub_date) > (timedelta(days=30) * count):
             count += 1
-        print "count = " + str(count)
+        logging.debug("count = " + str(count))
         return count
 
     def add_follower(self, name):
@@ -350,7 +349,7 @@ class CharacterManager():
                     if char['booty'] < 0:
                         char['booty'] = 0
                 self.save_character(char)
-        print "INFO: " + str(amount) + " Booty given to " + str(count) + " players"
+        logging.info(str(amount) + " Booty given to " + str(count) + " players")
 
     def give_exp(self, exp, users = []):
         if not users:
@@ -388,4 +387,4 @@ class CharacterManager():
                         overlay.alert_levelup(name, self.ranks[rank])
             sublevel = str(((level - 1) % self.ranks_per_level) + 1)
             self.grog.connMgr.send_message(strings['CHAR_LEVEL_UP'].format(ranktitle=self.ranks[rank] + " level " + sublevel, names=', '.join(levelups[level])))
-        print "INFO: " + str(amount) + " Exp granted to " + str(count) + " players"
+        logging.info(str(amount) + " Exp granted to " + str(count) + " players")

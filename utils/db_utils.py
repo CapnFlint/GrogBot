@@ -2,6 +2,7 @@ import MySQLdb as mdb
 import datetime
 import random
 import time
+import logging
 
 from config.config import config
 
@@ -18,7 +19,7 @@ def is_admin(uid):
             char = cur.fetchone()
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -40,7 +41,7 @@ def add_message(message):
             cur.execute("INSERT INTO messages (added, priority, type, message) VALUES (%s, %s, %s, %s)", (now, message['priority'], message['type'], message['message']))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -56,7 +57,7 @@ def clear_messages():
             cur.execute("DELETE FROM messages")
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -72,7 +73,7 @@ def clear_stats():
             cur.execute("UPDATE stats SET value=0 where stat like 'session%'")
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -88,7 +89,7 @@ def clear_stat(name):
             cur.execute("UPDATE stats SET value=0 where stat=%s",(name,))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -109,7 +110,7 @@ def add_stat(name, amount):
                 cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -130,7 +131,7 @@ def get_stat(name):
             value = int(stat['value'])
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -149,7 +150,7 @@ def get_custom_commands():
             rows = cur.fetchall()
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -172,7 +173,7 @@ def del_custom_command(command):
             cur.execute("DELETE from custom_command WHERE command = %s", (command,))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -190,7 +191,7 @@ def add_custom_command(command, message):
             cur.execute("REPLACE INTO custom_command (command, message) VALUES (%s, %s)", (command, message))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -209,7 +210,7 @@ def random_sub():
             char = cur.fetchone()
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -232,7 +233,7 @@ def get_subscribers():
                 subs.append(row['id'])
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         subs = []
 
     finally:
@@ -243,30 +244,26 @@ def get_subscribers():
 
 
 def stats_add_death(game):
-    print "adding death"
+    logging.info("adding death")
 
     con = None
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-        print "connected"
+
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("SELECT * from deaths where game = %s", (game,))
-            print "executed"
+
             stat = cur.fetchone()
 
-            print stat
             if stat:
-                print stat['count']
                 score = int(stat['count']) + 1
-                print score
                 cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
             else:
-                print "Creating game: " + game
                 cur.execute("INSERT INTO deaths (game, count) VALUES (%s, %s)", (game, 1))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -274,7 +271,7 @@ def stats_add_death(game):
             con.close()
 
 def stats_remove_death(game):
-    print "removing death"
+    logging.info("removing death")
 
     con = None
     try:
@@ -291,7 +288,7 @@ def stats_remove_death(game):
                 cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
 
     finally:
@@ -309,7 +306,7 @@ def sr_add_song(songid, songname, requestor):
         ret = True
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         ret = False
 
     finally:
@@ -329,7 +326,7 @@ def sr_remove_song(songid):
         ret = True
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         ret = False
 
     finally:
@@ -354,7 +351,7 @@ def sr_song_count(user):
                 count = 0
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         count = 0
 
     finally:
@@ -375,7 +372,7 @@ def qu_add_quote(quote, name, game):
         ret = True
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         ret = False
 
     finally:
@@ -383,7 +380,7 @@ def qu_add_quote(quote, name, game):
             con.close()
 
 def qu_get_quote():
-    print "Getting random quote"
+    logging.info("Getting random quote")
     quote = []
     con = None
     try:
@@ -394,14 +391,12 @@ def qu_get_quote():
             cur.execute("SELECT count(id) as count from quotes")
             count = cur.fetchone()['count']
 
-            print "count: " + str(count)
             pick = random.choice(range(count))+1
             cur.execute("SELECT * from quotes where id = %s", (pick,))
             quote = cur.fetchone()
-            print quote
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
 
     finally:
         if con:
@@ -410,7 +405,7 @@ def qu_get_quote():
     return quote
 
 def qu_get_quote_id(quid):
-    print "Getting quote by id " + str(quid)
+    logging.info("Getting quote by id " + str(quid))
     quote = []
     con = None
     try:
@@ -420,10 +415,9 @@ def qu_get_quote_id(quid):
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("SELECT * from quotes where id = %s", (quid,))
             quote = cur.fetchone()
-            print quote
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
 
     finally:
         if con:
@@ -443,7 +437,7 @@ def mq_add_message(mtype, priority, message, sound):
             cur.execute("INSERT INTO messages (added, priority, type, message, sound) VALUES (%s, %s, %s, %s, %s)", (now, priority, mtype, message, sound))
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0],e.args[1])
+        logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         ret = False
 
     finally:
@@ -464,7 +458,7 @@ def getEvent():
 
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
+        logging.error("Error %d: %s" % (e.args[0], e.args[1]))
 
     finally:
         if con:
@@ -483,7 +477,7 @@ def getEventById(evtid):
 
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
+        logging.error("Error %d: %s" % (e.args[0], e.args[1]))
 
     finally:
         if con:
@@ -501,7 +495,7 @@ def getEventCommands(event):
             commands = cur.fetchall()
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
+        logging.error("Error %d: %s" % (e.args[0], e.args[1]))
 
     finally:
         if con:
@@ -521,7 +515,7 @@ def get_message(msg_idx):
 
 
     except mdb.Error, e:
-        print "Error %d: %s" % (e.args[0], e.args[1])
+        logging.error("Error %d: %s" % (e.args[0], e.args[1]))
 
     finally:
         if con:
