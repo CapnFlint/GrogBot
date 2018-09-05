@@ -3,6 +3,7 @@ import websocket
 import thread
 import time
 import json
+import ssl
 
 from config.config import config
 
