@@ -1,7 +1,7 @@
 #!/usr/bin/env python27
 import logging
 logging.basicConfig(
-    format='%(levelname)s::%(filename)s::%(message)s',
+    format='[%(levelname)s] %(filename)s :: %(message)s',
     handlers=[
         logging.FileHandler("grog.log"),
         logging.StreamHandler()
