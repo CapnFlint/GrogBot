@@ -65,7 +65,6 @@ class pubsub():
     # handle Message
     def on_message(self, ws, message):
         msg = json.loads(message)
-        logging.debug(msg['type'])
         mtype = msg['type']
 
         if mtype == "PONG":
