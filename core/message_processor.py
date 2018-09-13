@@ -68,7 +68,7 @@ class MessageProcessor():
         # capnHi = 81912
 
         #hi_reg = '(^|\s)capnHi(\s)+'
-        print msg['perms']
+        print msg.keys()
         if msg['perms']['sub'] == '1':
             logging.debug("Sender IS a sub")
             if '81912' in msg['emotes'].keys():
