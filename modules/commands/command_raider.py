@@ -17,7 +17,7 @@ def command_quote(self, data):
         def slow_off():
             self.connMgr._send_message(".slowoff")
         # set a timer
-        t = Timer(10.0, slow_off)
+        t = Timer(140.0, slow_off)
         t.start()
     else:
         self.connMgr.send_message(raider + " isn't a valid streamer!")
