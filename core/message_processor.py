@@ -68,16 +68,11 @@ class MessageProcessor():
         # capnHi = 81912
 
         #hi_reg = '(^|\s)capnHi(\s)+'
-        print msg['perms']
         if msg['perms']['sub'] == True:
-            logging.debug("Sender IS a sub")
             if '81912' in msg['emotes'].keys():
-                logging.debug("capnHi has been sent")
                 if msg['sender_id'] not in self.seen_senders:
-                    logging.debug(msg['sender'] + "sender has not been seen")
                     self.seen_senders.append(msg['sender_id'])
                     overlay.alert_hello(msg['sender'])
-                    logging.debug("alert sent")
         logging.debug('[MSG] ' + msg['sender'] + ": " + msg['text'])
 
 
