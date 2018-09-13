@@ -26,7 +26,10 @@ def command_exp(self, data):
         except ValueError:
             amount = 10
 
-        if user and user in utils.get_viewers():
+        logging.debug("USER: " + user)
+        viewers = utils.get_viewers()
+        logging.debug(viewers)
+        if user and user in viewers:
             self.connMgr.send_message('Bounty for ' + user + '!!!')
             self.charMgr.give_exp(amount, [user])
             self.charMgr.give_booty(amount / 5, [user])
