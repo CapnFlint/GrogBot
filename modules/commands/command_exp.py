@@ -16,7 +16,7 @@ def command_exp(self, data):
 
         user = None
         if len(args) > 1:
-            user = args[0]
+            user = args[0].lower()
             amount = args[1]
         elif args:
             amount = args[0]
