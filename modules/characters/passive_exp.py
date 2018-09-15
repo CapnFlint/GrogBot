@@ -9,7 +9,7 @@ import utils.twitch_utils as twitch
 
 class passive_exp():
     def __init__(self, mgr):
-        self.exp_timer = 60 * 1
+        self.exp_timer = 60 * 5
         self.charMgr = mgr
         self.active_viewers = {}
         self.passive_viewers = []
@@ -20,7 +20,6 @@ class passive_exp():
     def boost(self, mproc, msg):
         #when they talk, add them to active_viewers
         now = datetime.now()
-        logging.debug(msg['sender'] + " activated BOOST!")
         self.active_viewers[msg['sender']] = now
         if msg['sender'] in self.passive_viewers:
             self.passive_viewers.remove(msg['sender'])
@@ -34,8 +33,7 @@ class passive_exp():
             expire = []
             for char in self.active_viewers:
                 if char in viewers:
-                    if (now - self.active_viewers[char]) > timedelta(minutes=1):
-                        logging.debug(char + "'s BOOST expired...'")
+                    if (now - self.active_viewers[char]) > timedelta(minutes=15):
                         expire.append(char)
                         if not char in self.passive_viewers:
                             self.passive_viewers.append(char)
@@ -53,10 +51,8 @@ class passive_exp():
                 if char in viewers:
                     viewers.remove(char)
 
-            logging.debug("Basic exp for: " + ", ".join(viewers))
-            logging.debug("passive exp for: " + ", ".join(self.passive_viewers))
-            logging.debug("active exp for: " + ", ".join(self.active_viewers.keys()))
-            self.charMgr.give_exp(2, viewers)
+            logging.info("=======[ Passive EXP ]=======")
+            self.charMgr.give_exp(1, viewers)
             self.charMgr.give_exp(5, self.passive_viewers)
             self.charMgr.give_booty(1, self.passive_viewers)
             self.charMgr.give_exp(10, self.active_viewers.keys())
