@@ -336,8 +336,8 @@ class CharacterManager():
             self.save_character(char)
 
 
-    def give_booty(self, amount, users = []):
-        if not users:
+    def give_booty(self, amount, users = None):
+        if users == None:
             users = twitch.get_viewers()
         count = 0
         for user in users:
@@ -351,8 +351,8 @@ class CharacterManager():
                 self.save_character(char)
         logging.info(str(amount) + " Booty given to " + str(count) + " players")
 
-    def give_exp(self, exp, users = []):
-        if not users:
+    def give_exp(self, exp, users = None):
+        if users == None:
             users = twitch.get_viewers()
         count = 0
         amount = 0

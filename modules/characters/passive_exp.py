@@ -29,19 +29,24 @@ class passive_exp():
             time.sleep(delay)
             viewers = twitch.get_viewers()
             now = datetime.now()
+            expire = []
             for char in self.active_viewers:
                 if char in viewers:
                     if (now - self.active_viewers[char]) > timedelta(minutes=1):
                         logging.debug(char + "'s BOOST expired...'")
-                        del self.active_viewers[char]
+                        expire.append(char)
                         if not char in self.passive_viewers:
                             self.passive_viewers.append(char)
                     else:
                         viewers.remove(char)
                 else:
-                    del self.active_viewers[char]
+                    expire.append(char)
                     if not char in self.passive_viewers:
                         self.passive_viewers.append(char)
+                        
+            for char in expire:
+                del self.active_viewers[char]
+
             for char in self.passive_viewers:
                 if char in viewers:
                     viewers.remove(char)
