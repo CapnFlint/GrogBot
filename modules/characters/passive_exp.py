@@ -47,7 +47,7 @@ class passive_exp():
                     viewers.remove(char)
 
             logging.debug("Basic exp for: " + ", ".join(viewers))
-            logging.debug("passive exp for: " + ", ".join(self.passive_viewers)
+            logging.debug("passive exp for: " + ", ".join(self.passive_viewers))
             logging.debug("active exp for: " + ", ".join(self.active_viewers.keys()))
             self.charMgr.give_exp(2, viewers)
             self.charMgr.give_exp(5, self.passive_viewers
