@@ -33,7 +33,7 @@ class passive_exp():
             expire = []
             for char in self.active_viewers:
                 if char in viewers:
-                    if (now - self.active_viewers[char]) > timedelta(minutes=15):
+                    if (now - self.active_viewers[char]) > timedelta(minutes=10):
                         expire.append(char)
                         if not char in self.passive_viewers:
                             self.passive_viewers.append(char)
