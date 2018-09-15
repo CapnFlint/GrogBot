@@ -30,7 +30,8 @@ class passive_exp():
             now = datetime.now()
             for char in self.active_viewers:
                 if char in viewers:
-                    if (now - self.active_viewers[char]) > timedelta(minutes=15):
+                    if (now - self.active_viewers[char]) > timedelta(minutes=1):
+                        logging.debug(char + "'s BOOST expired...'")
                         del self.active_viewers[char]
                         if not char in self.passive_viewers:
                             self.passive_viewers.append(char)
@@ -44,6 +45,9 @@ class passive_exp():
                 if char in viewers:
                     viewers.remove(char)
 
+            logging.debug("Basic exp for: " + ", ".join(viewers))
+            logging.debug("passive exp for: " + ", ".join(self.passive_viewers.keys()))
+            logging.debug("active exp for: " + ", ".join(self.active_viewers.keys()))
             self.charMgr.give_exp(2, viewers)
             self.charMgr.give_exp(5, self.passive_viewers.keys())
             self.charMgr.give_booty(1, self.passive_viewers.keys())
