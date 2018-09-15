@@ -50,8 +50,8 @@ class passive_exp():
             logging.debug("passive exp for: " + ", ".join(self.passive_viewers))
             logging.debug("active exp for: " + ", ".join(self.active_viewers.keys()))
             self.charMgr.give_exp(2, viewers)
-            self.charMgr.give_exp(5, self.passive_viewers
-            self.charMgr.give_booty(1, self.passive_viewers
+            self.charMgr.give_exp(5, self.passive_viewers)
+            self.charMgr.give_booty(1, self.passive_viewers)
             self.charMgr.give_exp(10, self.active_viewers.keys())
             self.charMgr.give_booty(2, self.active_viewers.keys())
             logging.info("Current viewer count: " + str(twitch.get_viewcount()))
