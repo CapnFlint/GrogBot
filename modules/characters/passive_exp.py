@@ -22,6 +22,8 @@ class passive_exp():
         now = datetime.now()
         logging.debug(msg['sender'] + " activated BOOST!")
         self.active_viewers[msg['sender']] = now
+        if msg['sender'] in self.passive_viewers:
+            self.passive_viewers.remove(msg['sender'])
 
 
     def passive_exp(self, delay):
@@ -43,7 +45,7 @@ class passive_exp():
                     expire.append(char)
                     if not char in self.passive_viewers:
                         self.passive_viewers.append(char)
-                        
+
             for char in expire:
                 del self.active_viewers[char]
 
