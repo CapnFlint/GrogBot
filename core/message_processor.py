@@ -24,8 +24,23 @@ class MessageProcessor():
         self.raid_running = False
         self.cmdBuffer = cmd_buffer.command_buffer(self)
         self.cmdBuffer.start()
-        self.seen_senders = []
+        self.hellos = []
+        self.active_viewers = []
         self.custom_commands = db.get_custom_commands()
+        self.msghooks = []
+
+        def hello_hook(self, msg):
+            # capnHi = 81912
+
+            #hi_reg = '(^|\s)capnHi(\s)+'
+            if msg['perms']['sub'] == True:
+                if '81912' in msg['emotes'].keys():
+                    if msg['sender_id'] not in self.hellos:
+                        self.hellos.append(msg['sender_id'])
+                        overlay.alert_hello(msg['sender'])
+            logging.debug('[MSG] ' + msg['sender'] + ": " + msg['text'])
+
+        self.register_hook(hello_hook)
 
     def add_custom_command(self, command, message):
         if command in self.options.keys():
@@ -65,15 +80,13 @@ class MessageProcessor():
 
     def parse_message(self, msg): #, sender, perms, emotes):
         # Do any normal message parsing we need here, e.g. spam/banned word checks
-        # capnHi = 81912
 
-        #hi_reg = '(^|\s)capnHi(\s)+'
-        if msg['perms']['sub'] == True:
-            if '81912' in msg['emotes'].keys():
-                if msg['sender_id'] not in self.seen_senders:
-                    self.seen_senders.append(msg['sender_id'])
-                    overlay.alert_hello(msg['sender'])
-        logging.debug('[MSG] ' + msg['sender'] + ": " + msg['text'])
+        for f in self.msghooks:
+            f(self, msg)
+
+    def register_hook(self, func):
+        logging.debug("Registering hook: " + func.__name__)
+        self.msghooks.append(func)
 
 
 
