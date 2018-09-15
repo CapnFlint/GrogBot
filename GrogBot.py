@@ -43,6 +43,8 @@ class GrogBot():
         self.eventMgr = EventManager(self)
         self.msgProc = MessageProcessor(self)
 
+        self.charMgr.init()
+
         # Initialize all the worker threads
         self.add_worker(random_messages(self))
         self.add_worker(follows(self))
