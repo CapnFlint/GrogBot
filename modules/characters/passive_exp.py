@@ -9,7 +9,7 @@ import utils.twitch_utils as twitch
 
 class passive_exp():
     def __init__(self, mgr):
-        self.exp_timer = 60 * 5
+        self.exp_timer = 60 * 1
         self.charMgr = mgr
         self.active_viewers = {}
         self.passive_viewers = []
