@@ -16,6 +16,8 @@ def command_quote(self, data):
 
         def slow_off():
             self.connMgr._send_message(".slowoff")
+            self.run_command("!follow", {'args':[raider]})
+            self.run_command("!follow", {'args':[raider]})
         # set a timer
         t = Timer(140.0, slow_off)
         t.start()
