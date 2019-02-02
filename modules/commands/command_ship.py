@@ -10,6 +10,7 @@ def command_ask(self, data):
     except:
         self.ship_cooldowns = {}
     char = self.charMgr.load_character(data['sender_id'])
+    print char
     if char['subscriber']:
         now = time.time()
         if data['sender_id'] in self.ship_cooldowns.keys():

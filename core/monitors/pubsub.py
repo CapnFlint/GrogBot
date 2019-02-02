@@ -60,6 +60,7 @@ class pubsub():
     def _reconnect(self, ws):
         # Handle reconnect Messages
         ws.close()
+        time.sleep(2)
         self.start()
 
     # handle Message
