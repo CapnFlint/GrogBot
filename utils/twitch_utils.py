@@ -53,6 +53,7 @@ def get_mods():
         return {}
 
 def is_mod(uid):
+    #TODO: Bad request? Fix it!
     url = "https://api.twitch.tv/kraken/users/{0}/chat/channels/{1}?api_version=5".format(uid, config['twitch']['channel_id'])
     mod = False
     try:

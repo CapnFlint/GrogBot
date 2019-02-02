@@ -108,7 +108,10 @@ class pubsub():
                 msg['sub_plan'] = '1000'
 
             sub_type = msg['sub_plan']
-            count = msg['months']
+            count = msg['cumulative_months']
+            streak = ""
+            if msg['streak_months']:
+                streak = msg['streak_months']
             #TODO: Remove Z once we clean up the DB
             time = msg['time'].split('.')[0] + "Z"
             context = msg['context']
@@ -124,7 +127,11 @@ class pubsub():
                     self.grog.connMgr.send_message("Welcome new crewmate {0}!!!".format(name))
                 else:
                     timer = 5
-                    self.grog.connMgr.send_message("Welcome back {0}, {1} months at sea! YARRR!!!".format(name, count))
+                    message = "Welcome back {0}, {1} total months at sea".format(name, count)
+                    if streak:
+                        message = message + " and {0} months in a row".format(streak)
+                    message = message + "! YARRR!!!"
+                    self.grog.connMgr.send_message(message)
                 if sub_type in ["1000","Prime"]:
                     #overlay.update_timer(timer)
                     pass
