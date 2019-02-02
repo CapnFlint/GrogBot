@@ -245,5 +245,6 @@ def _send_message(handler, data):
         ws.send(json.dumps(message))
         ws.recv()
         ws.close()
-    except:
+    except Exception as e:
         logging.error("Websocket not available...")
+        print e
