@@ -200,12 +200,17 @@ class pubsub():
         self._listen(ws)
         def run(*args):
             # ping!
-            while(1):
-                self._ping(ws)
-                time.sleep(10)
-                if(self.ping_ok == False):
-                    self._reconnect(ws)
-                time.sleep(230)
+            try:
+                while(1):
+                    self._ping(ws)
+                    time.sleep(10)
+                    if(self.ping_ok == False):
+                        logging.error("Ping failed, reconnecting!")
+                        self._reconnect(ws)
+                    time.sleep(230)
+            except WebSocketConnectionClosecException:
+                logging.debug("Socket closed, restarting!")
+                self._reconnect(ws)
         thread.start_new_thread(run, ())
 
     def _connect(self):
