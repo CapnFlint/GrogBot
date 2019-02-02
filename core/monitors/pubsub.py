@@ -108,7 +108,11 @@ class pubsub():
                 msg['sub_plan'] = '1000'
 
             sub_type = msg['sub_plan']
-            count = msg['cumulative_months']
+            # remove this in a few weeks once the full rollout is done...
+            if msg['months']:
+                count = msg['months']
+            else:
+                count = msg['cumulative_months']
             streak = ""
             if msg['streak_months']:
                 streak = msg['streak_months']
