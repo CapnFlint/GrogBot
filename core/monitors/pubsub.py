@@ -114,6 +114,9 @@ class pubsub():
             else:
                 count = msg['cumulative_months']
             streak = ""
+            print "*********"
+            print msg
+            print "*********"
             if msg['streak_months']:
                 streak = msg['streak_months']
             #TODO: Remove Z once we clean up the DB
