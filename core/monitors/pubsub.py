@@ -110,15 +110,11 @@ class pubsub():
             sub_type = msg['sub_plan']
             # remove this in a few weeks once the full rollout is done...
             if msg['months']:
-                count = msg['months']
+                streak = msg['months']
             else:
-                count = msg['cumulative_months']
-            streak = ""
-            print "*********"
-            print msg
-            print "*********"
-            if msg['streak_months']:
-                streak = msg['streak_months']
+                streak = 0
+            count = msg['cumulative_months']
+
             #TODO: Remove Z once we clean up the DB
             time = msg['time'].split('.')[0] + "Z"
             context = msg['context']
