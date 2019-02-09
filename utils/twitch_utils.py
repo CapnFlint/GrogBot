@@ -258,6 +258,7 @@ def get_sub_points(subs={}):
     points = 0
     if not subs:
         subs = get_subscribers()
+    print subs
     points += len(subs['1000'])
     points += len(subs['2000']) * 2
     points += len(subs['3000']) * 6
