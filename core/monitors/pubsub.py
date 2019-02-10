@@ -113,7 +113,12 @@ class pubsub():
                 streak = msg['months']
             else:
                 streak = 0
-            count = msg['cumulative_months']
+            if msg['cumulative_months']:
+                count = msg['cumulative_months']
+            else:
+                logging.error("cumulative_months missing! :(")
+                print msg
+                count = 1
 
             #TODO: Remove Z once we clean up the DB
             time = msg['time'].split('.')[0] + "Z"
