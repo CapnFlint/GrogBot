@@ -224,7 +224,7 @@ class pubsub():
                         logging.error("Ping failed, reconnecting!")
                         self._reconnect(ws)
                     time.sleep(230)
-            except WebSocketConnectionClosecException:
+            except WebSocketConnectionClosedException:
                 logging.debug("Socket closed, restarting!")
                 self._reconnect(ws)
         thread.start_new_thread(run, ())
