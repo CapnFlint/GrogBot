@@ -109,21 +109,24 @@ class pubsub():
 
             sub_type = msg['sub_plan']
             # remove this in a few weeks once the full rollout is done...
-            if msg['months']:
+            if 'months' in msg:
                 streak = msg['months']
             else:
                 streak = 0
-            if msg['cumulative_months']:
+            if 'cumulative_months' in msg:
                 count = msg['cumulative_months']
             else:
                 logging.error("cumulative_months missing! :(")
-                print msg
+                #TODO: do something if no months provided. Perhaps compute?
                 count = 1
 
             #TODO: Remove Z once we clean up the DB
             time = msg['time'].split('.')[0] + "Z"
             context = msg['context']
-            sub_message = msg['sub_message']
+            
+            sub_message = ""
+            if 'sub_message' in msg:
+                sub_message = msg['sub_message']
 
             # Send alert
             #TODO: update so higher sub tiers add more to the subathon timer

@@ -54,6 +54,11 @@ class ConnectionManager():
                 else:
                     char = self.grog.charMgr.load_character(uid)
                     if char:
+                        # Check name is up to date
+                        name = self.grog.charMgr.get_name(uid)
+                        if char['name'].lower() != name:
+                            char['name'] = name
+                            self.grog.charMgr.save_character(char)
                         logging.info("[NEW SUBSCRIBER] " + char['name'])
                         overlay.alert_sub(char['name'])
                         new_subs.append(char['name'])
@@ -113,6 +118,7 @@ class ConnectionManager():
         emote = '\001ACTION ' + msg + '\001'
         self._send_message(emote, chan)
 
+    # This is not used!!!
     def _send_names(self, chan=None):
         if not chan:
             chan = self.CHAN
@@ -133,7 +139,7 @@ class ConnectionManager():
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
     def _handle_join(self, user):
-        char = self.grog.charMgr.load_char_name(user)
+        char = self.grog.charMgr.load_char_by_name(user)
         if char:
             if char['subscriber']:
                 if char['ship'] > 0:
@@ -145,7 +151,7 @@ class ConnectionManager():
             logging.error("OH NOES!!! can't load character.")
 
     def _handle_part(self, user):
-        char = self.grog.charMgr.load_char_name(user)
+        char = self.grog.charMgr.load_char_by_name(user)
         if char:
             if char['subscriber']:
                 if char['ship'] > 0:

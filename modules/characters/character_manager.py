@@ -130,7 +130,7 @@ class CharacterManager():
         else:
             return user
 
-    def load_char_name(self, name):
+    def load_char_by_name(self, name):
         try:
             uid = twitch.get_ids([name])[name.lower()]
             return self.load_character(uid)
@@ -188,6 +188,19 @@ class CharacterManager():
 
 # -----[ Character Utility Functions ]------------------------------------------
 
+    def get_id(self, name):
+        # check for name in DB
+
+        # if exists, return ID
+
+        # else get ID from twitch API
+        id = twitch.get_ids([name])[0]
+        return id
+
+    def get_name(self, uid):
+        user = twitch.get_user(uid)
+        return user['display_name']
+
     def death_thread(self, name, duration):
         delay = duration * 60
         time.sleep(delay)
@@ -195,7 +208,7 @@ class CharacterManager():
 
     def kill_character(self, name, duration=0):
         logging.info("Killing " + name)
-        char = self.load_char_name(name)
+        char = self.load_char_by_name(name)
         if char:
             char['level'] = 0
             self.save_character(char)
@@ -203,7 +216,7 @@ class CharacterManager():
 
     def revive_character(self, name):
         logging.info("Reviving " + name)
-        char = self.load_char_name(name)
+        char = self.load_char_by_name(name)
         if char:
             if char['level'] > 0:
                 return False
@@ -214,7 +227,7 @@ class CharacterManager():
             return False
 
     def is_alive(self, name):
-        char = self.load_char_name(name)
+        char = self.load_char_by_name(name)
         if char and char['level'] > 0:
             return True
         return False
@@ -328,7 +341,7 @@ class CharacterManager():
         return count
 
     def add_follower(self, name):
-        char = self.load_char_name(name)
+        char = self.load_char_by_name(name)
         if char:
             now = int(time.time())
             char['follower'] = 1
@@ -342,7 +355,7 @@ class CharacterManager():
         count = 0
         for user in users:
             count += 1
-            char = self.load_char_name(user)
+            char = self.load_char_by_name(user)
             if char:
                 if char['level'] > 0:
                     char['booty'] += amount
@@ -359,7 +372,7 @@ class CharacterManager():
         levelups = defaultdict(list)
         for user in users:
             count += 1
-            char = self.load_char_name(user)
+            char = self.load_char_by_name(user)
             if char:
                 # 20% more exp for all subs!
                 if char['subscriber']:

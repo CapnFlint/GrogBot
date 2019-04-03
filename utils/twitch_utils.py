@@ -6,6 +6,7 @@ import logging
 from config.config import config
 
 def get_ids(names):
+    # names is a list of names ['foo','bar','baz']
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
     try:
         req = urllib2.Request(url)

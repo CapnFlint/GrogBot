@@ -7,7 +7,7 @@ def command_top(self, data):
     viewers = utils.get_viewers(False)
     highest = None
     for viewer in viewers:
-        char = self.charMgr.load_char_name(viewer)
+        char = self.charMgr.load_char_by_name(viewer)
         if highest is None:
             highest = char
         else:
@@ -23,7 +23,7 @@ def command_topbooty(self, data):
     viewers = utils.get_viewers(False)
     highest = None
     for viewer in viewers:
-        char = self.charMgr.load_char_name(viewer)
+        char = self.charMgr.load_char_by_name(viewer)
         if highest is None:
             highest = char
         else:
