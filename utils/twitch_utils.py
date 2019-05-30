@@ -7,7 +7,7 @@ from config.config import config
 
 def get_ids(names):
     # names is a list of names ['foo','bar','baz']
-    url = "https://api.twitch.tv/kraken/users?login=" + urllib.quote(','.join(names))
+    url = "https://api.twitch.tv/kraken/users?login=" + ','.join(map(urllib.quote, names))
     logging.debug("URL: " + url)
     try:
         req = urllib2.Request(url)
