@@ -8,10 +8,11 @@ from config.config import config
 def get_ids(names):
     # names is a list of names ['foo','bar','baz']
     url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
+    logging.debug("URL: " + url)
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
-        req.add_header('Client-ID', config['api']['client_id'])
+        req.add_header('Client-ID', "uo6dggojyb8d6soh92zknwmi5ej1q2")#config['api']['client_id'])
         response = urllib2.urlopen(req)
         data = json.load(response)
         if 'error' in data.keys():
