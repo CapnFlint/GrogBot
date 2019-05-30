@@ -89,7 +89,7 @@ class CharacterManager():
     def char_exists(self, name):
         user = None
         try:
-            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
             with con:
                 cur = con.cursor(mdb.cursors.DictCursor)
                 cur.execute("SELECT * from chars where name = %s", (name,))
