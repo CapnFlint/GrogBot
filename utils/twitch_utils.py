@@ -7,8 +7,7 @@ from config.config import config
 
 def get_ids(names):
     # names is a list of names ['foo','bar','baz']
-    url = "https://api.twitch.tv/kraken/users?login=" + ','.join(map(urllib.quote, names))
-    logging.debug("URL: " + url)
+    url = "https://api.twitch.tv/kraken/users?login=" + ','.join(names)
     try:
         req = urllib2.Request(url)
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
@@ -234,7 +233,7 @@ def get_latest_follows(count):
         userlist = json.load(response)['follows']
         users = []
         for item in userlist:
-            users.append(item['user']['display_name']) 
+            users.append(item['user']['display_name'].rstrip().replace(" ", "")) 
         return users
     except urllib2.URLError:
         logging.error("urllib2 error - get_latest_follows")
