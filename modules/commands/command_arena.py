@@ -135,11 +135,11 @@ def arena_fight_battles(self):
             winner = random.choice(fight_array)
             # add logic for second and third place
             if winner == red:
-                exp = self.charMgr.load_char_name(blue)['level']
+                exp = self.charMgr.load_char_by_name(blue)['level']
                 del competitors[blue]
                 self.run_command("!winner", {'args':[competitors[red]]})
             else:
-                exp = self.charMgr.load_char_name(red)['level']
+                exp = self.charMgr.load_char_by_name(red)['level']
                 del competitors[red]
                 self.run_command("!winner", {'args':[competitors[blue]]})
             self.charMgr.give_exp(exp, [competitors[winner]])

@@ -191,7 +191,7 @@ def charge_entry_fees(self):
         pass
     else:
         for name in self.giveaway_entries.keys():
-            char = self.charMgr.load_char_name(name)
+            char = self.charMgr.load_char_by_name(name)
             char['booty'] -= self.giveaway_entries[name]
             self.charMgr.save_character(char)
 
@@ -209,3 +209,4 @@ def get_tickets(self):
         for sub in sublist:
             entries.append(self.charMgr.load_character(sub)['name'])
     return entries
+

@@ -10,7 +10,7 @@ def command_fleet(self, data):
     if len(viewers) == 0:
         logging.debug("No viewers :(")
     for viewer in viewers:
-        char = self.charMgr.load_char_name(viewer)
+        char = self.charMgr.load_char_by_name(viewer)   
         if char['subscriber']:
             if char['ship'] > 0:
                 ship = char['ship']

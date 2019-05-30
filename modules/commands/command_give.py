@@ -24,7 +24,7 @@ def command_give(self, data):
             if recipient in utils.get_viewers():
                 source = self.charMgr.load_character(data['sender_id'])
                 if source['booty'] >= amount:
-                    target = self.charMgr.load_char_name(recipient)
+                    target = self.charMgr.load_char_by_name(recipient)
                     target['booty'] += amount
                     source['booty'] -= amount
                     self.charMgr.save_character(target)
@@ -38,3 +38,4 @@ def command_give(self, data):
             self.connMgr.send_message(strings['CMD_GIVE_USAGE'])
     except:
         self.connMgr.send_message(strings['CMD_GIVE_INVALID'].format(sender=data['sender']))
+
