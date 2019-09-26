@@ -21,14 +21,14 @@ class pubsub():
         self.ping_ok = True
 
     # send PING
-    def _ping(self, ws):
+    def _ping(self):
         # Send a ping Message
         logging.debug("PING!!!")
         self.ping_ok = False
         msg = {
             "type":"PING"
         }
-        ws.send(json.dumps(msg))
+        self.ws.send(json.dumps(msg))
 
     def _pong(self):
         # Handle pong response
@@ -37,7 +37,7 @@ class pubsub():
 
 
     # send LISTEN
-    def _listen(self, ws):
+    def _listen(self):
         logging.debug("Sending LISTEN")
         msg = {
             "type": "LISTEN",
@@ -48,7 +48,7 @@ class pubsub():
             }
         }
 
-        ws.send(json.dumps(msg))
+        self.ws.send(json.dumps(msg))
 
     # handle RESPONSE
     def _response(self, msg):
@@ -57,14 +57,14 @@ class pubsub():
             logging.error("Error found: '%s'" % msg["error"])
 
     # handle RECONNECT
-    def _reconnect(self, ws):
+    def _reconnect(self):
         # Handle reconnect Messages
-        ws.close()
+        self.ws.close()
         time.sleep(2)
         self.start()
 
     # handle Message
-    def on_message(self, ws, message):
+    def on_message(self, message):
         msg = json.loads(message)
         mtype = msg['type']
 
@@ -75,7 +75,7 @@ class pubsub():
         elif mtype == "RESPONSE":
             self._response(msg)
         elif mtype == "RECONNECT":
-            self._reconnect(ws)
+            self._reconnect()
         else:
             logging.error("Unhandled type: " + mtype)
 
@@ -207,30 +207,30 @@ class pubsub():
         logging.debug("New SubCount: " + str(stat))
         overlay.update_stat('subcount', stat)
 
-    def on_error(ws, error):
+    def on_error(self, error):
         logging.error(error)
-        self._reconnect(ws)
+        self._reconnect()
 
-    def on_close(self, ws):
+    def on_close(self):
         logging.debug("### closed ###")
-        self._reconnect(ws)
+        self._reconnect()
 
-    def on_open(ws):
+    def on_open(self):
         logging.debug("on_open called")
-        self._listen(ws)
+        self._listen()
         def run(*args):
             # ping!
             try:
                 while(1):
-                    self._ping(ws)
+                    self._ping()
                     time.sleep(10)
                     if(self.ping_ok == False):
                         logging.error("Ping failed, reconnecting!")
-                        self._reconnect(ws)
+                        self._reconnect()
                     time.sleep(230)
             except WebSocketConnectionClosedException:
                 logging.debug("Socket closed, restarting!")
-                self._reconnect(ws)
+                self._reconnect()
         thread.start_new_thread(run, ())
 
     def _connect(self):
