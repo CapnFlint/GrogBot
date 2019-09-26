@@ -1,2 +1,1 @@
-sudo docker build -t grogbot .
-sudo docker run -dit --rm --name grogbot grogbot
+sudo docker run -it --rm -v /var/run/mysqld/mysqld.sock:/var/run/mysqld/mysql.sock --name grogbot grogbot
