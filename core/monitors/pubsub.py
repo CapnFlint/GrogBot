@@ -216,6 +216,7 @@ class pubsub():
         self._reconnect(ws)
 
     def on_open(self, ws):
+        logging.debug("on_open called")
         self._listen(ws)
         def run(*args):
             # ping!
