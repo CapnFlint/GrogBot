@@ -144,9 +144,11 @@ def get_custom_commands():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        print con
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
+            print
+            print cur
+            print
             cur.execute("SELECT * from custom_command where custom=1")
             rows = cur.fetchall()
 
