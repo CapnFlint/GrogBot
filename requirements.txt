@@ -1,4 +1,4 @@
 httplib2
 mysqlclient
 requests
-websocket
+websocket_client
