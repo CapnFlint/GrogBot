@@ -207,8 +207,8 @@ class pubsub():
         logging.debug("New SubCount: " + str(stat))
         overlay.update_stat('subcount', stat)
 
-    def on_error(self, ws, error):
-        logging.info(error)
+    def on_error(ws, error):
+        logging.error(error)
         self._reconnect(ws)
 
     def on_close(self, ws):
