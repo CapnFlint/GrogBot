@@ -276,6 +276,7 @@ def get_subscribers(count=0, offset=0, subs={}):
 
     url = "https://api.twitch.tv/kraken/channels/{0}/subscriptions?limit={1}&direction=desc&offset={2}".format(config['twitch']['channel_id'], limit, offset)
     logging.debug("Retrieving subs " + str(offset) + " to " + str(offset + limit))
+    logging.debug(url)
 
     if offset==0:
         subs = {
