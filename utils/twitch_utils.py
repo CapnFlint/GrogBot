@@ -292,6 +292,7 @@ def get_subscribers(count=0, offset=0, subs={}):
         req.add_header('Authorization', 'OAuth '+ config['api']['access_token'])
         response = urllib2.urlopen(req)
         data = json.load(response)
+        logging.debug(data)
         userlist = data['subscriptions']
         total = int(data['_total'])
 
