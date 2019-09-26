@@ -140,9 +140,7 @@ def get_custom_commands():
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
-        print
-        print cur
-        print
+
         cur.execute("SELECT * from custom_command where custom=1")
         rows = cur.fetchall()
 
@@ -162,7 +160,8 @@ def get_custom_commands():
 
 def del_custom_command(command):
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        logging.debug("deleting custom command: " + command)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor()
         cur.execute("DELETE from custom_command WHERE command = %s", (command,))
@@ -177,9 +176,9 @@ def del_custom_command(command):
 
 
 def add_custom_command(command, message):
-    commands = {}
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        logging.debug("adding custom command: " + command)
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor()
         cur.execute("REPLACE INTO custom_command (command, message) VALUES (%s, %s)", (command, message))
@@ -196,7 +195,7 @@ def add_custom_command(command, message):
 def random_sub():
     commands = {}
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("SELECT name FROM chars WHERE subscriber = 1 ORDER BY rand() limit 1")
@@ -215,7 +214,7 @@ def random_sub():
 def get_subscribers():
     subs = []
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("SELECT id FROM chars WHERE subscriber = 1")
@@ -240,7 +239,7 @@ def stats_add_death(game):
 
     con = None
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("SELECT * from deaths where game = %s", (game,))
@@ -266,7 +265,7 @@ def stats_remove_death(game):
 
     con = None
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("SELECT * from deaths where game = %s", (game,))
@@ -289,7 +288,7 @@ def stats_remove_death(game):
 def sr_add_song(songid, songname, requestor):
     ret = False
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("INSERT INTO songrequests (songid, songname, requestor) VALUES (%s, %s, %s)", (songid, songname, requestor))
@@ -308,7 +307,7 @@ def sr_add_song(songid, songname, requestor):
 def sr_remove_song(songid):
     ret = False
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("DELETE FROM songrequests WHERE id = %s", (songid,))
