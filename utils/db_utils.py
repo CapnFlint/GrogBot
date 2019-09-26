@@ -13,10 +13,10 @@ def is_admin(uid):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT admin from chars where id = %s", (uid,))
-            char = cur.fetchone()
+
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT admin from chars where id = %s", (uid,))
+        char = cur.fetchone()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -36,9 +36,8 @@ def add_message(message):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO messages (added, priority, type, message) VALUES (%s, %s, %s, %s)", (now, message['priority'], message['type'], message['message']))
+        cur = con.cursor()
+        cur.execute("INSERT INTO messages (added, priority, type, message) VALUES (%s, %s, %s, %s)", (now, message['priority'], message['type'], message['message']))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -52,9 +51,8 @@ def clear_messages():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("DELETE FROM messages")
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("DELETE FROM messages")
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -68,9 +66,8 @@ def clear_stats():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE stats SET value=0 where stat like 'session%'")
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("UPDATE stats SET value=0 where stat like 'session%'")
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -84,9 +81,8 @@ def clear_stat(name):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("UPDATE stats SET value=0 where stat=%s",(name,))
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("UPDATE stats SET value=0 where stat=%s",(name,))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -100,14 +96,14 @@ def add_stat(name, amount):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
         value = 0
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT value from stats where stat = %s", (name,))
-            stat = cur.fetchone()
 
-            if stat:
-                value = int(stat['value']) + int(amount)
-                cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT value from stats where stat = %s", (name,))
+        stat = cur.fetchone()
+
+        if stat:
+            value = int(stat['value']) + int(amount)
+            cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -124,11 +120,10 @@ def get_stat(name):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT value from stats where stat = %s", (name,))
-            stat = cur.fetchone()
-            value = int(stat['value'])
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT value from stats where stat = %s", (name,))
+        stat = cur.fetchone()
+        value = int(stat['value'])
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -144,13 +139,12 @@ def get_custom_commands():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            print
-            print cur
-            print
-            cur.execute("SELECT * from custom_command where custom=1")
-            rows = cur.fetchall()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        print
+        print cur
+        print
+        cur.execute("SELECT * from custom_command where custom=1")
+        rows = cur.fetchall()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -167,13 +161,11 @@ def get_custom_commands():
     return commands
 
 def del_custom_command(command):
-    commands = {}
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
-        with con:
-            cur = con.cursor()
-            cur.execute("DELETE from custom_command WHERE command = %s", (command,))
+        cur = con.cursor()
+        cur.execute("DELETE from custom_command WHERE command = %s", (command,))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -189,9 +181,8 @@ def add_custom_command(command, message):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
-        with con:
-            cur = con.cursor()
-            cur.execute("REPLACE INTO custom_command (command, message) VALUES (%s, %s)", (command, message))
+        cur = con.cursor()
+        cur.execute("REPLACE INTO custom_command (command, message) VALUES (%s, %s)", (command, message))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -207,10 +198,9 @@ def random_sub():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT name FROM chars WHERE subscriber = 1 ORDER BY rand() limit 1")
-            char = cur.fetchone()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT name FROM chars WHERE subscriber = 1 ORDER BY rand() limit 1")
+        char = cur.fetchone()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -227,13 +217,12 @@ def get_subscribers():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT id FROM chars WHERE subscriber = 1")
-            result = cur.fetchall()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT id FROM chars WHERE subscriber = 1")
+        result = cur.fetchall()
 
-            for row in result:
-                subs.append(row['id'])
+        for row in result:
+            subs.append(row['id'])
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -253,17 +242,16 @@ def stats_add_death(game):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT * from deaths where game = %s", (game,))
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT * from deaths where game = %s", (game,))
 
-            stat = cur.fetchone()
+        stat = cur.fetchone()
 
-            if stat:
-                score = int(stat['count']) + 1
-                cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
-            else:
-                cur.execute("INSERT INTO deaths (game, count) VALUES (%s, %s)", (game, 1))
+        if stat:
+            score = int(stat['count']) + 1
+            cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
+        else:
+            cur.execute("INSERT INTO deaths (game, count) VALUES (%s, %s)", (game, 1))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -279,16 +267,16 @@ def stats_remove_death(game):
     con = None
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT * from deaths where game = %s", (game,))
-            stat = cur.fetchone()
 
-            if stat:
-                score = int(stat['count']) - 1
-                if score < 0:
-                    score = 0
-                cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT * from deaths where game = %s", (game,))
+        stat = cur.fetchone()
+
+        if stat:
+            score = int(stat['count']) - 1
+            if score < 0:
+                score = 0
+            cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -299,13 +287,12 @@ def stats_remove_death(game):
             con.close()
 
 def sr_add_song(songid, songname, requestor):
-    rows = 0
     ret = False
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("INSERT INTO songrequests (songid, songname, requestor) VALUES (%s, %s, %s)", (songid, songname, requestor))
+
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("INSERT INTO songrequests (songid, songname, requestor) VALUES (%s, %s, %s)", (songid, songname, requestor))
         ret = True
 
     except mdb.Error, e:
@@ -319,13 +306,12 @@ def sr_add_song(songid, songname, requestor):
     return ret
 
 def sr_remove_song(songid):
-    rows = 0
     ret = False
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("DELETE FROM songrequests WHERE id = %s", (songid,))
+
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("DELETE FROM songrequests WHERE id = %s", (songid,))
         ret = True
 
     except mdb.Error, e:
@@ -341,17 +327,16 @@ def sr_remove_song(songid):
 def sr_song_count(user):
     count = 0
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT count(*) as count from songrequests where requestor = %s", (user,))
-            char = cur.fetchone()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT count(*) as count from songrequests where requestor = %s", (user,))
+        char = cur.fetchone()
 
-            if char:
-                count = int(char['count'])
-            else:
-                count = 0
+        if char:
+            count = int(char['count'])
+        else:
+            count = 0
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -368,15 +353,12 @@ def qu_add_quote(quote, name, game):
     date = datetime.date.today()
 
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("INSERT INTO quotes (quote, date, name, game) VALUES (%s, %s, %s, %s)", (quote, date, name, game))
-        ret = True
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("INSERT INTO quotes (quote, date, name, game) VALUES (%s, %s, %s, %s)", (quote, date, name, game))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
-        ret = False
 
     finally:
         if con:
@@ -389,14 +371,13 @@ def qu_get_quote():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT count(id) as count from quotes")
-            count = cur.fetchone()['count']
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT count(id) as count from quotes")
+        count = cur.fetchone()['count']
 
-            pick = random.choice(range(count))+1
-            cur.execute("SELECT * from quotes where id = %s", (pick,))
-            quote = cur.fetchone()
+        pick = random.choice(range(count))+1
+        cur.execute("SELECT * from quotes where id = %s", (pick,))
+        quote = cur.fetchone()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -414,10 +395,9 @@ def qu_get_quote_id(quid):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("SELECT * from quotes where id = %s", (quid,))
-            quote = cur.fetchone()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("SELECT * from quotes where id = %s", (quid,))
+        quote = cur.fetchone()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -435,9 +415,8 @@ def mq_add_message(mtype, priority, message, sound):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("INSERT INTO messages (added, priority, type, message, sound) VALUES (%s, %s, %s, %s, %s)", (now, priority, mtype, message, sound))
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("INSERT INTO messages (added, priority, type, message, sound) VALUES (%s, %s, %s, %s, %s)", (now, priority, mtype, message, sound))
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -454,11 +433,9 @@ def getEvent():
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], "events")
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from event_events where start = 1 order by rand() limit 1")
-            event = cur.fetchone()
-
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("select * from event_events where start = 1 order by rand() limit 1")
+        event = cur.fetchone()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0], e.args[1]))
@@ -473,10 +450,9 @@ def getEventById(evtid):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], "events")
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from event_events WHERE eventID=%s", (evtid,))
-            event = cur.fetchone()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("select * from event_events WHERE eventID=%s", (evtid,))
+        event = cur.fetchone()
 
 
     except mdb.Error, e:
@@ -492,10 +468,9 @@ def getEventCommands(event):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], "events")
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from event_commands where eventID = %s", (event,))
-            commands = cur.fetchall()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("select * from event_commands where eventID = %s", (event,))
+        commands = cur.fetchall()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0], e.args[1]))
@@ -511,10 +486,9 @@ def get_message(msg_idx):
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
-        with con:
-            cur = con.cursor(mdb.cursors.DictCursor)
-            cur.execute("select * from msg_queue limit %s, 1", (msg_idx,))
-            event = cur.fetchone()
+        cur = con.cursor(mdb.cursors.DictCursor)
+        cur.execute("select * from msg_queue limit %s, 1", (msg_idx,))
+        event = cur.fetchone()
 
 
     except mdb.Error, e:
