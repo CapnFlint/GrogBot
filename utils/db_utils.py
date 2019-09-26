@@ -11,7 +11,7 @@ def is_admin(uid):
     char = None
     con = None
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -34,7 +34,7 @@ def is_admin(uid):
 def add_message(message):
     now = int(time.time())
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor()
@@ -50,7 +50,7 @@ def add_message(message):
 
 def clear_messages():
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -66,7 +66,7 @@ def clear_messages():
 
 def clear_stats():
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -82,7 +82,7 @@ def clear_stats():
 
 def clear_stat(name):
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -98,7 +98,7 @@ def clear_stat(name):
 
 def add_stat(name, amount):
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
         value = 0
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -122,7 +122,7 @@ def add_stat(name, amount):
 def get_stat(name):
     value = 0
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
@@ -142,8 +142,9 @@ def get_stat(name):
 def get_custom_commands():
     commands = {}
     try:
-        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db']);
+        con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
+        print con
         with con:
             cur = con.cursor(mdb.cursors.DictCursor)
             cur.execute("SELECT * from custom_command where custom=1")
