@@ -292,7 +292,7 @@ def get_subscribers(count=0, offset=0, subs={}):
 
         response = urllib2.urlopen(req)
         data = json.load(response)
-        logging.debug(data)
+
         userlist = data['subscriptions']
         total = int(data['_total'])
 
