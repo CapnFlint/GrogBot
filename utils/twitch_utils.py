@@ -289,7 +289,7 @@ def get_subscribers(count=0, offset=0, subs={}):
         req.add_header('Accept', 'application/vnd.twitchtv.v5+json')
         req.add_header('Client-ID', config['api']['client_id'])
         req.add_header('Authorization', 'OAuth '+ config['api']['access_token'])
-        logging.debug(req.headers.items)
+        logging.debug(req.headers)
         response = urllib2.urlopen(req)
         data = json.load(response)
         logging.debug(data)
