@@ -166,6 +166,8 @@ def del_custom_command(command):
         cur = con.cursor()
         cur.execute("DELETE from custom_command WHERE command = %s", (command,))
 
+        con.commit()
+
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
         return 0
@@ -182,6 +184,8 @@ def add_custom_command(command, message):
 
         cur = con.cursor()
         cur.execute("REPLACE INTO custom_command (command, message) VALUES (%s, %s)", (command, message))
+
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
