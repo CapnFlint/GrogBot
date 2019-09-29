@@ -23,5 +23,5 @@ def command_ask(self, data):
         else:
             ship = char['sub_count']
         logging.debug("Sending ship for " + char['name'])
-        overlay.ship("join", data['sender'], ship)
+        overlay.ship("join", data['sender_id'], ship)
         self.ship_cooldowns[data['sender_id']] = now
