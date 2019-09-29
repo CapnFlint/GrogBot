@@ -16,4 +16,4 @@ def command_fleet(self, data):
                 ship = char['ship']
             else:
                 ship = char['sub_count']
-            overlay.ship("join", viewer, ship)
+            overlay.ship("join", char['id'], ship)
