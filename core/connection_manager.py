@@ -240,14 +240,15 @@ class ConnectionManager():
             if char != ":":
                 result += char
         result = result.encode('utf-8')
-        return result
+        sender_id = self.grog.charMgr.load_char_by_name(result)['id']
+        return sender_id
 
     def _get_tags(self, data):
         data = data.split(';')
         tagmap = {}
         for d in data:
             (key, val) = d.split('=')
-            tagmap[key] = val;
+            tagmap[key] = val
         return tagmap
 
     def _get_perms(self, tags):
