@@ -136,6 +136,7 @@ class CharacterManager():
             return self.load_character(uid)
         except:
             # Catch for weird situations where a name doesn't actually exist
+            logging.error("Could not get an ID for user: " + name )
             return None
 
     def save_character(self, char):
