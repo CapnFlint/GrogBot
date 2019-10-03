@@ -139,7 +139,7 @@ class ConnectionManager():
 # -----[ Handle Joins/Parts/Modes ]---------------------------------------------
 
     def _handle_join(self, user):
-        char = self.grog.charMgr.load_char(user)
+        char = self.grog.charMgr.load_character(user)
         if char:
             if char['subscriber']:
                 if char['ship'] > 0:
