@@ -151,7 +151,7 @@ class ConnectionManager():
             logging.error("OH NOES!!! can't load character: " + str(user))
 
     def _handle_part(self, user):
-        char = self.grog.charMgr.load_char_by_name(user)
+        char = self.grog.charMgr.load_character(user)
         if char:
             if char['subscriber']:
                 if char['ship'] > 0:
