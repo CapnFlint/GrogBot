@@ -148,7 +148,7 @@ class ConnectionManager():
                     ship = char['sub_count']
                 overlay.ship("join", user, ship)
         else:
-            logging.error("OH NOES!!! can't load character.")
+            logging.error("OH NOES!!! can't load character: " + str(user))
 
     def _handle_part(self, user):
         char = self.grog.charMgr.load_char_by_name(user)
