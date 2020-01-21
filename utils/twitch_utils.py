@@ -318,15 +318,14 @@ def get_subscribers(count=0, offset=0, subs={}):
 
 def get_emotes():
     # Get a list of my current emotes for the raid game!
-    url = "https://twitchemotes.com/api_cache/v3/subscriber.json"
-    id = config['twitch']['channel_id']
+    channel_id = config['twitch']['channel_id']
+    url = "https://api.twitchemotes.com/api/v4/channels/" + channel_id
 
     logging.info("Getting list of current Emotes...")
     try:
         req = urllib2.Request(url)
         response = urllib2.urlopen(req)
         data = json.load(response)
-        data = data[id]
         emotes = []
         for emote in data['emotes']:
             emotes.append(str(emote['id']))
