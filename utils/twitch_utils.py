@@ -326,6 +326,7 @@ def get_emotes():
         req = urllib2.Request(url)
         response = urllib2.urlopen(req)
         data = json.load(response)
+        print(data)
         emotes = []
         for emote in data['emotes']:
             emotes.append(str(emote['id']))
