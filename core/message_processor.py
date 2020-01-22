@@ -67,7 +67,7 @@ class MessageProcessor():
             msg['args'] = msg['text'].split(' ')
             cmd = msg['args'].pop(0).lower()
 
-            if self.grog.charMgr.is_alive(msg['sender']):
+            if self.grog.charMgr.is_alive(msg['sender_id']):
                 if cmd in self.options.keys():
                     self.options[cmd](self, msg)
                 elif cmd in self.custom_commands.keys():

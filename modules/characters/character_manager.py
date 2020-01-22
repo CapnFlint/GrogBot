@@ -107,6 +107,27 @@ class CharacterManager():
         else:
             return False
 
+    def char_exists_id(self, char_id):
+        user = None
+        try:
+            con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
+            with con:
+                cur = con.cursor(mdb.cursors.DictCursor)
+                cur.execute("SELECT * from chars where id = %s", (char_id,))
+                user = cur.fetchone()
+        except mdb.Error, e:
+
+            logging.error("DB Error %d: %s" % (e.args[0],e.args[1]))
+
+        finally:
+
+            if con:
+                con.close()
+        if user:
+            return True
+        else:
+            return False
+
     def load_character(self, uid):
         user = None
         try:
@@ -228,8 +249,8 @@ class CharacterManager():
         else:
             return False
 
-    def is_alive(self, name):
-        char = self.load_char_by_name(name)
+    def is_alive(self, char_id):
+        char = self.load_character(char_id)
         if char and char['level'] > 0:
             return True
         return False

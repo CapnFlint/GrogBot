@@ -233,15 +233,7 @@ class ConnectionManager():
         return msg
 
     def _get_sender(self, msg):
-        result = ""
-        for char in msg:
-            if char == "!":
-                break
-            if char != ":":
-                result += char
-        result = result.encode('utf-8')
-        sender_id = self.grog.charMgr.load_char_by_name(result)['id']
-        return sender_id
+        return self._parse_message(msg)['sender_id']
 
     def _get_tags(self, data):
         data = data.split(';')

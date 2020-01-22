@@ -15,9 +15,10 @@ def command_plank(self, data):
     else:
         duration = 0
 
-    if self.charMgr.char_exists(target):
-        if not twitch.is_mod(twitch.get_ids([target])):
-            if self.charMgr.is_alive(target):
+    target_id = twitch.get_ids([target])
+    if self.charMgr.char_exists_id(target_id):
+        if not twitch.is_mod(target_id):
+            if self.charMgr.is_alive(target_id):
                 self.connMgr.send_message(target + ', you have been sentenced to walk the PLANK!!!')
                 sound = [{"file": "sounds/davey.mp3", "volume": 50}, {"file": "sounds/splash.mp3", "volume": 60}]
                 overlay.alert(1, "[HL]{0}[/HL] has walked the PLANK!!!".format(target), sound)
