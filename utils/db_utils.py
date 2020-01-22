@@ -103,9 +103,13 @@ def add_stat(name, amount):
         cur.execute("SELECT value from stats where stat = %s", (name,))
         stat = cur.fetchone()
 
+        logging.debug('stat: ')
+        logging.debug(stat)
+
         if stat:
             value = int(stat['value']) + int(amount)
             cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
+            logging.debug('done')
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
