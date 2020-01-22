@@ -48,7 +48,6 @@ class ConnectionManager():
 
         if sublist:
             for uid in sublist:
-                logging.debug("Processing: " + uid)
                 if uid in old_subs:
                     old_subs.remove(uid)
                 else:
@@ -240,7 +239,10 @@ class ConnectionManager():
             if char != ":":
                 result += char
         result = result.encode('utf-8')
-        sender_id = self.grog.charMgr.load_char_by_name(result)['id']
+        char = self.grog.charMgr.load_char_by_name(result)
+        sender_id = 0
+        if char:
+            sender_id = char['id']
         return sender_id
 
     def _get_tags(self, data):
@@ -353,7 +355,8 @@ class ConnectionManager():
 
                             elif line[1] == 'PART':
                                 leaver = self._get_sender(line[0])
-                                self._handle_part(leaver)
+                                if(leaver):
+                                    self._handle_part(leaver)
 
                             elif line[1] == 'MODE':
                                 self._handle_mode(line[4])

@@ -192,8 +192,9 @@ def charge_entry_fees(self):
     else:
         for name in self.giveaway_entries.keys():
             char = self.charMgr.load_char_by_name(name)
-            char['booty'] -= self.giveaway_entries[name]
-            self.charMgr.save_character(char)
+            if char:
+                char['booty'] -= self.giveaway_entries[name]
+                self.charMgr.save_character(char)
 
 def get_entries(self):
     return self.giveaway_entries.keys()
