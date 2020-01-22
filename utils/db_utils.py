@@ -78,6 +78,7 @@ def clear_stats():
             con.close()
 
 def clear_stat(name):
+    logging.debug('clearing state: ' + name)
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
 
