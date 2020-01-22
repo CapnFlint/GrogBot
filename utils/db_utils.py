@@ -84,6 +84,7 @@ def clear_stat(name):
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("UPDATE stats SET value=0 where stat=%s",(name,))
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -110,7 +111,7 @@ def add_stat(name, amount):
             value = int(stat['value']) + int(amount)
             logging.debug(value)
             count = cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
-            cur.commit()
+            #con.commit()
             logging.debug(count)
             logging.debug('done')
 
