@@ -111,6 +111,7 @@ def add_stat(name, amount):
             logging.debug(value)
             count = cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
             logging.debug(count)
+            console.log(cur.fetchall())
             logging.debug('done')
 
     except mdb.Error, e:
