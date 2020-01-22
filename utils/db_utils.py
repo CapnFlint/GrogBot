@@ -94,6 +94,7 @@ def clear_stat(name):
             con.close()
 
 def add_stat(name, amount):
+    logging.debug('adding stat: ' + name + "(" + str(amount) + ")")
     try:
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
         value = 0
