@@ -109,8 +109,8 @@ def add_stat(name, amount):
         if stat:
             value = int(stat['value']) + int(amount)
             logging.debug(value)
-            cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
-            logging.debug(cur)
+            count = cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
+            logging.debug(count)
             logging.debug('done')
 
     except mdb.Error, e:
