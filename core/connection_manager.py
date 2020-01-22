@@ -339,12 +339,15 @@ class ConnectionManager():
                                 pass
 
                             elif line[1] == 'JOIN':
+                                logging.debug('JOIN: ' + line[0])
                                 self._handle_join(self._get_sender(line[0]))
 
                             elif line[1] == 'PART':
+                                logging.debug('PART: ' + line[0])
                                 self._handle_part(self._get_sender(line[0]))
 
                             elif line[1] == 'MODE':
+                                logging.debug('MODE: ' + line[0])
                                 self._handle_mode(line[4])
 
                             else:
