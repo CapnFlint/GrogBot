@@ -233,7 +233,15 @@ class ConnectionManager():
         return msg
 
     def _get_sender(self, msg):
-        return self._parse_message(msg)['sender_id']
+        result = ""
+        for char in msg:
+            if char == "!":
+                break
+            if char != ":":
+                result += char
+        result = result.encode('utf-8')
+        sender_id = self.grog.charMgr.load_char_by_name(result)['id']
+        return sender_id
 
     def _get_tags(self, data):
         data = data.split(';')
@@ -339,15 +347,15 @@ class ConnectionManager():
                                 pass
 
                             elif line[1] == 'JOIN':
-                                logging.debug('JOIN: ' + line[0])
-                                self._handle_join(self._get_sender(line[0]))
+                                joiner = self._get_sender(line[0])
+                                if(joiner):
+                                    self._handle_join(joiner)
 
                             elif line[1] == 'PART':
-                                logging.debug('PART: ' + line[0])
-                                self._handle_part(self._get_sender(line[0]))
+                                leaver = self._get_sender(line[0])
+                                self._handle_part(leaver)
 
                             elif line[1] == 'MODE':
-                                logging.debug('MODE: ' + line[0])
                                 self._handle_mode(line[4])
 
                             else:
