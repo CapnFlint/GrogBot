@@ -24,9 +24,12 @@ class ConnectionManager():
 
 # -----[ Message Function ]-----------------------------------------------------
 
-    def send_message(self, msg, priority=3, chat=True, screen=False):
+    def send_message(self, msg, priority=3, chat=True, emote=True, screen=False):
         if chat:
-            self._send_emote(msg)
+            if emote:
+                self._send_emote(msg)
+            else:
+                self._send_message(msg)
         if screen:
             overlay.alert(priority, msg)
 

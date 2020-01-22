@@ -56,7 +56,7 @@ def command_duel(self, data):
                     challenge_player(self, attacker, target)
                     logging.debug(target)
                     if target['id'] == '91953864':
-                        self.connMgr.send_message("!accept")
+                        self.connMgr.send_message("!accept", emote=False)
                 else:
                     self.connMgr.send_message("Sorry, " + name + " is not a valid target.")
             else:
