@@ -176,21 +176,22 @@ class pubsub():
                 return
 
             char = self.grog.charMgr.load_character(user_id)
+            if char:
 
-            self.grog.charMgr.update_subscriber(char, time, sub_type, count)
+                self.grog.charMgr.update_subscriber(char, time, sub_type, count)
 
-            self.grog.charMgr.save_character(char)
+                self.grog.charMgr.save_character(char)
 
-            overlay.ship("sub", name, count)
-            overlay.alert_sub(name, sub_type, count, context, sub_message['message'])
+                overlay.ship("sub", name, count)
+                overlay.alert_sub(name, sub_type, count, context, sub_message['message'])
 
-            #self.grog.charMgr.give_booty(50, [name])
-            #overlay.ship("sub", name, count)
-            #overlay.alert_sub(name, sub_type, count, context, sub_message)
-            self.update_subcount()
+                #self.grog.charMgr.give_booty(50, [name])
+                #overlay.ship("sub", name, count)
+                #overlay.alert_sub(name, sub_type, count, context, sub_message)
+                self.update_subcount()
 
-            stat = db.add_stat('sessionSubs', 1)
-            overlay.update_stat('subs', stat)
+                stat = db.add_stat('sessionSubs', 1)
+                overlay.update_stat('subs', stat)
 
         elif (data["topic"] == "channel-bits-events-v1." + config['twitch']['channel_id']):
             logging.info("Bits event received")

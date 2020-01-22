@@ -38,7 +38,7 @@ def command_duel(self, data):
 
         attacker = self.charMgr.load_character(data['sender_id'])
         now = time.time()
-        if attacker['id'] in self.duel_cooldowns.keys():
+        if attacker and attacker['id'] in self.duel_cooldowns.keys():
             if now - self.duel_cooldowns[attacker['id']] < 3600:
                 self.connMgr.send_message("Sorry " + attacker['name'] + ", you're still recovering from your last duel! Please wait " + str(int((3600 - (now - self.duel_cooldowns[attacker['id']])) / 60)) + " minutes before trying again.")
                 return

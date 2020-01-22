@@ -171,7 +171,7 @@ def register_entry(self, sender, args):
 
         char = self.charMgr.load_character(sender)
 
-        if char['booty'] >= tickets:
+        if char and char['booty'] >= tickets:
             self.giveaway_entries[char['name']] = tickets
 
             # remove entry if tickets = 0
@@ -199,8 +199,9 @@ def charge_entry_fees(self):
     else:
         for name in self.giveaway_entries.keys():
             char = self.charMgr.load_character(name)
-            char['booty'] -= self.giveaway_entries[name]
-            self.charMgr.save_character(char)
+            if char:
+                char['booty'] -= self.giveaway_entries[name]
+                self.charMgr.save_character(char)
 
 def get_entries(self):
     return self.giveaway_entries.keys()

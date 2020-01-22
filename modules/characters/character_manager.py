@@ -342,14 +342,16 @@ class CharacterManager():
 
     def unsub_user(self, uid):
         char = self.load_character(uid)
-        self.remove_subscriber(char)
-        self.save_character(char)
+        if char:
+            self.remove_subscriber(char)
+            self.save_character(char)
 
     def sub_user(self, uid, count=0):
         char = self.load_character(uid)
-        sub = twitch.get_subscription(uid)
-        self.update_subscriber(char, sub['created'], sub['sub_plan'])
-        self.save_character(char)
+        if char:
+            sub = twitch.get_subscription(uid)
+            self.update_subscriber(char, sub['created'], sub['sub_plan'])
+            self.save_character(char)
 
 
     def guess_sub_count(self, date):

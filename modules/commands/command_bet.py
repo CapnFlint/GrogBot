@@ -64,7 +64,7 @@ def register_bet(self, data):
 
         char = self.charMgr.load_character(data['sender_id'])
 
-        if char['booty'] >= amount:
+        if char and char['booty'] >= amount:
             if choice in self.bet_options:
                 if not data['sender'] in list(chain.from_iterable([[b[0] for b in self.bet_entries[a]] for a in self.bet_entries])):
                     self.bet_entries[choice].append((data['sender'],amount))

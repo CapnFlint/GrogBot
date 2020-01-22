@@ -7,7 +7,7 @@ last_milo = 0
 
 def feed_milo(self, uid):
     char = self.charMgr.load_character(uid)
-    if char['booty'] >= 5:
+    if char and char['booty'] >= 5:
         char['booty'] -= 5
         self.connMgr.send_message("Milo loved his Milo snax! Thanks! capnMilo Woof!")
         self.charMgr.save_character(char)

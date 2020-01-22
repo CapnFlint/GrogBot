@@ -68,7 +68,7 @@ def command_startarena(self, data):
 
 def arena_register_entry(self, data):
     char = self.charMgr.load_character(data['sender_id'])
-    if char['follower']:
+    if char and char['follower']:
         if char['booty'] >= self.arena_entry_fee:
             self.arena_entries[char['id']] = char['name']
             self.connMgr.send_message(char['name'] + " has entered the arena!")
@@ -86,8 +86,9 @@ def arena_prize_fund(self):
 def arena_collect_fees(self):
     for entry in self.arena_entries.keys():
         char = self.charMgr.load_character(entry)
-        char['booty'] -= self.arena_max_bet
-        self.charMgr.save_character(char)
+        if char:
+            char['booty'] -= self.arena_max_bet
+            self.charMgr.save_character(char)
 
 def arena_fight_battles(self):
     self.connMgr.send_message("Let battle commence! May the odds be ever in your favour!")

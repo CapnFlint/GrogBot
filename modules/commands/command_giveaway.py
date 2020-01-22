@@ -164,7 +164,7 @@ def register_entry(self, data):
 
         char = self.charMgr.load_character(data['sender_id'])
 
-        if char['booty'] >= tickets:
+        if char and char['booty'] >= tickets:
             self.giveaway_entries[char['name']] = tickets
 
             # remove entry if tickets = 0

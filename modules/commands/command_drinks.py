@@ -2,7 +2,7 @@ from helper import *
 
 def buy_drink(self, uid):
     char = self.charMgr.load_character(uid)
-    if char['booty'] >= 3:
+    if char and char['booty'] >= 3:
         char['booty'] -= 3
         self.connMgr.send_message('hands ' + char['name'] + ' a fine beverage.')
         self.charMgr.save_character(char)
