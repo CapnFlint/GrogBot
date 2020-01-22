@@ -111,7 +111,7 @@ def add_stat(name, amount):
             value = int(stat['value']) + int(amount)
             logging.debug(value)
             count = cur.execute("UPDATE stats SET value = %s WHERE stat = %s", (value, name))
-            #con.commit()
+            con.commit()
             logging.debug(count)
             logging.debug('done')
 
