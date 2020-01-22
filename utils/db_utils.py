@@ -38,6 +38,7 @@ def add_message(message):
 
         cur = con.cursor()
         cur.execute("INSERT INTO messages (added, priority, type, message) VALUES (%s, %s, %s, %s)", (now, message['priority'], message['type'], message['message']))
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -53,6 +54,7 @@ def clear_messages():
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("DELETE FROM messages")
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -68,6 +70,7 @@ def clear_stats():
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("UPDATE stats SET value=0 where stat like 'session%'")
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -263,8 +266,11 @@ def stats_add_death(game):
         if stat:
             score = int(stat['count']) + 1
             cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
+            con.commit()
         else:
             cur.execute("INSERT INTO deaths (game, count) VALUES (%s, %s)", (game, 1))
+            con.commit()
+        
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -290,6 +296,7 @@ def stats_remove_death(game):
             if score < 0:
                 score = 0
             cur.execute("UPDATE deaths SET count = %s WHERE game = %s", (score, game))
+            con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -306,6 +313,7 @@ def sr_add_song(songid, songname, requestor):
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("INSERT INTO songrequests (songid, songname, requestor) VALUES (%s, %s, %s)", (songid, songname, requestor))
+        con.commit()
         ret = True
 
     except mdb.Error, e:
@@ -325,6 +333,7 @@ def sr_remove_song(songid):
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("DELETE FROM songrequests WHERE id = %s", (songid,))
+        con.commit()
         ret = True
 
     except mdb.Error, e:
@@ -369,6 +378,7 @@ def qu_add_quote(quote, name, game):
         con = mdb.connect(config['db']['host'], config['db']['user'], config['db']['pass'], config['db']['db'])
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("INSERT INTO quotes (quote, date, name, game) VALUES (%s, %s, %s, %s)", (quote, date, name, game))
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
@@ -430,6 +440,7 @@ def mq_add_message(mtype, priority, message, sound):
 
         cur = con.cursor(mdb.cursors.DictCursor)
         cur.execute("INSERT INTO messages (added, priority, type, message, sound) VALUES (%s, %s, %s, %s, %s)", (now, priority, mtype, message, sound))
+        con.commit()
 
     except mdb.Error, e:
         logging.error("Error %d: %s" % (e.args[0],e.args[1]))
