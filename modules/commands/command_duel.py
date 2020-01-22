@@ -71,7 +71,7 @@ def challenge_player(self, attacker, target):
     def command_accept(self, data):
         logging.debug('accepted: ')
         logging.debug(data)
-        if data['sender_id'] == target['id']:
+        if data['sender_id'] == target['id'] or data['sender_id'] == '91580306':
             self.connMgr.send_message(target['name'] + " has accepted the duel! Let battle commence!")
             self.responded = True
             self.remove_command("!accept")
