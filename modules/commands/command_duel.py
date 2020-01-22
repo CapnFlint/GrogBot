@@ -54,6 +54,8 @@ def command_duel(self, data):
                     self.duel_cooldowns[attacker['id']] = now
 
                     challenge_player(self, attacker, target)
+                    if target['name'] == 'grogbot':
+                        self.connMgr.send_message("!accept")
                 else:
                     self.connMgr.send_message("Sorry, " + name + " is not a valid target.")
             else:
