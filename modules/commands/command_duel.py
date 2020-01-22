@@ -55,7 +55,7 @@ def command_duel(self, data):
 
                     challenge_player(self, attacker, target)
                     logging.debug(target)
-                    if target['name'] == 'grogbot':
+                    if target['id'] == '91953864':
                         self.connMgr.send_message("!accept")
                 else:
                     self.connMgr.send_message("Sorry, " + name + " is not a valid target.")
