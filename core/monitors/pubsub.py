@@ -215,7 +215,7 @@ class pubsub():
         logging.debug("### closed ###")
         self._reconnect()
 
-    def on_open(self, ws):
+    def on_open(self):
         logging.debug("on_open called")
         self._listen()
         def run(*args):
