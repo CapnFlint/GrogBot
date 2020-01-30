@@ -3,7 +3,7 @@ import modules.overlay.overlay as overlay
 import utils.twitter as twitter
 import utils.twitch_utils as twitch
 
-#@processes("!test", PERM_ADMIN)
+@processes("!test", PERM_ADMIN)
 def command_test(self, data):
     self.connMgr.send_message("You have {0} sub points!".format(twitch.get_sub_points()))
 
