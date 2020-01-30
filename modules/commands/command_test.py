@@ -5,7 +5,7 @@ import utils.twitch_utils as twitch
 
 @processes("!test", PERM_ADMIN)
 def command_test(self, data):
-    self.connMgr.send_message("You have {0} sub points!".format(twitch.get_sub_points()))
+    self.connMgr.send_message("You have {0} sub points!".format(twitch.get_sub_points()), screen=True)
 
 @processes("!test1", PERM_ADMIN)
 def command_test1(self, data):
