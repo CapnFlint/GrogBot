@@ -134,10 +134,10 @@ class pubsub():
                 name = msg['display_name']
                 user_id = msg['user_id']
                 if context == "sub":
-                    timer = 5
+                    timer = 6
                     self.grog.connMgr.send_message("Welcome new crewmate {0}!!!".format(name))
                 else:
-                    timer = 2
+                    timer = 3
                     message = "Welcome back {0}, {1} total months at sea".format(name, count)
                     if streak:
                         message = message + " and {0} months in a row".format(streak)
@@ -160,13 +160,13 @@ class pubsub():
                 sender = msg['display_name']
                 self.grog.connMgr.send_message("{1} slipped the kings shilling into {0}'s grog, welcome to the crew!!!".format(name, sender))
                 if sub_type in ["1000","Prime"]:
-                    overlay.update_timer(5)
+                    overlay.update_timer(6)
                     pass
                 elif sub_type == "2000":
-                    overlay.update_timer(10)
+                    overlay.update_timer(12)
                     pass
                 elif sub_type == "3000":
-                    overlay.update_timer(20)
+                    overlay.update_timer(30)
                     pass
                 self.grog.charMgr.give_booty(50, [sender, name])
 
